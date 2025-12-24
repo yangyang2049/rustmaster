@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>国旗涂鸦</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            height: 100%;
+            width: 100%;
+            /* 背景色设为透明，让 PaintPlayPage 的背景色透过来 */
+            background-color: transparent;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* 背景色设为透明，让 PaintPlayPage 的背景色透过来 */
+            background-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            padding-top: 60px;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 0 16px;
+            height: calc(100% - 60px);
+            /* 背景色设为透明，让 PaintPlayPage 的背景色透过来 */
+            background-color: transparent;
+        }
+
+        .country-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1677FF;
+            text-align: center;
+            margin-bottom: 16px;
+            transition: color 0.3s ease;
+        }
+
+        #flag-svg {
+            width: 100%;
+            max-width: 540px;
+            min-height: 200px;
+            margin: 0 auto 16px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* 背景色设为透明，让 PaintPlayPage 的背景色透过来 */
+            background-color: transparent;
+        }
+
+        #flag-svg svg {
+            width: 100%;
+            height: auto;
+            max-height: 250px;
+        }
+
+        #flag-svg.disabled {
+            pointer-events: none;
+            /* 答案正确时不降低透明度，保持旗帜清晰可见 */
+            /* opacity: 0.7; */
+        }
+
+        #color-palette {
+            width: 100%;
+            max-width: 540px;
+            margin: 16px auto;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px;
+        }
+
+        .color-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15),
+                inset 0 -4px 5px rgba(0, 0, 0, 0.1),
+                inset 0 5px 5px rgba(255, 255, 255, 0.4);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .color-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .color-btn::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0));
+            border-radius: 26px 26px 0 0;
+            pointer-events: none;
+        }
+
+        .color-btn.selected {
+            box-shadow: 0 0 0 3px #007AFF, 0 3px 6px rgba(0, 0, 0, 0.2);
+            transform: scale(1.1);
+        }
+
+        .result-mark {
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 72px;
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .result-mark.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .success-animation {
+            animation: successAnim 1s cubic-bezier(0.17, 0.89, 0.32, 1.15) forwards;
+        }
+
+        .failure-animation {
+            animation: failureAnim 0.5s ease-out forwards;
+        }
+
+        @keyframes successAnim {
+            0% { transform: translate(-50%, 0%) scale(0.8); opacity: 0; }
+            100% { transform: translate(-50%, -80%) scale(1.1); opacity: 1; }
+        }
+
+        @keyframes failureAnim {
+            0% { transform: translate(-50%, -80%) scale(1.1); opacity: 0; }
+            100% { transform: translate(-50%, 0%) scale(0.9); opacity: 1; }
+        }
+
+        /* 填充动画 */
+        @keyframes fillPulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+    </style>
+</head>
+    <body style="background-color: transparent;">
+    <div class="game-container">
+        <div class="country-name" id="country-name"></div>
+        <div id="flag-svg"></div>
+        <div id="color-palette"></div>
+        <div id="success-mark" class="result-mark">👍</div>
+        <div id="failure-mark" class="result-mark">👎</div>
+    </div>
+
+    <script>
+        // 不再从 ArkTS 注入背景色，HTML 自己管理背景色
+        // 默认使用浅色模式，通过 setBackgroundColor 函数可以切换到深色模式
+        
+        // 全局变量
+        let correctColors = [];
+        let pathColors = {};
+        let currentColor = null;
+        let gameCompleted = false;
+        let svgData = null;
+        let isDrawing = false;
+        let lastPoint = null;
+
+        // 颜色选择器类
+        class ColorPalette {
+            constructor(containerId, colors, callback) {
+                this.container = document.getElementById(containerId);
+                this.colors = colors.map(c => c.startsWith('#') ? c : '#' + c);
+                this.selectedColor = null;
+                this.onColorSelected = callback;
+                this.disabled = false;
+                this.render();
+                this.selectFirst();
+            }
+
+            render() {
+                if (!this.container) return;
+                this.container.innerHTML = '';
+
+                // 随机打乱颜色顺序
+                const shuffled = [...this.colors].sort(() => Math.random() - 0.5);
+
+                shuffled.forEach(color => {
+                    const btn = document.createElement('button');
+                    btn.className = 'color-btn';
+                    btn.style.backgroundColor = color;
+                    btn.dataset.color = color;
+
+                    if (color === this.selectedColor) {
+                        btn.classList.add('selected');
+                    }
+
+                    btn.addEventListener('click', () => {
+                        if (this.disabled) return;
+                        this.select(color);
+                    });
+
+                    this.container.appendChild(btn);
+                });
+            }
+
+            select(color) {
+                this.selectedColor = color;
+                this.container.querySelectorAll('.color-btn').forEach(btn => {
+                    btn.classList.toggle('selected', btn.dataset.color === color);
+                });
+                if (this.onColorSelected) {
+                    this.onColorSelected(color);
+                }
+            }
+
+            selectFirst() {
+                if (this.colors.length > 0) {
+                    // 选择打乱后的第一个颜色
+                    const firstBtn = this.container.querySelector('.color-btn');
+                    if (firstBtn) {
+                        this.select(firstBtn.dataset.color);
+                    }
+                }
+            }
+
+            setDisabled(status) {
+                this.disabled = status;
+                this.container.querySelectorAll('.color-btn').forEach(btn => {
+                    btn.style.opacity = status ? '0.5' : '1';
+                    btn.style.cursor = status ? 'not-allowed' : 'pointer';
+                });
+            }
+
+            updateColors(colors) {
+                this.colors = colors.map(c => c.startsWith('#') ? c : '#' + c);
+                this.render();
+                this.selectFirst();
+            }
+        }
+
+        let colorPalette = null;
+
+        // 所有元素背景保持透明，让 PaintPlayPage 的背景色透过来
+
+        // 设置游戏（从原生调用）
+        function setupPaintGame(countryCode, countryName, colors, svgBase64) {
+            // 重置状态
+            gameCompleted = false;
+            pathColors = {};
+            correctColors = colors;
+
+            // 设置国家名称
+            const countryNameEl = document.getElementById('country-name');
+            if (countryNameEl) {
+                countryNameEl.textContent = countryName;
+            }
+
+            // 加载SVG
+            if (svgBase64 && svgBase64.length > 0) {
+                loadFlagSvgFromBase64(svgBase64);
+            } else {
+                console.error('No SVG base64 provided for:', countryCode);
+            }
+
+            // 更新颜色选择器
+            const uniqueColors = [...new Set(colors)];
+            if (colorPalette) {
+                colorPalette.updateColors(uniqueColors);
+            } else {
+                colorPalette = new ColorPalette('color-palette', uniqueColors, (color) => {
+                    currentColor = color;
+                });
+            }
+
+            // 启用交互
+            enableInteractions();
+        }
+
+        // 从 Base64 编码加载国旗SVG
+        function loadFlagSvgFromBase64(base64Svg) {
+            try {
+                if (!base64Svg || base64Svg.length === 0) {
+                    return;
+                }
+                const svgContent = atob(base64Svg);
+                const container = document.getElementById('flag-svg');
+                if (!container) {
+                    return;
+                }
+                container.innerHTML = svgContent;
+                svgData = base64Svg;
+                bindSvgEvents(container);
+            } catch (e) {
+                console.error('Failed to decode SVG:', e);
+            }
+        }
+
+
+        // 绑定SVG事件
+        function bindSvgEvents(container) {
+            // 绑定点击和触摸事件
+            const pathsAndGroups = container.querySelectorAll('path[id], g[id]');
+            pathsAndGroups.forEach(element => {
+                const id = parseInt(element.id);
+                if (!isNaN(id) && id >= 1 && id <= 9) {
+                    pathColors[id] = null;
+
+                    // 点击事件（兼容原有功能）
+                    element.addEventListener('click', function(event) {
+                        if (container.classList.contains('disabled')) return;
+                        if (!currentColor) return;
+
+                        // 通知原生播放音效
+                        try {
+                            NativeInterface.onPaintSound();
+                        } catch(e) {}
+
+                        // 填充颜色
+                        fillElement(this, currentColor);
+                        pathColors[this.id] = currentColor;
+
+                        // 检查是否完成
+                        if (Object.values(pathColors).every(c => c !== null)) {
+                            checkAnswer();
+                        }
+                    });
+
+                    // 触摸开始
+                    element.addEventListener('touchstart', function(event) {
+                        if (container.classList.contains('disabled')) return;
+                        if (!currentColor) return;
+                        
+                        event.preventDefault();
+                        isDrawing = true;
+                        const touch = event.touches[0];
+                        const svg = container.querySelector('svg');
+                        const svgRect = svg.getBoundingClientRect();
+                        const point = getSVGPoint(svg, touch.clientX, touch.clientY, svgRect);
+                        lastPoint = point;
+                        
+                        // 立即填充
+                        fillElement(this, currentColor);
+                        pathColors[this.id] = currentColor;
+                        
+                        // 通知原生播放音效
+                        try {
+                            NativeInterface.onPaintSound();
+                        } catch(e) {}
+                    }, { passive: false });
+
+                    // 触摸移动（手指绘制）
+                    container.addEventListener('touchmove', function(event) {
+                        if (!isDrawing || container.classList.contains('disabled')) return;
+                        if (!currentColor) return;
+                        
+                        event.preventDefault();
+                        const touch = event.touches[0];
+                        
+                        // 检查触摸点下的元素
+                        const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+                        if (elementAtPoint) {
+                            let targetElement = null;
+                            
+                            // 检查是否是path或g元素
+                            if (elementAtPoint.tagName === 'path' && elementAtPoint.id) {
+                                targetElement = elementAtPoint;
+                            } else if (elementAtPoint.tagName === 'g' && elementAtPoint.id) {
+                                targetElement = elementAtPoint;
+                            } else {
+                                // 查找父级path或g元素
+                                const parentPath = elementAtPoint.closest('path[id]');
+                                const parentGroup = elementAtPoint.closest('g[id]');
+                                targetElement = parentPath || parentGroup;
+                            }
+                            
+                            if (targetElement && targetElement.id) {
+                                const targetId = parseInt(targetElement.id);
+                                if (!isNaN(targetId) && targetId >= 1 && targetId <= 9) {
+                                    // 如果该区域还未填充，则填充
+                                    if (pathColors[targetId] !== currentColor) {
+                                        fillElement(targetElement, currentColor);
+                                        pathColors[targetId] = currentColor;
+                                        
+                                        // 通知原生播放音效
+                                        try {
+                                            NativeInterface.onPaintSound();
+                                        } catch(e) {}
+                                        
+                                        // 检查是否完成
+                                        if (Object.values(pathColors).every(c => c !== null)) {
+                                            checkAnswer();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }, { passive: false });
+
+                    // 触摸结束
+                    container.addEventListener('touchend', function(event) {
+                        if (!isDrawing) return;
+                        event.preventDefault();
+                        isDrawing = false;
+                        lastPoint = null;
+                        
+                        // 检查是否完成
+                        if (Object.values(pathColors).every(c => c !== null)) {
+                            checkAnswer();
+                        }
+                    }, { passive: false });
+
+                    // 触摸取消
+                    container.addEventListener('touchcancel', function(event) {
+                        isDrawing = false;
+                        lastPoint = null;
+                    });
+                }
+            });
+        }
+
+   
+        // 填充元素
+        function fillElement(element, color) {
+            if (element.tagName.toLowerCase() === 'g') {
+                element.querySelectorAll('path').forEach(path => {
+                    path.style.fill = color;
+                    path.style.stroke = color;
+                });
+            } else {
+                element.style.fill = color;
+                element.style.stroke = color;
+            }
+
+            // 添加填充动画效果
+            element.style.animation = 'fillPulse 0.3s ease-out';
+            setTimeout(() => {
+                element.style.animation = '';
+            }, 300);
+        }
+
+        // 检查答案
+        function checkAnswer() {
+            if (gameCompleted) return;
+
+            let allCorrect = true;
+
+            for (let i = 1; i <= correctColors.length; i++) {
+                const userColor = pathColors[i];
+                const expectedColor = correctColors[i - 1];
+
+                if (!userColor) {
+                    allCorrect = false;
+                    break;
+                }
+
+                const normalizedUser = userColor.replace(/^#/, '').toLowerCase();
+                const normalizedCorrect = expectedColor.toLowerCase();
+
+                if (normalizedUser !== normalizedCorrect) {
+                    allCorrect = false;
+                    break;
+                }
+            }
+
+            if (allCorrect) {
+                showSuccess();
+            } else {
+                showFailure();
+            }
+        }
+
+        // 显示成功
+        function showSuccess() {
+            if (gameCompleted) return;
+            gameCompleted = true;
+
+            disableInteractions();
+
+            setTimeout(() => {
+                const mark = document.getElementById('success-mark');
+                mark.classList.add('show', 'success-animation');
+
+                // 通知原生
+                try {
+                    NativeInterface.onPaintCorrect();
+                } catch(e) {
+                    console.log('Native call failed');
+                }
+
+                setTimeout(() => {
+                    mark.classList.remove('show', 'success-animation');
+                }, 2000);
+            }, 500);
+        }
+
+        // 显示失败
+        function showFailure() {
+            if (gameCompleted) return;
+
+            disableInteractions();
+
+            setTimeout(() => {
+                const mark = document.getElementById('failure-mark');
+                mark.classList.add('show', 'failure-animation');
+
+                // 通知原生
+                try {
+                    NativeInterface.onPaintIncorrect();
+                } catch(e) {
+                    console.log('Native call failed');
+                }
+
+                setTimeout(() => {
+                    mark.classList.remove('show', 'failure-animation');
+                }, 2000);
+            }, 300);
+        }
+
+        // 禁用交互
+        function disableInteractions() {
+            const svg = document.getElementById('flag-svg');
+            if (svg) svg.classList.add('disabled');
+            if (colorPalette) colorPalette.setDisabled(true);
+        }
+
+        // 启用交互
+        function enableInteractions() {
+            const svg = document.getElementById('flag-svg');
+            if (svg) svg.classList.remove('disabled');
+            if (colorPalette) colorPalette.setDisabled(false);
+
+            // 隐藏结果标记
+            document.getElementById('success-mark').classList.remove('show', 'success-animation');
+            document.getElementById('failure-mark').classList.remove('show', 'failure-animation');
+        }
+
+        // 获取SVG坐标点
+        function getSVGPoint(svg, clientX, clientY, svgRect) {
+            const point = svg.createSVGPoint();
+            point.x = clientX - svgRect.left;
+            point.y = clientY - svgRect.top;
+            const svgPoint = point.matrixTransform(svg.getScreenCTM().inverse());
+            return svgPoint;
+        }
+
+        // 禁用手势缩放
+        document.addEventListener('gesturestart', e => e.preventDefault());
+        document.addEventListener('gesturechange', e => e.preventDefault());
+        document.addEventListener('gestureend', e => e.preventDefault());
+    </script>
+</body>
+</html>
+

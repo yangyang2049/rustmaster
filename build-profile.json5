@@ -1,0 +1,70 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/yangyangshi/.ohos/config/default_rustmaster_8m2uPc09ZfTbdhHAjmwJJ2ioRQxQl2iebomPKN3dT_E=.cer",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B94D34D51F9191AC0D9A7DC3D69147AD3E1803447160DB9256B992945D340C2EAE16F802EEA3D67",
+          "profile": "/Users/yangyangshi/.ohos/config/default_rustmaster_8m2uPc09ZfTbdhHAjmwJJ2ioRQxQl2iebomPKN3dT_E=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/yangyangshi/.ohos/config/default_rustmaster_8m2uPc09ZfTbdhHAjmwJJ2ioRQxQl2iebomPKN3dT_E=.p12",
+          "storePassword": "0000001B63B44F9092DE284CEDC042EDC200B04F1857DB38B5FF97136208054D83CE8B5FFD741BF5176B4C"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "targetSdkVersion": "6.0.0(20)",
+        "compatibleSdkVersion": "6.0.0(20)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      },
+      {
+        "name": "release",
+        "signingConfig": "release",
+        "targetSdkVersion": "6.0.0(20)",
+        "compatibleSdkVersion": "6.0.0(20)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default",
+            "release"
+          ]
+        }
+      ]
+    }
+  ]
+}

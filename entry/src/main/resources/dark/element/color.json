@@ -1,0 +1,248 @@
+{
+  "color": [
+    {
+      "name": "start_window_background",
+      "value": "#000000"
+    },
+    {
+      "name": "white",
+      "value": "#1C1C1E"
+    },
+    {
+      "name": "harmony_blue",
+      "value": "#5B9FFF"
+    },
+    {
+      "name": "harmony_dark",
+      "value": "#1C1C1E"
+    },
+    {
+      "name": "harmony_gray",
+      "value": "#8E8E93"
+    },
+    {
+      "name": "harmony_light",
+      "value": "#2C2C2E"
+    },
+    {
+      "name": "gray",
+      "value": "#636366"
+    },
+    {
+      "name": "gray_light",
+      "value": "#1C1C1E"
+    },
+    {
+      "name": "light_gray",
+      "value": "#48484A"
+    },
+    {
+      "name": "blue_light",
+      "value": "#2C2C2E"
+    },
+    {
+      "name": "yellow",
+      "value": "#FFB340"
+    },
+    {
+      "name": "blue",
+      "value": "#5B9FFF"
+    },
+    {
+      "name": "shadow",
+      "value": "#00000060"
+    },
+    {
+      "name": "background",
+      "value": "#000000"
+    },
+    {
+      "name": "error",
+      "value": "#FF453A"
+    },
+    {
+      "name": "button_primary",
+      "value": "#0A84FF"
+    },
+    {
+      "name": "text_primary",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "text_secondary",
+      "value": "#AEAEB2"
+    },
+    {
+      "name": "text_tertiary",
+      "value": "#6C6C70"
+    },
+    {
+      "name": "text_dark",
+      "value": "#E5E5EA"
+    },
+    {
+      "name": "icon_tab_normal",
+      "value": "#6C6C70"
+    },
+    {
+      "name": "bg_page",
+      "value": "#000000"
+    },
+    {
+      "name": "bg_card",
+      "value": "#1C1C1E"
+    },
+    {
+      "name": "bg_secondary",
+      "value": "#2C2C2E"
+    },
+    {
+      "name": "bg_tertiary",
+      "value": "#3A3A3C"
+    },
+    {
+      "name": "bg_quaternary",
+      "value": "#3A3A3C"
+    },
+    {
+      "name": "bg_blue_light",
+      "value": "#2C2C2E"
+    },
+    {
+      "name": "bg_green_light",
+      "value": "#14532D"
+    },
+    {
+      "name": "bg_red_light",
+      "value": "#7F1D1D"
+    },
+    {
+      "name": "bg_yellow_light",
+      "value": "#78350F"
+    },
+    {
+      "name": "bg_orange_light",
+      "value": "#7C2D12"
+    },
+    {
+      "name": "color_green",
+      "value": "#22C55E"
+    },
+    {
+      "name": "color_orange",
+      "value": "#FB923C"
+    },
+    {
+      "name": "color_orange_red",
+      "value": "#F97316"
+    },
+    {
+      "name": "color_purple",
+      "value": "#A78BFA"
+    },
+    {
+      "name": "color_cyan",
+      "value": "#22D3EE"
+    },
+    {
+      "name": "color_red",
+      "value": "#F87171"
+    },
+    {
+      "name": "color_red_dark",
+      "value": "#EF4444"
+    },
+    {
+      "name": "gray_disabled",
+      "value": "#4B5563"
+    },
+    {
+      "name": "gray_border",
+      "value": "#3A3A3C"
+    },
+    {
+      "name": "gray_very_light",
+      "value": "#2C2C2E"
+    },
+    {
+      "name": "bg_page_alt",
+      "value": "#000000"
+    },
+    {
+      "name": "text_white",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "bg_title_bar",
+      "value": "#000000"
+    },
+    {
+      "name": "bg_tab_bar",
+      "value": "#000000"
+    },
+    {
+      "name": "bg_gallery",
+      "value": "#000000"
+    },
+    {
+      "name": "bg_flag_topic",
+      "value": "#1C1C1E"
+    },
+    {
+      "name": "icon_color",
+      "value": "#E2E8F0"
+    },
+    {
+      "name": "rust_primary",
+      "value": "#FB923C"
+    },
+    {
+      "name": "rust_primary_dark",
+      "value": "#F97316"
+    },
+    {
+      "name": "rust_secondary",
+      "value": "#FDBA74"
+    },
+    {
+      "name": "rust_bg_light",
+      "value": "#431407"
+    },
+    {
+      "name": "rust_text",
+      "value": "#FDBA74"
+    },
+    {
+      "name": "rust_bg_card",
+      "value": "#7C2D12"
+    },
+    {
+      "name": "rust_border",
+      "value": "#C2410C"
+    },
+    {
+      "name": "success",
+      "value": "#34D399"
+    },
+    {
+      "name": "success_bg",
+      "value": "#064E3B"
+    },
+    {
+      "name": "warning",
+      "value": "#FBBF24"
+    },
+    {
+      "name": "warning_bg",
+      "value": "#78350F"
+    },
+    {
+      "name": "info",
+      "value": "#60A5FA"
+    },
+    {
+      "name": "info_bg",
+      "value": "#2C2C2E"
+    }
+  ]
+}

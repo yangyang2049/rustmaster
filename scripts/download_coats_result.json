@@ -1,0 +1,990 @@
+[
+  {
+    "code": "cn",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "jp",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "kr",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "kp",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "in",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "id",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "th",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "vn",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "my",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "sg",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ph",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "mm",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "kh",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "la",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "bn",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "tl",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "pk",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "bd",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "lk",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "np",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "bt",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "mv",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "af",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ir",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "iq",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "sa",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ae",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "qa",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "kw",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "bh",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "om",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ye",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "jo",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "lb",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "sy",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "il",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ps",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "tr",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ge",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "am",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "az",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "kz",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "uz",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "tm",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "kg",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "tj",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "mn",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ru",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ua",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "by",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "md",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ro",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "bg",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "gr",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "al",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "mk",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "rs",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "me",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ba",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "hr",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "si",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "sk",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "cz",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "pl",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "de",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "at",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ch",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "li",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "lu",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "be",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "nl",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "fr",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "es",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "pt",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "it",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "va",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "sm",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "mt",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ad",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "mc",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ie",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "gb",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "is",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "no",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "se",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "fi",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "dk",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ee",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "lv",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "lt",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "cy",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "hu",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "eg",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ly",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "tn",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "dz",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ma",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "sd",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ss",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "et",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "er",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "dj",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "so",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ke",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ug",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "rw",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "bi",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "tz",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "mw",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "zm",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "zw",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "bw",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "na",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "za",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ls",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "sz",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "mz",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "mg",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "km",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "mu",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "sc",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "cv",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "gw",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "gn",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "sl",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "lr",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ci",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "gh",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "tg",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "bj",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ne",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "bf",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ml",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "mr",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "sn",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "gm",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ao",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "cd",
+    "success": false,
+    "reason": "no_data"
+  },
+  {
+    "code": "cf",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "cg",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "cm",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ga",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "gq",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ng",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "st",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "td",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "us",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ca",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "mx",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "gt",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "bz",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "sv",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "hn",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ni",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "cr",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "pa",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "cu",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "jm",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ht",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "do",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "tt",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "bb",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "gd",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "lc",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "vc",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ag",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "bs",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "dm",
+    "success": true
+  },
+  {
+    "code": "kn",
+    "success": true
+  },
+  {
+    "code": "br",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ar",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "cl",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "pe",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "co",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ve",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ec",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "bo",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "py",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "uy",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "sr",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "gy",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "fk",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "au",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "nz",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "pg",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "fj",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "sb",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "vu",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "nc",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "pf",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ws",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "to",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "tv",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "ki",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "nr",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "pw",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "fm",
+    "success": true,
+    "skipped": true
+  },
+  {
+    "code": "mh",
+    "success": true,
+    "skipped": true
+  }
+]

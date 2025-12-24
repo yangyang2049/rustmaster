@@ -1,0 +1,351 @@
+{
+  "timestamp": "2025-12-16T07:47:31.164Z",
+  "summary": {
+    "duplicateFiles": 1,
+    "duplicateNames": 4,
+    "similarNames": 18,
+    "unusedFiles": 22
+  },
+  "details": {
+    "duplicateFiles": [
+      {
+        "hash": "86db61eb9e95aa92f3c4caf3f09af856",
+        "files": [
+          ".idea/modules/accounting.iml",
+          ".idea/modules/flagwiki.iml"
+        ]
+      }
+    ],
+    "similarNames": [
+      {
+        "name1": "anthemplayer",
+        "name2": "anthempage",
+        "similarity": "75.00%",
+        "files1": [
+          "entry/src/main/ets/components/AnthemPlayer.ets"
+        ],
+        "files2": [
+          "entry/src/main/ets/pages/anthem/AnthemPage.ets"
+        ]
+      },
+      {
+        "name1": "connectionslevels",
+        "name2": "connectionslevelspage",
+        "similarity": "80.95%",
+        "files1": [
+          "entry/src/main/ets/pages/connections/ConnectionsLevels.ets"
+        ],
+        "files2": [
+          "entry/src/main/ets/pages/connections/ConnectionsLevelsPage.ets"
+        ]
+      },
+      {
+        "name1": "connectionslevelspage",
+        "name2": "connectionsplaypage",
+        "similarity": "71.43%",
+        "files1": [
+          "entry/src/main/ets/pages/connections/ConnectionsLevelsPage.ets"
+        ],
+        "files2": [
+          "entry/src/main/ets/pages/connections/ConnectionsPlayPage.ets"
+        ]
+      },
+      {
+        "name1": "fakeflaglevels",
+        "name2": "fakeflaglevelspage",
+        "similarity": "77.78%",
+        "files1": [
+          "entry/src/main/ets/pages/fakeflag/FakeFlagLevels.ets"
+        ],
+        "files2": [
+          "entry/src/main/ets/pages/fakeflag/FakeFlagLevelsPage.ets"
+        ]
+      },
+      {
+        "name1": "flaghistorylistpage",
+        "name2": "flaghistorypage",
+        "similarity": "78.95%",
+        "files1": [
+          "entry/src/main/ets/pages/flaghistory/FlagHistoryListPage.ets"
+        ],
+        "files2": [
+          "entry/src/main/ets/pages/flaghistory/FlagHistoryPage.ets"
+        ]
+      },
+      {
+        "name1": "flaghistorypage",
+        "name2": "flaghistorydata",
+        "similarity": "80.00%",
+        "files1": [
+          "entry/src/main/ets/pages/flaghistory/FlagHistoryPage.ets"
+        ],
+        "files2": [
+          "entry/src/main/ets/utils/FlagHistoryData.ets"
+        ]
+      },
+      {
+        "name1": "flagdetailpage",
+        "name2": "stateflagdetailpage",
+        "similarity": "73.68%",
+        "files1": [
+          "entry/src/main/ets/pages/gallery/FlagDetailPage.ets"
+        ],
+        "files2": [
+          "entry/src/main/ets/pages/stateflag/StateFlagDetailPage.ets"
+        ]
+      },
+      {
+        "name1": "memorylevels",
+        "name2": "memorylevelspage",
+        "similarity": "75.00%",
+        "files1": [
+          "entry/src/main/ets/pages/memory/MemoryLevels.ets"
+        ],
+        "files2": [
+          "entry/src/main/ets/pages/memory/MemoryLevelsPage.ets"
+        ]
+      },
+      {
+        "name1": "favoritespage",
+        "name2": "favoritesmanager",
+        "similarity": "75.00%",
+        "files1": [
+          "entry/src/main/ets/pages/profile/FavoritesPage.ets"
+        ],
+        "files2": [
+          "entry/src/main/ets/utils/favoritesManager.ets"
+        ]
+      },
+      {
+        "name1": "quizlevels",
+        "name2": "quizlevelspage",
+        "similarity": "71.43%",
+        "files1": [
+          "entry/src/main/ets/pages/quiz/QuizLevels.ets"
+        ],
+        "files2": [
+          "entry/src/main/ets/pages/quiz/QuizLevelsPage.ets"
+        ]
+      },
+      {
+        "name1": "quizlevelspage",
+        "name2": "quizselectpage",
+        "similarity": "71.43%",
+        "files1": [
+          "entry/src/main/ets/pages/quiz/QuizLevelsPage.ets"
+        ],
+        "files2": [
+          "entry/src/main/ets/pages/quiz/QuizSelectPage.ets"
+        ]
+      },
+      {
+        "name1": "trivialevels",
+        "name2": "trivialevelspage",
+        "similarity": "75.00%",
+        "files1": [
+          "entry/src/main/ets/pages/trivia/TriviaLevels.ets"
+        ],
+        "files2": [
+          "entry/src/main/ets/pages/trivia/TriviaLevelsPage.ets"
+        ]
+      },
+      {
+        "name1": "check_anthem_names",
+        "name2": "check_anthem_sources",
+        "similarity": "75.00%",
+        "files1": [
+          "scripts/check_anthem_names.js"
+        ],
+        "files2": [
+          "scripts/check_anthem_sources.js"
+        ]
+      },
+      {
+        "name1": "download_anthems",
+        "name2": "download_anthems_v2",
+        "similarity": "84.21%",
+        "files1": [
+          "scripts/download_anthems.js"
+        ],
+        "files2": [
+          "scripts/download_anthems_v2.js"
+        ]
+      },
+      {
+        "name1": "download_anthems",
+        "name2": "download_anthems_v3",
+        "similarity": "84.21%",
+        "files1": [
+          "scripts/download_anthems.js"
+        ],
+        "files2": [
+          "scripts/download_anthems_v3.js"
+        ]
+      },
+      {
+        "name1": "download_anthems_v2",
+        "name2": "download_anthems_v3",
+        "similarity": "94.74%",
+        "files1": [
+          "scripts/download_anthems_v2.js"
+        ],
+        "files2": [
+          "scripts/download_anthems_v3.js"
+        ]
+      },
+      {
+        "name1": "download_missing_anthems",
+        "name2": "find_missing_anthems",
+        "similarity": "75.00%",
+        "files1": [
+          "scripts/download_missing_anthems.js"
+        ],
+        "files2": [
+          "scripts/find_missing_anthems.js"
+        ]
+      },
+      {
+        "name1": "extract_flag_history",
+        "name2": "extract_flag_history_v2",
+        "similarity": "86.96%",
+        "files1": [
+          "scripts/extract_flag_history.js"
+        ],
+        "files2": [
+          "scripts/extract_flag_history_v2.js"
+        ]
+      }
+    ],
+    "unusedFiles": [
+      {
+        "file": "entry/hvigorfile.ts",
+        "name": "hvigorfile"
+      },
+      {
+        "file": "entry/src/main/ets/utils/FlagHistoryDownloader.ets",
+        "name": "FlagHistoryDownloader"
+      },
+      {
+        "file": "entry/src/main/ets/utils/inputValidator.ets",
+        "name": "inputValidator"
+      },
+      {
+        "file": "hvigorfile.ts",
+        "name": "hvigorfile"
+      },
+      {
+        "file": "scripts/check_anthem_names.js",
+        "name": "check_anthem_names"
+      },
+      {
+        "file": "scripts/check_anthem_sources.js",
+        "name": "check_anthem_sources"
+      },
+      {
+        "file": "scripts/convert_coats_to_png.js",
+        "name": "convert_coats_to_png"
+      },
+      {
+        "file": "scripts/convert_flag_history_to_png.js",
+        "name": "convert_flag_history_to_png"
+      },
+      {
+        "file": "scripts/download_anthems.js",
+        "name": "download_anthems"
+      },
+      {
+        "file": "scripts/download_anthems_v2.js",
+        "name": "download_anthems_v2"
+      },
+      {
+        "file": "scripts/download_anthems_v3.js",
+        "name": "download_anthems_v3"
+      },
+      {
+        "file": "scripts/download_coats_of_arms.js",
+        "name": "download_coats_of_arms"
+      },
+      {
+        "file": "scripts/download_flag_history.js",
+        "name": "download_flag_history"
+      },
+      {
+        "file": "scripts/download_missing_anthems.js",
+        "name": "download_missing_anthems"
+      },
+      {
+        "file": "scripts/extract_flag_history.js",
+        "name": "extract_flag_history"
+      },
+      {
+        "file": "scripts/extract_flag_history_v2.js",
+        "name": "extract_flag_history_v2"
+      },
+      {
+        "file": "scripts/final_anthem_check.js",
+        "name": "final_anthem_check"
+      },
+      {
+        "file": "scripts/find_missing_anthems.js",
+        "name": "find_missing_anthems"
+      },
+      {
+        "file": "scripts/fix_anthem_issues.js",
+        "name": "fix_anthem_issues"
+      },
+      {
+        "file": "scripts/generate_anthem_report.js",
+        "name": "generate_anthem_report"
+      },
+      {
+        "file": "scripts/generate_flag_history_data.js",
+        "name": "generate_flag_history_data"
+      },
+      {
+        "file": "scripts/review_unused_files.js",
+        "name": "review_unused_files"
+      }
+    ],
+    "duplicateNames": [
+      {
+        "name": ".DS_Store",
+        "files": [
+          ".DS_Store",
+          "entry/.DS_Store",
+          "entry/src/.DS_Store",
+          "entry/src/main/.DS_Store",
+          "entry/src/main/resources/.DS_Store",
+          "entry/src/main/resources/base/.DS_Store"
+        ]
+      },
+      {
+        "name": "build.log.1",
+        "files": [
+          ".hvigor/outputs/build-logs/build.log.1",
+          ".hvigor/outputs/build-logs/build.log.2",
+          ".hvigor/outputs/build-logs/build.log.3",
+          ".hvigor/outputs/build-logs/build.log.4",
+          ".hvigor/outputs/build-logs/build.log.5",
+          ".hvigor/outputs/build-logs/build.log.6",
+          ".hvigor/outputs/build-logs/build.log.7",
+          ".hvigor/outputs/build-logs/build.log.8",
+          ".hvigor/outputs/build-logs/build.log.9"
+        ]
+      },
+      {
+        "name": "hvigorfile.ts",
+        "files": [
+          "entry/hvigorfile.ts",
+          "hvigorfile.ts"
+        ]
+      },
+      {
+        "name": "List.test.ets",
+        "files": [
+          "entry/src/ohosTest/ets/test/List.test.ets",
+          "entry/src/test/List.test.ets"
+        ]
+      }
+    ]
+  }
+}

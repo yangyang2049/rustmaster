@@ -1,0 +1,464 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "Rust 从入门到放弃"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "Explore the mysteries of world flags"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "Rust 从入门到放弃"
+    },
+    {
+      "name": "vibrate_permission_reason",
+      "value": "For providing haptic feedback during operations"
+    },
+    {
+      "name": "internet_permission_reason",
+      "value": "For downloading voice models and online voice services"
+    },
+    {
+      "name": "app_welcome_title",
+      "value": "Rust 从入门到放弃"
+    },
+    {
+      "name": "app_welcome_subtitle",
+      "value": "Explore the mysteries of world flags"
+    },
+    {
+      "name": "weekly_flag",
+      "value": "Flag of the Week"
+    },
+    {
+      "name": "national_day",
+      "value": "National Day"
+    },
+    {
+      "name": "quick_entrance",
+      "value": "Quick Access"
+    },
+    {
+      "name": "flag_gallery",
+      "value": "Flag Gallery"
+    },
+    {
+      "name": "state_flags",
+      "value": "State Flags"
+    },
+    {
+      "name": "flag_quiz",
+      "value": "Flag Quiz"
+    },
+    {
+      "name": "favorites",
+      "value": "Favorites"
+    },
+    {
+      "name": "topic_recommendations",
+      "value": "Featured Topics"
+    },
+    {
+      "name": "fun_facts",
+      "value": "💡 Fun Facts"
+    },
+    {
+      "name": "explore_flag_quiz",
+      "value": "Flag Quiz"
+    },
+    {
+      "name": "explore_flag_quiz_desc",
+      "value": "Guess country by flag, guess flag by country"
+    },
+    {
+      "name": "explore_fake_flag",
+      "value": "Find the Fake"
+    },
+    {
+      "name": "explore_fake_flag_desc",
+      "value": "Find the fake flag among four flags"
+    },
+    {
+      "name": "explore_spelling",
+      "value": "Spelling Challenge"
+    },
+    {
+      "name": "explore_spelling_desc",
+      "value": "Look at the flag, type the country name"
+    },
+    {
+      "name": "explore_trivia",
+      "value": "Trivia"
+    },
+    {
+      "name": "explore_trivia_desc",
+      "value": "Fun flag knowledge quiz"
+    },
+    {
+      "name": "explore_memory",
+      "value": "Memory Match"
+    },
+    {
+      "name": "explore_memory_desc",
+      "value": "Flip cards and match pairs to train memory"
+    },
+    {
+      "name": "explore_connections",
+      "value": "Connections"
+    },
+    {
+      "name": "explore_connections_desc",
+      "value": "Group flags into four themed groups"
+    },
+    {
+      "name": "explore_headsup",
+      "value": "Heads Up"
+    },
+    {
+      "name": "explore_headsup_desc",
+      "value": "Quickly identify flags, challenge your reaction"
+    },
+    {
+      "name": "basic_info",
+      "value": "Basic Information"
+    },
+    {
+      "name": "capital",
+      "value": "Capital"
+    },
+    {
+      "name": "region",
+      "value": "Region"
+    },
+    {
+      "name": "population",
+      "value": "Population"
+    },
+    {
+      "name": "area",
+      "value": "Area"
+    },
+    {
+      "name": "country_code",
+      "value": "Country Code"
+    },
+    {
+      "name": "about_flag",
+      "value": "About This Flag"
+    },
+    {
+      "name": "flag_proportion",
+      "value": "Flag Proportion"
+    },
+    {
+      "name": "adopted_date",
+      "value": "Adopted Date"
+    },
+    {
+      "name": "coat_of_arms",
+      "value": "Coat of Arms"
+    },
+    {
+      "name": "favorite",
+      "value": "Favorite"
+    },
+    {
+      "name": "favorited",
+      "value": "Favorited"
+    },
+    {
+      "name": "download",
+      "value": "Download"
+    },
+    {
+      "name": "share",
+      "value": "Share"
+    },
+    {
+      "name": "copy_hint",
+      "value": "Tap any item to copy"
+    },
+    {
+      "name": "got_it",
+      "value": "Got it"
+    },
+    {
+      "name": "copied",
+      "value": "Copied"
+    },
+    {
+      "name": "copy_failed",
+      "value": "Copy failed"
+    },
+    {
+      "name": "preparing_image",
+      "value": "Preparing image..."
+    },
+    {
+      "name": "screenshot_failed",
+      "value": "Screenshot failed"
+    },
+    {
+      "name": "flag_saved",
+      "value": "Flag image saved to gallery"
+    },
+    {
+      "name": "save_failed",
+      "value": "Save failed"
+    },
+    {
+      "name": "preparing_share",
+      "value": "Preparing to share..."
+    },
+    {
+      "name": "share_failed",
+      "value": "Share failed"
+    },
+    {
+      "name": "from_app",
+      "value": "来自 Rust 从入门到放弃"
+    },
+    {
+      "name": "historical_flags",
+      "value": "Historical Flags"
+    },
+    {
+      "name": "unknown",
+      "value": "Unknown"
+    },
+    {
+      "name": "asia",
+      "value": "Asia"
+    },
+    {
+      "name": "europe",
+      "value": "Europe"
+    },
+    {
+      "name": "africa",
+      "value": "Africa"
+    },
+    {
+      "name": "americas",
+      "value": "Americas"
+    },
+    {
+      "name": "oceania",
+      "value": "Oceania"
+    },
+    {
+      "name": "billion_people",
+      "value": " billion"
+    },
+    {
+      "name": "ten_thousand_people",
+      "value": "K"
+    },
+    {
+      "name": "people",
+      "value": ""
+    },
+    {
+      "name": "ten_thousand_sq_km",
+      "value": "K km²"
+    },
+    {
+      "name": "sq_km",
+      "value": " km²"
+    },
+    {
+      "name": "headquarters",
+      "value": "Headquarters"
+    },
+    {
+      "name": "org_type",
+      "value": "Organization Type"
+    },
+    {
+      "name": "coverage_population",
+      "value": "Coverage Population"
+    },
+    {
+      "name": "website",
+      "value": "Website"
+    },
+    {
+      "name": "description",
+      "value": "Description"
+    },
+    {
+      "name": "start_reading",
+      "value": "Start reading"
+    },
+    {
+      "name": "stop_reading",
+      "value": "Reading stopped"
+    },
+    {
+      "name": "reading_unavailable",
+      "value": "Reading feature unavailable"
+    },
+    {
+      "name": "exploration_progress",
+      "value": "Exploration Progress"
+    },
+    {
+      "name": "completed",
+      "value": "Completed"
+    },
+    {
+      "name": "level",
+      "value": " level"
+    },
+    {
+      "name": "my_favorites",
+      "value": "My Favorites"
+    },
+    {
+      "name": "dark_mode",
+      "value": "Dark Mode"
+    },
+    {
+      "name": "follow_system",
+      "value": "System Default"
+    },
+    {
+      "name": "light",
+      "value": "Light"
+    },
+    {
+      "name": "dark",
+      "value": "Dark"
+    },
+    {
+      "name": "sound",
+      "value": "Sound"
+    },
+    {
+      "name": "vibration",
+      "value": "Vibration"
+    },
+    {
+      "name": "rate_app",
+      "value": "Rate App"
+    },
+    {
+      "name": "feedback",
+      "value": "Feedback"
+    },
+    {
+      "name": "about_app",
+      "value": "About App"
+    },
+    {
+      "name": "share_app",
+      "value": "Share App"
+    },
+    {
+      "name": "confirm",
+      "value": "Confirm"
+    },
+    {
+      "name": "cancel",
+      "value": "Cancel"
+    },
+    {
+      "name": "ok",
+      "value": "OK"
+    },
+    {
+      "name": "save_failed_toast",
+      "value": "Save failed"
+    },
+    {
+      "name": "app_tagline",
+      "value": "Explore the world, starting with flags 🚩"
+    },
+    {
+      "name": "level_n",
+      "value": "Level {level}"
+    },
+    {
+      "name": "next_level",
+      "value": "Next Level"
+    },
+    {
+      "name": "perfect_finish",
+      "value": "Perfect Finish"
+    },
+    {
+      "name": "play_again",
+      "value": "Play Again"
+    },
+    {
+      "name": "back",
+      "value": "Back"
+    },
+    {
+      "name": "paint_instructions_title",
+      "value": "How to Play"
+    },
+    {
+      "name": "paint_instruction_1",
+      "value": "1. Select a color from the palette"
+    },
+    {
+      "name": "paint_instruction_2",
+      "value": "2. Tap or drag on flag areas to fill colors"
+    },
+    {
+      "name": "paint_instruction_3",
+      "value": "3. Complete the painting in the correct color order"
+    },
+    {
+      "name": "paint_instruction_4",
+      "value": "4. Each level contains multiple flags or state flags, complete all correctly to pass"
+    },
+    {
+      "name": "congratulations",
+      "value": "Congratulations!"
+    },
+    {
+      "name": "all_levels_completed",
+      "value": "You have completed all {category} painting levels!"
+    },
+    {
+      "name": "restart_question",
+      "value": "Restart from level 1?"
+    },
+    {
+      "name": "restart",
+      "value": "Restart"
+    },
+    {
+      "name": "connections_hint",
+      "value": "Group into four groups of four. Select and find all to pass."
+    },
+    {
+      "name": "cannot_open_app_market",
+      "value": "Cannot open app market, please go to app market to rate manually"
+    },
+    {
+      "name": "cannot_open_app_market_simple",
+      "value": "Cannot open app market"
+    },
+    {
+      "name": "about_app_message",
+      "value": "Rust 从入门到放弃 1.0.1\n\n一款全面的 Rust 编程学习应用，包含语法参考、题库和互动练习。"
+    },
+    {
+      "name": "feedback_message",
+      "value": "If you have suggestions or questions, please leave a comment in the app store, or send an email to ssz2048@163.com. Thank you for your support."
+    },
+    {
+      "name": "share_app_text",
+      "value": "Rust 从入门到放弃 - 一款全面的 Rust 编程学习应用，包含语法参考、题库和互动练习。\n\n下载链接：{url}"
+    },
+    {
+      "name": "share_app_description",
+      "value": "Explore the mysteries of world flags"
+    }
+  ]
+}

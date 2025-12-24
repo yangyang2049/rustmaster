@@ -1,0 +1,68 @@
+{
+  "success": [
+    {
+      "code": "IL",
+      "name": "Israel",
+      "issue": "视频文件，需要删除并重新下载",
+      "fileName": "Hatikvah_instrumental.ogg",
+      "action": "delete_and_download",
+      "success": true,
+      "size": 1274878
+    },
+    {
+      "code": "NO",
+      "name": "Norway",
+      "issue": "文件过小，需要重新下载",
+      "fileName": "Norway (National Anthem).ogg",
+      "action": "delete_and_download",
+      "success": true,
+      "size": 1104295
+    },
+    {
+      "code": "BR",
+      "name": "Brazil",
+      "issue": "需要找到正确的音频文件",
+      "fileName": "Hino Nacional Brasileiro instrumental.ogg",
+      "action": "delete_and_download",
+      "success": true,
+      "size": 1920086
+    },
+    {
+      "code": "FR",
+      "name": "France",
+      "issue": "需要找到正确的音频文件",
+      "fileName": "La_Marseillaise.ogg",
+      "action": "download",
+      "success": true,
+      "size": 1447209
+    },
+    {
+      "code": "MW",
+      "name": "Malawi",
+      "issue": "找到正确文件，需要下载",
+      "fileName": "Malawian national anthem.oga",
+      "action": "download",
+      "success": true,
+      "size": 1359106
+    },
+    {
+      "code": "NZ",
+      "name": "New Zealand",
+      "issue": "找到WAV文件，需要转换为OGG",
+      "fileName": "God_Defend_New_Zealand_instrumental.ogg",
+      "action": "download",
+      "success": true,
+      "size": 1023276
+    },
+    {
+      "code": "TH",
+      "name": "Thailand",
+      "issue": "找到正确文件，需要下载",
+      "fileName": "Thai National Anthem - US Navy Band.ogg",
+      "action": "download",
+      "success": true,
+      "size": 717982
+    }
+  ],
+  "failed": []
+}

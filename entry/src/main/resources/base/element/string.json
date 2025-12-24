@@ -1,0 +1,1448 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "Rust 从入门到放弃"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "Rust 编程学习应用"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "Rust 从入门到放弃"
+    },
+    {
+      "name": "vibrate_permission_reason",
+      "value": "用于操作时提供触觉反馈"
+    },
+    {
+      "name": "internet_permission_reason",
+      "value": "用于下载语音模型和在线语音服务"
+    },
+    {
+      "name": "background_running_permission_reason",
+      "value": "用于在后台继续播放国歌音乐"
+    },
+    {
+      "name": "app_welcome_title",
+      "value": "Rust 从入门到放弃"
+    },
+    {
+      "name": "app_welcome_subtitle",
+      "value": "Rust 编程学习应用"
+    },
+    {
+      "name": "tab_home",
+      "value": "首页"
+    },
+    {
+      "name": "tab_gallery",
+      "value": "画廊"
+    },
+    {
+      "name": "tab_anthem",
+      "value": "国歌"
+    },
+    {
+      "name": "tab_paint",
+      "value": "涂鸦"
+    },
+    {
+      "name": "tab_explore",
+      "value": "探索"
+    },
+    {
+      "name": "tab_profile",
+      "value": "我的"
+    },
+    {
+      "name": "game_quiz",
+      "value": "国旗猜猜"
+    },
+    {
+      "name": "game_fake_flag",
+      "value": "假旗找茬"
+    },
+    {
+      "name": "game_input",
+      "value": "输入游戏"
+    },
+    {
+      "name": "game_trivia",
+      "value": "知识问答"
+    },
+    {
+      "name": "game_memory",
+      "value": "记忆翻牌"
+    },
+    {
+      "name": "game_connections",
+      "value": "分组连线"
+    },
+    {
+      "name": "quiz_flag_to_name",
+      "value": "看旗猜国名"
+    },
+    {
+      "name": "quiz_name_to_flag",
+      "value": "看名猜国旗"
+    },
+    {
+      "name": "level_number",
+      "value": "第 %s 关"
+    },
+    {
+      "name": "congratulations",
+      "value": "恭喜过关！"
+    },
+    {
+      "name": "next_level",
+      "value": "下一关"
+    },
+    {
+      "name": "perfect_finish",
+      "value": "完美收官"
+    },
+    {
+      "name": "continent_asia",
+      "value": "亚洲"
+    },
+    {
+      "name": "continent_europe",
+      "value": "欧洲"
+    },
+    {
+      "name": "continent_africa",
+      "value": "非洲"
+    },
+    {
+      "name": "continent_americas",
+      "value": "美洲"
+    },
+    {
+      "name": "continent_oceania",
+      "value": "大洋洲"
+    },
+    {
+      "name": "weekly_flag",
+      "value": "本周国旗"
+    },
+    {
+      "name": "national_day",
+      "value": "国庆日"
+    },
+    {
+      "name": "quick_entrance",
+      "value": "快捷入口"
+    },
+    {
+      "name": "flag_gallery",
+      "value": "国旗画廊"
+    },
+    {
+      "name": "state_flags",
+      "value": "各国州旗"
+    },
+    {
+      "name": "flag_quiz",
+      "value": "国旗猜猜"
+    },
+    {
+      "name": "favorites",
+      "value": "收藏夹"
+    },
+    {
+      "name": "topic_recommendations",
+      "value": "专题推荐"
+    },
+    {
+      "name": "fun_facts",
+      "value": "💡 趣味小知识"
+    },
+    {
+      "name": "explore_flag_quiz",
+      "value": "国旗猜猜"
+    },
+    {
+      "name": "explore_flag_quiz_desc",
+      "value": "看旗猜国名、看名猜国旗"
+    },
+    {
+      "name": "explore_fake_flag",
+      "value": "假旗找茬"
+    },
+    {
+      "name": "explore_fake_flag_desc",
+      "value": "在四面国旗中找出假旗"
+    },
+    {
+      "name": "explore_spelling",
+      "value": "输入游戏"
+    },
+    {
+      "name": "explore_spelling_desc",
+      "value": "看国旗，输入国家名称"
+    },
+    {
+      "name": "explore_trivia",
+      "value": "知识问答"
+    },
+    {
+      "name": "explore_trivia_desc",
+      "value": "趣味国旗百科问答"
+    },
+    {
+      "name": "explore_memory",
+      "value": "记忆翻牌"
+    },
+    {
+      "name": "explore_memory_desc",
+      "value": "翻牌配对，锻炼记忆力"
+    },
+    {
+      "name": "explore_connections",
+      "value": "分组连线"
+    },
+    {
+      "name": "explore_connections_desc",
+      "value": "将国旗按主题分成四组"
+    },
+    {
+      "name": "explore_headsup",
+      "value": "国旗猜猜乐"
+    },
+    {
+      "name": "explore_headsup_desc",
+      "value": "快速识别国旗，挑战你的反应"
+    },
+    {
+      "name": "headsup_tutorial_title",
+      "value": "使用说明"
+    },
+    {
+      "name": "headsup_tutorial_message",
+      "value": "• 点击屏幕查看答案\n• 再点下一个\n• 每十个一轮"
+    },
+    {
+      "name": "headsup_session_over",
+      "value": "本轮完成！"
+    },
+    {
+      "name": "headsup_session_count",
+      "value": "已完成 %s 轮"
+    },
+    {
+      "name": "headsup_exit",
+      "value": "退出"
+    },
+    {
+      "name": "headsup_continue",
+      "value": "继续"
+    },
+    {
+      "name": "basic_info",
+      "value": "基本信息"
+    },
+    {
+      "name": "capital",
+      "value": "首都"
+    },
+    {
+      "name": "region",
+      "value": "所属地区"
+    },
+    {
+      "name": "population",
+      "value": "人口"
+    },
+    {
+      "name": "area",
+      "value": "面积"
+    },
+    {
+      "name": "country_code",
+      "value": "国家代码"
+    },
+    {
+      "name": "about_flag",
+      "value": "关于这面国旗"
+    },
+    {
+      "name": "flag_proportion",
+      "value": "国旗比例"
+    },
+    {
+      "name": "adopted_date",
+      "value": "采用日期"
+    },
+    {
+      "name": "coat_of_arms",
+      "value": "国徽"
+    },
+    {
+      "name": "favorite",
+      "value": "收藏"
+    },
+    {
+      "name": "favorited",
+      "value": "已收藏"
+    },
+    {
+      "name": "download",
+      "value": "下载"
+    },
+    {
+      "name": "share",
+      "value": "分享"
+    },
+    {
+      "name": "copy_hint",
+      "value": "点击各项内容可复制"
+    },
+    {
+      "name": "got_it",
+      "value": "知道了"
+    },
+    {
+      "name": "copied",
+      "value": "已复制"
+    },
+    {
+      "name": "copy_failed",
+      "value": "复制失败"
+    },
+    {
+      "name": "preparing_image",
+      "value": "正在准备图片..."
+    },
+    {
+      "name": "screenshot_failed",
+      "value": "截取图片失败"
+    },
+    {
+      "name": "flag_saved",
+      "value": "国旗图片已保存到相册"
+    },
+    {
+      "name": "save_failed",
+      "value": "保存失败"
+    },
+    {
+      "name": "preparing_share",
+      "value": "正在准备分享..."
+    },
+    {
+      "name": "share_failed",
+      "value": "分享失败"
+    },
+    {
+      "name": "from_app",
+      "value": "来自 Rust 从入门到放弃"
+    },
+    {
+      "name": "unknown",
+      "value": "未知"
+    },
+    {
+      "name": "asia",
+      "value": "亚洲"
+    },
+    {
+      "name": "europe",
+      "value": "欧洲"
+    },
+    {
+      "name": "africa",
+      "value": "非洲"
+    },
+    {
+      "name": "americas",
+      "value": "美洲"
+    },
+    {
+      "name": "oceania",
+      "value": "大洋洲"
+    },
+    {
+      "name": "billion_people",
+      "value": "亿人"
+    },
+    {
+      "name": "ten_thousand_people",
+      "value": "万人"
+    },
+    {
+      "name": "people",
+      "value": "人"
+    },
+    {
+      "name": "ten_thousand_sq_km",
+      "value": "万平方公里"
+    },
+    {
+      "name": "sq_km",
+      "value": "平方公里"
+    },
+    {
+      "name": "headquarters",
+      "value": "总部"
+    },
+    {
+      "name": "org_type",
+      "value": "组织类型"
+    },
+    {
+      "name": "coverage_population",
+      "value": "覆盖人口"
+    },
+    {
+      "name": "website",
+      "value": "网站"
+    },
+    {
+      "name": "description",
+      "value": "简介"
+    },
+    {
+      "name": "start_reading",
+      "value": "开始朗读"
+    },
+    {
+      "name": "stop_reading",
+      "value": "已停止朗读"
+    },
+    {
+      "name": "reading_unavailable",
+      "value": "朗读功能暂不可用"
+    },
+    {
+      "name": "tts_first_use_title",
+      "value": "关于文本朗读功能"
+    },
+    {
+      "name": "tts_first_use_message",
+      "value": "本应用的文本朗读功能依赖于华为手机的TTS（文本转语音）能力。\n\n如果您的设备尚未下载相应的语音包，该功能可能无法正常工作。您可以在系统设置中下载所需的语音包。"
+    },
+    {
+      "name": "tts_first_use_confirm",
+      "value": "我知道了"
+    },
+    {
+      "name": "exploration_progress",
+      "value": "探索进度"
+    },
+    {
+      "name": "completed",
+      "value": "已完成"
+    },
+    {
+      "name": "level",
+      "value": "关"
+    },
+    {
+      "name": "my_favorites",
+      "value": "我的收藏"
+    },
+    {
+      "name": "no_favorites",
+      "value": "暂无收藏"
+    },
+    {
+      "name": "favorite_removed",
+      "value": "已取消收藏"
+    },
+    {
+      "name": "navigation_failed",
+      "value": "导航失败"
+    },
+    {
+      "name": "dark_mode",
+      "value": "深色模式"
+    },
+    {
+      "name": "follow_system",
+      "value": "跟随系统"
+    },
+    {
+      "name": "light",
+      "value": "浅色"
+    },
+    {
+      "name": "dark",
+      "value": "深色"
+    },
+    {
+      "name": "language",
+      "value": "语言"
+    },
+    {
+      "name": "chinese",
+      "value": "中文"
+    },
+    {
+      "name": "english",
+      "value": "English"
+    },
+    {
+      "name": "sound",
+      "value": "音效"
+    },
+    {
+      "name": "vibration",
+      "value": "振动"
+    },
+    {
+      "name": "loop_playback",
+      "value": "循环播放"
+    },
+    {
+      "name": "no_sound_file",
+      "value": "暂无音频文件"
+    },
+    {
+      "name": "rate_app",
+      "value": "应用评分"
+    },
+    {
+      "name": "feedback",
+      "value": "意见反馈"
+    },
+    {
+      "name": "about_app",
+      "value": "关于应用"
+    },
+    {
+      "name": "share_app",
+      "value": "分享应用"
+    },
+    {
+      "name": "data_info",
+      "value": "数据说明"
+    },
+    {
+      "name": "confirm",
+      "value": "确定"
+    },
+    {
+      "name": "cancel",
+      "value": "取消"
+    },
+    {
+      "name": "ok",
+      "value": "好的"
+    },
+    {
+      "name": "save_failed_toast",
+      "value": "保存失败"
+    },
+    {
+      "name": "app_tagline",
+      "value": "探索世界，从国旗开始 🚩"
+    },
+    {
+      "name": "level_n",
+      "value": "第 {level} 关"
+    },
+    {
+      "name": "play_again",
+      "value": "再玩一次"
+    },
+    {
+      "name": "back",
+      "value": "返回"
+    },
+    {
+      "name": "paint_instructions_title",
+      "value": "涂鸦说明"
+    },
+    {
+      "name": "paint_instruction_1",
+      "value": "1. 从调色板选择颜色"
+    },
+    {
+      "name": "paint_instruction_2",
+      "value": "2. 用手指点击或拖动国旗区域进行填色"
+    },
+    {
+      "name": "paint_instruction_3",
+      "value": "3. 按照正确的颜色顺序完成涂鸦"
+    },
+    {
+      "name": "paint_instruction_4",
+      "value": "4. 每关包含多个国旗或州旗，全部正确即可过关"
+    },
+    {
+      "name": "paint_category_world",
+      "value": "世界"
+    },
+    {
+      "name": "paint_category_world_desc",
+      "value": "世界各国国旗涂鸦"
+    },
+    {
+      "name": "paint_category_us",
+      "value": "美国"
+    },
+    {
+      "name": "paint_category_us_desc",
+      "value": "美国各州州旗涂鸦"
+    },
+    {
+      "name": "paint_instructions_banner",
+      "value": "涂鸦说明"
+    },
+    {
+      "name": "paint_reset_failed",
+      "value": "重置失败，请重试"
+    },
+    {
+      "name": "all_levels_completed",
+      "value": "涂鸦关卡！"
+    },
+    {
+      "name": "restart_question",
+      "value": "是否重新开始，从第1关开始？"
+    },
+    {
+      "name": "connections_hint",
+      "value": "分成四组，每组四个。点选，找齐即可过关。"
+    },
+    {
+      "name": "cannot_open_app_market",
+      "value": "无法打开应用市场，请手动前往应用市场评分"
+    },
+    {
+      "name": "cannot_open_app_market_simple",
+      "value": "无法打开应用市场"
+    },
+    {
+      "name": "about_app_message",
+      "value": "Rust 从入门到放弃 v1.0.1\n\n一款全面的 Rust 编程学习应用，包含语法参考、题库和互动练习。"
+    },
+    {
+      "name": "feedback_message",
+      "value": "如有建议或问题，可通过应用商店评论，或者发邮件到 ssz2048@163.com 反馈。感谢您的支持。"
+    },
+    {
+      "name": "share_app_text",
+      "value": "Rust 从入门到放弃 - 一款全面的 Rust 编程学习应用，包含语法参考、题库和互动练习。\n\n下载链接：{url}"
+    },
+    {
+      "name": "share_app_description",
+      "value": "探索世界国旗的奥秘"
+    },
+    {
+      "name": "data_info_title",
+      "value": "数据说明"
+    },
+    {
+      "name": "data_info_overview",
+      "value": "数据概览"
+    },
+    {
+      "name": "data_info_overview_content",
+      "value": "本应用包含以下国旗数据：\n\n• 193 个联合国会员国国旗\n• 2 个联合国观察员国国旗\n• 11 个国家的 246 个州旗/省旗\n• 195 个国家的国徽数据\n• 188 个国家的国歌数据"
+    },
+    {
+      "name": "data_info_source",
+      "value": "数据来源"
+    },
+    {
+      "name": "data_info_source_content",
+      "value": "维基百科 (Wikipedia) - Creative Commons 许可"
+    },
+    {
+      "name": "data_info_note",
+      "value": "说明"
+    },
+    {
+      "name": "data_info_note_content",
+      "value": "数据仅供参考，如有疑问请以官方资料为准。"
+    },
+    {
+      "name": "data_info_state_flags",
+      "value": "州旗/省旗数据"
+    },
+    {
+      "name": "data_info_state_flags_content",
+      "value": "本应用还包含以下 11 个国家的州旗/省旗数据：\n\n🇯🇵 日本（47 个都道府县）\n🇺🇸 美国（50 个州）\n🇩🇪 德国（16 个州）\n🇦🇺 澳大利亚（9 个州）\n🇧🇷 巴西（27 个州）\n🇨🇦 加拿大（13 个省）\n🇰🇷 韩国（17 个行政区）\n🇨🇭 瑞士（26 个州）\n🇬🇧 英国（4 个地区）\n🇮🇹 意大利（20 个大区）\n🇪🇸 西班牙（17 个自治区）"
+    },
+    {
+      "name": "data_info_more_coming",
+      "value": "更多数据"
+    },
+    {
+      "name": "data_info_more_coming_content",
+      "value": "我们正在持续更新和扩展数据内容，更多国家和地区的国旗数据即将到来，敬请期待！"
+    },
+    {
+      "name": "data_info_coat_of_arms",
+      "value": "国徽数据"
+    },
+    {
+      "name": "data_info_coat_of_arms_content",
+      "value": "本应用包含 %s 个国家的国徽数据。"
+    },
+    {
+      "name": "data_info_anthem",
+      "value": "国歌数据"
+    },
+    {
+      "name": "data_info_anthem_content",
+      "value": "本应用包含 %s 个国家的国歌数据。"
+    },
+    {
+      "name": "data_info_flags_count",
+      "value": "• %s 个国家的国旗数据"
+    },
+    {
+      "name": "data_info_coat_of_arms_count",
+      "value": "• %s 个国家的国徽数据"
+    },
+    {
+      "name": "data_info_anthem_count",
+      "value": "• %s 个国家的国歌数据"
+    },
+    {
+      "name": "level_not_found",
+      "value": "关卡不存在"
+    },
+    {
+      "name": "level_data_load_failed",
+      "value": "关卡数据加载失败"
+    },
+    {
+      "name": "next",
+      "value": "下一个"
+    },
+    {
+      "name": "complete",
+      "value": "完成"
+    },
+    {
+      "name": "search_country_or_region",
+      "value": "搜索国家或地区"
+    },
+    {
+      "name": "search_country",
+      "value": "搜索国家"
+    },
+    {
+      "name": "national_anthem",
+      "value": "国歌"
+    },
+    {
+      "name": "no_anthem_available",
+      "value": "暂无国歌"
+    },
+    {
+      "name": "no_matching_countries",
+      "value": "未找到匹配的国家"
+    },
+    {
+      "name": "modify_keywords_or_select",
+      "value": "修改关键词或选择\"全部\"或其他大洲"
+    },
+    {
+      "name": "no_playing",
+      "value": "暂无播放"
+    },
+    {
+      "name": "select_song_to_play",
+      "value": "请选择歌曲播放"
+    },
+    {
+      "name": "loading",
+      "value": "加载中..."
+    },
+    {
+      "name": "level_challenge_success",
+      "value": "第%s关挑战成功"
+    },
+    {
+      "name": "total_countries",
+      "value": "共 %s 个国家"
+    },
+    {
+      "name": "total_organizations",
+      "value": "共 %s 个组织"
+    },
+    {
+      "name": "favorite_added",
+      "value": "已添加到收藏"
+    },
+    {
+      "name": "download_failed",
+      "value": "下载失败"
+    },
+    {
+      "name": "state_flag_saved",
+      "value": "州旗图片已保存到相册"
+    },
+    {
+      "name": "no_data",
+      "value": "暂无数据"
+    },
+    {
+      "name": "belongs_to_country",
+      "value": "所属国家"
+    },
+    {
+      "name": "state_flag_detail",
+      "value": "州旗详情"
+    },
+    {
+      "name": "state_flag",
+      "value": "州旗"
+    },
+    {
+      "name": "historical_flags",
+      "value": "历史国旗"
+    },
+    {
+      "name": "flag_history",
+      "value": "国旗变迁史"
+    },
+    {
+      "name": "current",
+      "value": "（当前）"
+    },
+    {
+      "name": "quiz_flag_to_name_desc",
+      "value": "根据国旗图案，选择正确的国家名称"
+    },
+    {
+      "name": "quiz_name_to_flag_desc",
+      "value": "根据国家名称，选择正确的国旗图案"
+    },
+    {
+      "name": "complete_levels_to_unlock",
+      "value": "完成每关挑战，解锁更多关卡"
+    },
+    {
+      "name": "time",
+      "value": "时间"
+    },
+    {
+      "name": "moves",
+      "value": "步数"
+    },
+    {
+      "name": "pairs",
+      "value": "配对"
+    },
+    {
+      "name": "total_moves",
+      "value": "总步数"
+    },
+    {
+      "name": "pairs_completed",
+      "value": "配对完成"
+    },
+    {
+      "name": "time_up",
+      "value": "时间到！"
+    },
+    {
+      "name": "which_country_flag",
+      "value": "这是哪个国家的国旗？"
+    },
+    {
+      "name": "select_correct_flag",
+      "value": "请选择正确的国旗"
+    },
+    {
+      "name": "challenge_failed",
+      "value": "挑战失败"
+    },
+    {
+      "name": "correct_answers_count",
+      "value": "正确回答了 %s 道题"
+    },
+    {
+      "name": "correct_answers_count_trivia",
+      "value": "正确回答了 %s 题"
+    },
+    {
+      "name": "max_combo",
+      "value": "最高连击 %s"
+    },
+    {
+      "name": "next_question",
+      "value": "下一题"
+    },
+    {
+      "name": "view_results",
+      "value": "查看结果"
+    },
+    {
+      "name": "correct_answers",
+      "value": "正确答题"
+    },
+    {
+      "name": "correct_answers_label",
+      "value": "正确回答"
+    },
+    {
+      "name": "remaining_lives",
+      "value": "剩余生命"
+    },
+    {
+      "name": "share_score",
+      "value": "分享成绩"
+    },
+    {
+      "name": "combo_streak",
+      "value": "%s 连击！"
+    },
+    {
+      "name": "correct_answers_share",
+      "value": "正确答题：%s / %s"
+    },
+    {
+      "name": "max_combo_share",
+      "value": "最高连击：%s"
+    },
+    {
+      "name": "remaining_lives_share",
+      "value": "剩余生命：%s"
+    },
+    {
+      "name": "back_to_levels",
+      "value": "返回关卡列表"
+    },
+    {
+      "name": "restart",
+      "value": "重新开始"
+    },
+    {
+      "name": "try_again",
+      "value": "再试一次！"
+    },
+    {
+      "name": "shuffle",
+      "value": "打乱"
+    },
+    {
+      "name": "unselect_all",
+      "value": "取消全选"
+    },
+    {
+      "name": "submit",
+      "value": "提交"
+    },
+    {
+      "name": "correct_answer",
+      "value": "✓ 正确!"
+    },
+    {
+      "name": "enter_country_name",
+      "value": "请输入国家名称"
+    },
+    {
+      "name": "find_fake_flag",
+      "value": "找出假旗"
+    },
+    {
+      "name": "correct_found",
+      "value": "正确找出"
+    },
+    {
+      "name": "correct_found_count",
+      "value": "正确找出了 %s 个假旗"
+    },
+    {
+      "name": "delete",
+      "value": "删除"
+    },
+    {
+      "name": "fun_fact_1",
+      "value": "🇳🇵 尼泊尔是世界上唯一非矩形的国旗，由两个三角形组成！"
+    },
+    {
+      "name": "fun_fact_2",
+      "value": "🇨🇭 瑞士和梵蒂冈是世界上仅有的两个正方形国旗！"
+    },
+    {
+      "name": "fun_fact_3",
+      "value": "🇯🇵 日本国旗上的红色圆形代表太阳，日本被称为\"日出之国\"！"
+    },
+    {
+      "name": "fun_fact_4",
+      "value": "🇱🇾 利比亚在1977-2011年使用过世界上唯一的纯色国旗（绿色）！"
+    },
+    {
+      "name": "fun_fact_5",
+      "value": "🇲🇨 摩纳哥和印度尼西亚的国旗几乎相同，只是尺寸比例不同！"
+    },
+    {
+      "name": "fun_fact_6",
+      "value": "🇩🇰 丹麦国旗是世界上使用时间最长的国旗，自1219年开始使用！"
+    },
+    {
+      "name": "fun_fact_7",
+      "value": "🇧🇷 巴西国旗上的27颗星星代表26个州和1个联邦区！"
+    },
+    {
+      "name": "fun_fact_8",
+      "value": "🇺🇸 美国国旗的50颗星代表50个州，13道条纹代表最初的13个殖民地！"
+    },
+    {
+      "name": "fun_fact_9",
+      "value": "🇨🇦 加拿大国旗上的枫叶有11个尖角，这是经过风洞测试最清晰的设计！"
+    },
+    {
+      "name": "fun_fact_10",
+      "value": "🇬🇧 英国国旗\"米字旗\"由英格兰、苏格兰和爱尔兰的旗帜组合而成！"
+    },
+    {
+      "name": "month_1",
+      "value": "1月"
+    },
+    {
+      "name": "month_2",
+      "value": "2月"
+    },
+    {
+      "name": "month_3",
+      "value": "3月"
+    },
+    {
+      "name": "month_4",
+      "value": "4月"
+    },
+    {
+      "name": "month_5",
+      "value": "5月"
+    },
+    {
+      "name": "month_6",
+      "value": "6月"
+    },
+    {
+      "name": "month_7",
+      "value": "7月"
+    },
+    {
+      "name": "month_8",
+      "value": "8月"
+    },
+    {
+      "name": "month_9",
+      "value": "9月"
+    },
+    {
+      "name": "month_10",
+      "value": "10月"
+    },
+    {
+      "name": "month_11",
+      "value": "11月"
+    },
+    {
+      "name": "month_12",
+      "value": "12月"
+    },
+    {
+      "name": "month_jan",
+      "value": "Jan"
+    },
+    {
+      "name": "month_feb",
+      "value": "Feb"
+    },
+    {
+      "name": "month_mar",
+      "value": "Mar"
+    },
+    {
+      "name": "month_apr",
+      "value": "Apr"
+    },
+    {
+      "name": "month_may",
+      "value": "May"
+    },
+    {
+      "name": "month_jun",
+      "value": "Jun"
+    },
+    {
+      "name": "month_jul",
+      "value": "Jul"
+    },
+    {
+      "name": "month_aug",
+      "value": "Aug"
+    },
+    {
+      "name": "month_sep",
+      "value": "Sep"
+    },
+    {
+      "name": "month_oct",
+      "value": "Oct"
+    },
+    {
+      "name": "month_nov",
+      "value": "Nov"
+    },
+    {
+      "name": "month_dec",
+      "value": "Dec"
+    },
+    {
+      "name": "day_suffix",
+      "value": "日"
+    },
+    {
+      "name": "save_failed_with_error",
+      "value": "保存失败: %s"
+    },
+    {
+      "name": "details",
+      "value": "详情"
+    },
+    {
+      "name": "also_known_as",
+      "value": "，英文名%s"
+    },
+    {
+      "name": "headquarters_located",
+      "value": "总部位于%s"
+    },
+    {
+      "name": "region_is",
+      "value": "地区是%s"
+    },
+    {
+      "name": "org_type_is",
+      "value": "组织类型是%s"
+    },
+    {
+      "name": "coverage_population_approx",
+      "value": "覆盖人口约%s"
+    },
+    {
+      "name": "website_colon",
+      "value": "网站：%s"
+    },
+    {
+      "name": "capital_is",
+      "value": "首都是%s"
+    },
+    {
+      "name": "region_belongs",
+      "value": "所属地区是%s"
+    },
+    {
+      "name": "population_colon",
+      "value": "人口%s"
+    },
+    {
+      "name": "area_colon",
+      "value": "面积%s"
+    },
+    {
+      "name": "flag_proportion_is",
+      "value": "国旗比例为%s"
+    },
+    {
+      "name": "adopted_date_is",
+      "value": "采用日期是%s"
+    },
+    {
+      "name": "also_known_as_en",
+      "value": ", also known as %s"
+    },
+    {
+      "name": "headquarters_located_en",
+      "value": "Headquarters is located in %s"
+    },
+    {
+      "name": "region_colon_en",
+      "value": "Region: %s"
+    },
+    {
+      "name": "org_type_colon_en",
+      "value": "Organization type: %s"
+    },
+    {
+      "name": "coverage_population_en",
+      "value": "Coverage population: approximately %s"
+    },
+    {
+      "name": "website_colon_en",
+      "value": "Website: %s"
+    },
+    {
+      "name": "capital_colon_en",
+      "value": "Capital: %s"
+    },
+    {
+      "name": "population_colon_en",
+      "value": "Population: %s"
+    },
+    {
+      "name": "area_colon_en",
+      "value": "Area: %s"
+    },
+    {
+      "name": "flag_proportion_en",
+      "value": "Flag proportion: %s"
+    },
+    {
+      "name": "adopted_date_en",
+      "value": "Adopted date: %s"
+    },
+    {
+      "name": "flag",
+      "value": "旗帜"
+    },
+    {
+      "name": "national_flag",
+      "value": "国旗"
+    },
+    {
+      "name": "flag_default_description",
+      "value": "%s的国旗是这个国家的重要象征，代表着国家的历史、文化和价值观。"
+    },
+    {
+      "name": "connectionsAsia",
+      "value": "亚洲"
+    },
+    {
+      "name": "connectionsEurope",
+      "value": "欧洲"
+    },
+    {
+      "name": "connectionsAmericas",
+      "value": "美洲"
+    },
+    {
+      "name": "connectionsAfrica",
+      "value": "非洲"
+    },
+    {
+      "name": "connectionsRedFlags",
+      "value": "红色旗帜"
+    },
+    {
+      "name": "connectionsGreenFlags",
+      "value": "绿色旗帜"
+    },
+    {
+      "name": "connectionsBlueFlags",
+      "value": "蓝色旗帜"
+    },
+    {
+      "name": "connectionsYellowFlags",
+      "value": "黄色旗帜"
+    },
+    {
+      "name": "connectionsAngloSaxonFlags",
+      "value": "盎格鲁-撒克逊旗帜"
+    },
+    {
+      "name": "connectionsSlavicFlags",
+      "value": "斯拉夫旗帜"
+    },
+    {
+      "name": "connectionsNordicFlags",
+      "value": "北欧旗帜"
+    },
+    {
+      "name": "connectionsArabFlags",
+      "value": "阿拉伯旗帜"
+    },
+    {
+      "name": "connectionsEastAsia",
+      "value": "东亚"
+    },
+    {
+      "name": "connectionsSouthAsia",
+      "value": "南亚"
+    },
+    {
+      "name": "connectionsWestAsia",
+      "value": "西亚"
+    },
+    {
+      "name": "connectionsSoutheastAsia",
+      "value": "东南亚"
+    },
+    {
+      "name": "connectionsNorthAfrica",
+      "value": "北非"
+    },
+    {
+      "name": "connectionsEastAfrica",
+      "value": "东非"
+    },
+    {
+      "name": "connectionsSouthAfrica",
+      "value": "南非"
+    },
+    {
+      "name": "connectionsWestAfrica",
+      "value": "西非"
+    },
+    {
+      "name": "connectionsNorthEurope",
+      "value": "北欧"
+    },
+    {
+      "name": "connectionsEastEurope",
+      "value": "东欧"
+    },
+    {
+      "name": "connectionsWestEurope",
+      "value": "西欧"
+    },
+    {
+      "name": "connectionsSouthEurope",
+      "value": "南欧"
+    },
+    {
+      "name": "connectionsSocialismCountries",
+      "value": "社会主义国家"
+    },
+    {
+      "name": "connectionsSun",
+      "value": "太阳"
+    },
+    {
+      "name": "connectionsCrescentAndStar",
+      "value": "新月和星星"
+    },
+    {
+      "name": "connectionsAnimal",
+      "value": "动物"
+    },
+    {
+      "name": "connectionsPanAfricanColors",
+      "value": "泛非颜色"
+    },
+    {
+      "name": "connectionsIslandCountries",
+      "value": "岛国"
+    },
+    {
+      "name": "connectionsLandlockedCountries",
+      "value": "内陆国家"
+    },
+    {
+      "name": "connectionsBiggestCountries",
+      "value": "最大国家"
+    },
+    {
+      "name": "connectionsFlagsWithManyStripes",
+      "value": "多条纹旗帜"
+    },
+    {
+      "name": "connectionsTwoColorFlags",
+      "value": "双色旗帜"
+    },
+    {
+      "name": "connectionsFlagsWithWeapons",
+      "value": "带武器旗帜"
+    },
+    {
+      "name": "connectionsTinyCountries",
+      "value": "小国"
+    },
+    {
+      "name": "connectionsFlagsWithStars",
+      "value": "带星星旗帜"
+    },
+    {
+      "name": "connectionsFlagsWithTreesOrPlants",
+      "value": "带树木或植物旗帜"
+    },
+    {
+      "name": "connectionsFlagsWithCrowns",
+      "value": "带王冠旗帜"
+    },
+    {
+      "name": "connectionsFlagsWithSouthernCross",
+      "value": "带南十字星旗帜"
+    },
+    {
+      "name": "connectionsNonRectangularFlags",
+      "value": "非矩形旗帜"
+    },
+    {
+      "name": "connectionsHorizontalTribands",
+      "value": "水平三色旗"
+    },
+    {
+      "name": "connectionsVerticalTribands",
+      "value": "垂直三色旗"
+    },
+    {
+      "name": "connectionsDiagonalStripes",
+      "value": "对角条纹"
+    },
+    {
+      "name": "connectionsNileRiverCountries",
+      "value": "尼罗河国家"
+    },
+    {
+      "name": "connectionsAmazonRiverCountries",
+      "value": "亚马逊河国家"
+    },
+    {
+      "name": "connectionsMekongRiverCountries",
+      "value": "湄公河国家"
+    },
+    {
+      "name": "connectionsDanubeRiverCountries",
+      "value": "多瑙河国家"
+    },
+    {
+      "name": "state_count_jp",
+      "value": "47 个都道府县"
+    },
+    {
+      "name": "state_count_us",
+      "value": "50 个州"
+    },
+    {
+      "name": "state_count_de",
+      "value": "16 个州"
+    },
+    {
+      "name": "state_count_au",
+      "value": "9 个州"
+    },
+    {
+      "name": "state_count_br",
+      "value": "27 个州"
+    },
+    {
+      "name": "state_count_ca",
+      "value": "13 个省"
+    },
+    {
+      "name": "state_count_kr",
+      "value": "17 个行政区"
+    },
+    {
+      "name": "state_count_ch",
+      "value": "26 个州"
+    },
+    {
+      "name": "state_count_gb",
+      "value": "4 个地区"
+    },
+    {
+      "name": "state_count_it",
+      "value": "20 个大区"
+    },
+    {
+      "name": "state_count_es",
+      "value": "17 个自治区"
+    }
+  ]
+}
