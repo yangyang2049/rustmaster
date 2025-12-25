@@ -2,6 +2,49 @@
 
 ## [未发布]
 
+### 修复 (Fixed)
+- **应用图标配置修复**：修复了应用图标显示问题
+  - 优化了 `AppScope/resources/base/media/layered_image.json` 的格式
+  - 确认了图标配置：`background.png`（橙色背景）和 `foreground.png`（白色 Rust 文字）
+  - 注意：`foreground.png` 应该是透明背景，如果显示不正确，请确保图片文件是透明背景的 PNG
+
+### 删除 (Removed)
+- **删除 Gemini 服务**：移除了 GeminiService 及相关代码
+  - 删除了 `entry/src/main/ets/services/GeminiService.ets` 文件
+  - 从 `RustTypes.ets` 中删除了 `ExecutionResult` 接口和 `Language` 枚举
+  - 从 `RustConstants.ets` 中删除了 `INITIAL_CODE` 常量
+  - 原因：项目没有 API Key 或服务器支持
+
+### 清理 (Cleanup)
+- **删除未使用的资源文件**：清理了 `entry/src/main/resources` 目录中未使用的文件
+  - 删除了 base/media 中的 33 个未使用的图标和资源文件
+  - 删除了 dark/media 中的 19 个未使用的图标文件
+  - 保留的文件：导航栏图标、设置页面图标、以及其他在代码中实际使用的资源
+
+### 修复 (Fixed)
+- **编译错误修复**：修复了所有 ArkTS 编译错误
+  - ✅ 修复类型错误：明确指定所有类型，避免使用 `any` 和 `unknown`
+  - ✅ 修复 `in` 操作符：改用 `hasOwnProperty` 检查对象属性（后改为 `params['key'] !== undefined`）
+  - ✅ 修复 Builder 方法语法：移除 Builder 方法中的 `const` 声明，改用条件渲染
+  - ✅ 修复 `hasOwnProperty` 受限问题：改用 `params['key'] !== undefined` 检查属性
+  - ✅ 移除已弃用的 `router.back()` 调用：Navigation 组件会自动处理返回
+- **Bug 修复**：修复了审查报告中发现的所有 9 个 Bug
+  - ✅ 修复判断题逻辑错误（QuizPage.ets 和 QuizDetailPage.ets）：添加了正确的答案判断逻辑，处理空数组情况
+  - ✅ 修复非空断言风险：在所有 Builder 方法中添加了空值检查，避免使用非空断言
+  - ✅ 修复 parseInt 可能返回 NaN（LearnPage.ets）：添加了 NaN 检查和字符串比较回退
+  - ✅ 修复数组越界风险（QuizPage.ets）：在 getCurrentQuestion() 方法中添加了边界检查
+  - ✅ 修复多选题提交逻辑可能重复计分：添加了 answeredQuestionIndices Set 来跟踪已回答的问题
+  - ✅ 修复路由参数类型安全问题：添加了严格的参数类型检查和验证
+  - ✅ 修复 Preferences 数据解析错误处理：添加了完善的类型检查和错误恢复机制
+  - ✅ 修复除零风险（QuizDetailPage.ets）：在正确率计算中添加了题目数检查
+
+### 新增 (Added)
+- **Bug 审查报告**：创建了 `docs/BUG_REVIEW.md`，详细记录了项目中发现的 10 个潜在 Bug
+  - 包括高优先级问题：判断题逻辑错误、非空断言风险、文件列表配置错误
+  - 包括中优先级问题：parseInt NaN、数组越界、多选题提交逻辑、路由参数类型安全、Preferences 数据解析
+  - 包括低优先级问题：除零风险、API Key 配置
+  - 每个 Bug 都提供了详细的问题描述、影响分析和修复建议
+
 ### 新增 (Added)
 - **题库系统扩展**：支持三种题型（判断题、单选题、多选题）
   - 新增500+道Rust相关题目（150道判断题、250道单选题、100道多选题）
@@ -47,7 +90,6 @@
   - **测验页面**：创建 `QuizPage.ets`，实现答题流程、结果统计、进度追踪
   - **面试页面**：创建 `InterviewPage.ets`，实现搜索、展开、难度标签功能
   - **设置页面**：创建 `SettingsPage.ets`，实现学习档案、数据持久化
-  - **Gemini 服务**：创建 `GeminiService.ets`，实现代码执行、解释、修复的 AI 功能（需要配置 API Key）
 
 ### 变更 (Changed)
 - **应用名称和 Bundle ID 更新**：将应用名称改为 "Rust 从入门到放弃"，Bundle ID 改为 "com.douhua.rustmaster"

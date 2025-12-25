@@ -1,15 +1,4 @@
-import { Language, CourseChapter, CourseUnit, QuizModule, ReferenceCategory, InterviewItem, QuestionType } from './RustTypes';
-
-export const INITIAL_CODE: Map<Language, string> = new Map([
-  [Language.RUST, `fn main() {
-    println!("欢迎使用 Rust 大师！");
-    println!("点击'教程'开始系统学习，");
-    println!("或者直接在这里编写代码。");
-}`],
-  [Language.TYPESCRIPT, `console.log("TypeScript Playground");`],
-  [Language.JAVASCRIPT, `console.log("JavaScript Playground");`],
-  [Language.PYTHON, `print("Python Playground")`]
-]);
+import { CourseChapter, CourseUnit, QuizModule, ReferenceCategory, InterviewItem, QuestionType } from './RustTypes';
 
 export const DAILY_TIPS: string[] = [
   "在 Rust 中，如果你不需要使用某个变量，可以在变量名前加下划线（如 _x）来忽略未使用的警告。",

@@ -10,19 +10,6 @@ export enum Tab {
   SETTINGS = 'SETTINGS'
 }
 
-export enum Language {
-  RUST = 'Rust',
-  TYPESCRIPT = 'TypeScript',
-  PYTHON = 'Python',
-  JAVASCRIPT = 'JavaScript'
-}
-
-export interface ExecutionResult {
-  output: string;
-  isError: boolean;
-  explanation?: string;
-}
-
 export type Difficulty = '入门' | '进阶' | '高阶';
 
 export interface CourseChapter {

@@ -34,9 +34,23 @@ export struct LearnPage {
     try {
       this.prefs = await PreferencesManager.getPreferences('rust_learn');
       const readChapters = await this.prefs.get('chaptersRead', '[]');
-      this.chaptersRead = JSON.parse(readChapters as string);
+      
+      if (typeof readChapters !== 'string') {
+        console.warn('Invalid chaptersRead format, resetting to empty array');
+        this.chaptersRead = [];
+        return;
+      }
+      
+      const parsed: string[] | null = JSON.parse(readChapters) as string[] | null;
+      if (Array.isArray(parsed)) {
+        this.chaptersRead = parsed;
+      } else {
+        console.warn('chaptersRead is not an array, resetting');
+        this.chaptersRead = [];
+      }
     } catch (err) {
       console.error(`Failed to load preferences: ${JSON.stringify(err)}`);
+      this.chaptersRead = []; // 使用默认值
     }
   }
 
@@ -62,7 +76,15 @@ export struct LearnPage {
   private getUnitChapters(unitId: string): CourseChapter[] {
     const chapters = COURSE_CHAPTERS.filter(chapter => chapter.unitId === unitId);
     // 按照 id 的数值顺序排序，确保每个单元内的课程按顺序显示
-    return chapters.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    return chapters.sort((a, b) => {
+      const aNum = parseInt(a.id);
+      const bNum = parseInt(b.id);
+      // 如果解析失败，使用字符串比较
+      if (isNaN(aNum) || isNaN(bNum)) {
+        return a.id.localeCompare(b.id);
+      }
+      return aNum - bNum;
+    });
   }
 
   private getChapterNumberInUnit(chapter: CourseChapter): string {

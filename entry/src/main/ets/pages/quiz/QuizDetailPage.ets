@@ -29,11 +29,25 @@ struct QuizDetailPage {
   private quizId: string = '';
 
   async aboutToAppear() {
-    const params = router.getParams() as RouterParams;
-    if (params && params.quizId) {
-      this.quizId = params.quizId;
-      this.quiz = QUIZ_MODULES.find(q => q.id === params.quizId) || null;
-      await this.loadProgress();
+    const params = router.getParams() as Record<string, Object> | null;
+    if (params && typeof params === 'object' && params['quizId'] !== undefined) {
+      const quizId = params['quizId'] as string;
+      if (typeof quizId === 'string' && quizId.trim() !== '') {
+        this.quizId = quizId;
+        this.quiz = QUIZ_MODULES.find(q => q.id === quizId) || null;
+        if (this.quiz) {
+          await this.loadProgress();
+        } else {
+          console.error(`Quiz not found: ${quizId}`);
+          // Navigation 组件会自动提供返回按钮
+        }
+      } else {
+        console.error('Invalid quizId parameter');
+        // Navigation 组件会自动提供返回按钮
+      }
+    } else {
+      console.error('Missing quizId parameter');
+      // Navigation 组件会自动提供返回按钮
     }
   }
 
@@ -42,12 +56,30 @@ struct QuizDetailPage {
       this.prefs = await PreferencesManager.getPreferences('quiz_progress');
       const savedProgress = await this.prefs.get(`quiz_${this.quizId}`, '');
       if (savedProgress && typeof savedProgress === 'string' && savedProgress !== '') {
-        const progress: QuizProgress = JSON.parse(savedProgress);
+        let progress: QuizProgress;
+        try {
+          progress = JSON.parse(savedProgress);
+        } catch (parseErr) {
+          console.warn('Failed to parse quiz progress, using defaults');
+          return;
+        }
+        
+        // 验证进度数据格式
+        if (typeof progress !== 'object' || progress === null) {
+          console.warn('Invalid progress format, using defaults');
+          return;
+        }
+        
         // 确保索引在有效范围内
-        if (this.quiz && progress.currentQuestionIndex < this.quiz.questions.length) {
+        if (this.quiz && 
+            typeof progress.currentQuestionIndex === 'number' &&
+            progress.currentQuestionIndex >= 0 &&
+            progress.currentQuestionIndex < this.quiz.questions.length) {
           this.currentQuestionIndex = progress.currentQuestionIndex;
-          this.score = progress.score;
-          this.answeredQuestions = progress.answeredQuestions || [];
+          this.score = typeof progress.score === 'number' ? progress.score : 0;
+          this.answeredQuestions = Array.isArray(progress.answeredQuestions) 
+            ? progress.answeredQuestions 
+            : [];
         }
       }
     } catch (err) {
@@ -137,9 +169,15 @@ struct QuizDetailPage {
         this.score++;
       }
     } else if (currentQ.type === QuestionType.TRUE_FALSE) {
-      // 判断题
-      const isCorrect = (this.selectedAnswer === 0 && correctIndices.includes(0)) ||
-        (this.selectedAnswer === 1 && !correctIndices.includes(0));
+      // 判断题：0表示正确，1表示错误
+      if (correctIndices.length === 0) {
+        return; // 如果没有正确答案，不处理
+      }
+      // 正确答案是"正确"（0）
+      const isAnswerCorrect = correctIndices.includes(0);
+      // 用户选择"正确"（0）且答案是正确，或用户选择"错误"（1）且答案是错误
+      const isCorrect = (this.selectedAnswer === 0 && isAnswerCorrect) ||
+        (this.selectedAnswer === 1 && !isAnswerCorrect);
       if (isCorrect) {
         this.score++;
       }
@@ -278,8 +316,12 @@ struct QuizDetailPage {
       return this.selectedAnswers.length === correctIndices.length &&
         this.selectedAnswers.every(idx => correctIndices.includes(idx));
     } else if (currentQ.type === QuestionType.TRUE_FALSE) {
-      return (this.selectedAnswer === 0 && correctIndices.includes(0)) ||
-        (this.selectedAnswer === 1 && !correctIndices.includes(0));
+      if (correctIndices.length === 0) return false; // 如果没有正确答案，返回false
+      // 正确答案是"正确"（0）
+      const isAnswerCorrect = correctIndices.includes(0);
+      // 用户选择"正确"（0）且答案是正确，或用户选择"错误"（1）且答案是错误
+      return (this.selectedAnswer === 0 && isAnswerCorrect) ||
+        (this.selectedAnswer === 1 && !isAnswerCorrect);
     } else {
       return correctIndices.includes(this.selectedAnswer);
     }
@@ -320,64 +362,68 @@ struct QuizDetailPage {
 
   @Builder
   QuestionCard() {
-    Column() {
-      // 题型标签
-      Row() {
-        Text(this.getQuestionTypeLabel(this.getCurrentQuestion()!.type))
-          .fontSize(12)
-          .fontColor($r(Colors.RUST_PRIMARY))
-          .backgroundColor($r(Colors.RUST_BG_LIGHT))
-          .padding({ left: 8, right: 8, top: 4, bottom: 4 })
-          .borderRadius(4)
+    if (this.getCurrentQuestion()) {
+      Column() {
+        // 题型标签
+        Row() {
+          Text(this.getQuestionTypeLabel(this.getCurrentQuestion()!.type))
+            .fontSize(12)
+            .fontColor($r(Colors.RUST_PRIMARY))
+            .backgroundColor($r(Colors.RUST_BG_LIGHT))
+            .padding({ left: 8, right: 8, top: 4, bottom: 4 })
+            .borderRadius(4)
+        }
+        .width('100%')
+        .margin({ bottom: 12 })
+
+        Text(this.getCurrentQuestion()!.question)
+          .fontSize(16)
+          .fontWeight(FontWeight.Medium)
+          .fontColor($r(Colors.TEXT_PRIMARY))
+          .lineHeight(26)
       }
       .width('100%')
-      .margin({ bottom: 12 })
-
-      Text(this.getCurrentQuestion()!.question)
-        .fontSize(16)
-        .fontWeight(FontWeight.Medium)
-        .fontColor($r(Colors.TEXT_PRIMARY))
-        .lineHeight(26)
+      .padding(16)
+      .backgroundColor($r(Colors.BG_CARD))
+      .borderRadius(Sizes.RADIUS_LG)
+      .shadow({
+        radius: 8,
+        color: $r(Colors.SHADOW),
+        offsetX: 0,
+        offsetY: 2
+      })
     }
-    .width('100%')
-    .padding(16)
-    .backgroundColor($r(Colors.BG_CARD))
-    .borderRadius(Sizes.RADIUS_LG)
-    .shadow({
-      radius: 8,
-      color: $r(Colors.SHADOW),
-      offsetX: 0,
-      offsetY: 2
-    })
   }
 
   @Builder
   OptionsCard() {
-    Column() {
-      if (this.getCurrentQuestion()!.type === QuestionType.TRUE_FALSE) {
-        // 判断题
-        Row({ space: 12 }) {
-          this.TrueFalseButton(true, 0)
-          this.TrueFalseButton(false, 1)
+    if (this.getCurrentQuestion()) {
+      Column() {
+        if (this.getCurrentQuestion()!.type === QuestionType.TRUE_FALSE) {
+          // 判断题
+          Row({ space: 12 }) {
+            this.TrueFalseButton(true, 0)
+            this.TrueFalseButton(false, 1)
+          }
+          .width('100%')
+        } else {
+          // 单选题和多选题
+          ForEach(this.getCurrentQuestion()!.options, (option: string, index: number) => {
+            this.OptionItem(option, index)
+          }, (option: string, index: number) => `q${this.currentQuestionIndex}-opt${index}-${option}`)
         }
-        .width('100%')
-      } else {
-        // 单选题和多选题
-        ForEach(this.getCurrentQuestion()!.options, (option: string, index: number) => {
-          this.OptionItem(option, index)
-        }, (option: string, index: number) => `q${this.currentQuestionIndex}-opt${index}-${option}`)
       }
+      .width('100%')
+      .padding(16)
+      .backgroundColor($r(Colors.BG_CARD))
+      .borderRadius(Sizes.RADIUS_LG)
+      .shadow({
+        radius: 8,
+        color: $r(Colors.SHADOW),
+        offsetX: 0,
+        offsetY: 2
+      })
     }
-    .width('100%')
-    .padding(16)
-    .backgroundColor($r(Colors.BG_CARD))
-    .borderRadius(Sizes.RADIUS_LG)
-    .shadow({
-      radius: 8,
-      color: $r(Colors.SHADOW),
-      offsetX: 0,
-      offsetY: 2
-    })
   }
 
   @Builder
@@ -463,41 +509,43 @@ struct QuizDetailPage {
 
   @Builder
   ExplanationCard() {
-    Column() {
-      Row() {
-        Image(this.isAnswerCorrect() ? $r('app.media.icon_check') : $r('app.media.icon_close'))
-          .width(20)
-          .height(20)
-          .fillColor(this.isAnswerCorrect() ? $r(Colors.SUCCESS) : $r(Colors.ERROR))
+    if (this.getCurrentQuestion()) {
+      Column() {
+        Row() {
+          Image(this.isAnswerCorrect() ? $r('app.media.icon_check') : $r('app.media.icon_close'))
+            .width(20)
+            .height(20)
+            .fillColor(this.isAnswerCorrect() ? $r(Colors.SUCCESS) : $r(Colors.ERROR))
 
-        Text('解析')
+          Text('解析')
+            .fontSize(14)
+            .fontWeight(FontWeight.Bold)
+            .fontColor($r(Colors.TEXT_PRIMARY))
+            .margin({ left: 8 })
+        }
+        .width('100%')
+        .justifyContent(FlexAlign.Start)
+        .margin({ bottom: 12 })
+
+        Text(this.getCurrentQuestion()!.explanation)
           .fontSize(14)
-          .fontWeight(FontWeight.Bold)
-          .fontColor($r(Colors.TEXT_PRIMARY))
-          .margin({ left: 8 })
+          .fontColor($r(Colors.TEXT_SECONDARY))
+          .lineHeight(22)
+          .width('100%')
+          .textAlign(TextAlign.Start)
       }
       .width('100%')
-      .justifyContent(FlexAlign.Start)
-      .margin({ bottom: 12 })
-
-      Text(this.getCurrentQuestion()!.explanation)
-        .fontSize(14)
-        .fontColor($r(Colors.TEXT_SECONDARY))
-        .lineHeight(22)
-        .width('100%')
-        .textAlign(TextAlign.Start)
+      .padding(16)
+      .backgroundColor($r(Colors.BG_CARD))
+      .borderRadius(Sizes.RADIUS_LG)
+      .alignItems(HorizontalAlign.Start)
+      .shadow({
+        radius: 8,
+        color: $r(Colors.SHADOW),
+        offsetX: 0,
+        offsetY: 2
+      })
     }
-    .width('100%')
-    .padding(16)
-    .backgroundColor($r(Colors.BG_CARD))
-    .borderRadius(Sizes.RADIUS_LG)
-    .alignItems(HorizontalAlign.Start)
-    .shadow({
-      radius: 8,
-      color: $r(Colors.SHADOW),
-      offsetX: 0,
-      offsetY: 2
-    })
   }
 
   @Builder
@@ -545,7 +593,9 @@ struct QuizDetailPage {
               .fontColor($r(Colors.RUST_PRIMARY))
               .fontWeight(FontWeight.Medium)
 
-            Text(`正确率: ${Math.round((this.score / (this.quiz?.questions.length || 1)) * 100)}%`)
+            Text(this.quiz && this.quiz.questions.length > 0
+              ? `正确率: ${Math.round((this.score / this.quiz.questions.length) * 100)}%`
+              : '正确率: --')
               .fontSize(14)
               .fontColor($r(Colors.TEXT_SECONDARY))
               .margin({ top: 4 })
@@ -580,7 +630,8 @@ struct QuizDetailPage {
               .height(50)
               .borderRadius(12)
               .onClick(() => {
-                router.back();
+                // Navigation 组件会自动处理返回，通过 hideBackButton(false) 设置的返回按钮
+                // 如果需要程序化返回，可以使用 router.pushUrl 返回到上一页
               })
           }
           .width('100%')

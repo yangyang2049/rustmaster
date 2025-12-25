@@ -17,6 +17,7 @@ export struct QuizPage {
   @State selectedOption: number | null = null;  // 用于单选题和判断题
   @State selectedOptions: number[] = [];  // 用于多选题
   @State isQuizFinished: boolean = false;
+  @State answeredQuestionIndices: Set<number> = new Set();  // 记录已回答的问题索引
 
   private startQuiz(quiz: QuizModule) {
     this.activeQuiz = quiz;
@@ -25,6 +26,7 @@ export struct QuizPage {
     this.selectedOption = null;
     this.selectedOptions = [];
     this.isQuizFinished = false;
+    this.answeredQuestionIndices = new Set();
   }
 
   private closeQuiz() {
@@ -34,11 +36,13 @@ export struct QuizPage {
     this.selectedOption = null;
     this.selectedOptions = [];
     this.isQuizFinished = false;
+    this.answeredQuestionIndices = new Set();
   }
 
   private handleQuizAnswer(optionIndex: number) {
     if (!this.activeQuiz) return;
-    const currentQ = this.activeQuiz.questions[this.quizQuestionIndex];
+    const currentQ = this.getCurrentQuestion();
+    if (!currentQ) return;
     
     // 获取正确答案索引（向后兼容）
     const correctIndices = currentQ.correctIndices || (currentQ.correctIndex !== undefined ? [currentQ.correctIndex] : []);
@@ -56,25 +60,47 @@ export struct QuizPage {
       this.selectedOption = optionIndex;
       
       // 检查答案
+      // 检查是否已经回答过这道题
+      if (this.answeredQuestionIndices.has(this.quizQuestionIndex)) {
+        return; // 已经回答过，不再处理
+      }
+      
       if (currentQ.type === QuestionType.TRUE_FALSE) {
         // 判断题：0表示正确，1表示错误
-        const isCorrect = (optionIndex === 0 && correctIndices.includes(0)) || 
-                         (optionIndex === 1 && correctIndices.includes(0) === false);
+        if (correctIndices.length === 0) {
+          return; // 如果没有正确答案，不处理
+        }
+        // 正确答案是"正确"（0）
+        const isAnswerCorrect = correctIndices.includes(0);
+        // 用户选择"正确"（0）且答案是正确，或用户选择"错误"（1）且答案是错误
+        const isCorrect = (optionIndex === 0 && isAnswerCorrect) || 
+                         (optionIndex === 1 && !isAnswerCorrect);
         if (isCorrect) {
           this.quizScore++;
         }
+        // 标记为已回答
+        this.answeredQuestionIndices.add(this.quizQuestionIndex);
       } else {
         // 单选题
         if (correctIndices.includes(optionIndex)) {
           this.quizScore++;
         }
+        // 标记为已回答
+        this.answeredQuestionIndices.add(this.quizQuestionIndex);
       }
-    }
+  }
   }
 
   private handleMultipleChoiceSubmit() {
     if (!this.activeQuiz) return;
-    const currentQ = this.activeQuiz.questions[this.quizQuestionIndex];
+    const currentQ = this.getCurrentQuestion();
+    if (!currentQ) return;
+    
+    // 检查是否已经提交过这道题
+    if (this.answeredQuestionIndices.has(this.quizQuestionIndex)) {
+      return; // 已经提交过，不再处理
+    }
+    
     const correctIndices = currentQ.correctIndices || [];
     
     // 检查多选题答案：必须全部正确且数量相同
@@ -82,6 +108,9 @@ export struct QuizPage {
         this.selectedOptions.every(idx => correctIndices.includes(idx))) {
       this.quizScore++;
     }
+    
+    // 标记为已回答
+    this.answeredQuestionIndices.add(this.quizQuestionIndex);
   }
 
   private nextQuestion() {
@@ -98,10 +127,19 @@ export struct QuizPage {
 
   private getCurrentQuestion(): QuizQuestion | null {
     if (!this.activeQuiz) return null;
+    // 添加边界检查
+    if (this.quizQuestionIndex < 0 || 
+        this.quizQuestionIndex >= this.activeQuiz.questions.length) {
+      return null;
+    }
     return this.activeQuiz.questions[this.quizQuestionIndex];
   }
 
   private hasAnswered(): boolean {
+    // 检查是否已经回答过这道题（已提交）
+    if (this.answeredQuestionIndices.has(this.quizQuestionIndex)) {
+      return true;
+    }
     const currentQ = this.getCurrentQuestion();
     if (!currentQ) return false;
     
@@ -125,8 +163,12 @@ export struct QuizPage {
     } else if (currentQ.type === QuestionType.TRUE_FALSE) {
       // 判断题：0表示正确，1表示错误
       if (this.selectedOption === null) return false;
-      return (this.selectedOption === 0 && correctIndices.includes(0)) || 
-             (this.selectedOption === 1 && !correctIndices.includes(0));
+      if (correctIndices.length === 0) return false; // 如果没有正确答案，返回false
+      // 正确答案是"正确"（0）
+      const isAnswerCorrect = correctIndices.includes(0);
+      // 用户选择"正确"（0）且答案是正确，或用户选择"错误"（1）且答案是错误
+      return (this.selectedOption === 0 && isAnswerCorrect) || 
+             (this.selectedOption === 1 && !isAnswerCorrect);
     } else {
       // 单选题
       return this.selectedOption !== null && correctIndices.includes(this.selectedOption);

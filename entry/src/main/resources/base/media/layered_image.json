@@ -1,7 +1,7 @@
 {
-  "layered-image":
-  {
-    "background" : "$media:ic_tab_learn",
-    "foreground" : "$media:ic_tab_learn"
+  "layered-image": {
+    "background": "$media:background",
+    "foreground": "$media:foreground"
   }
 }
+

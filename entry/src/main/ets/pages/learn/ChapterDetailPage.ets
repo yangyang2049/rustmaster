@@ -16,22 +16,54 @@ struct ChapterDetailPage {
   private prefs: preferences.Preferences | null = null;
 
   async aboutToAppear() {
-    const params = router.getParams() as RouterParams;
-    if (params && params.chapterId) {
-      this.chapter = COURSE_CHAPTERS.find(c => c.id === params.chapterId) || null;
+    const params = router.getParams() as Record<string, Object> | null;
+    if (params && typeof params === 'object' && params['chapterId'] !== undefined) {
+      const chapterId = params['chapterId'] as string;
+      if (typeof chapterId === 'string' && chapterId.trim() !== '') {
+        this.chapter = COURSE_CHAPTERS.find(c => c.id === chapterId) || null;
 
-      // 标记章节为已读
-      if (this.chapter) {
-        await this.markChapterAsRead(this.chapter.id);
+        // 标记章节为已读
+        if (this.chapter) {
+          await this.markChapterAsRead(this.chapter.id);
+        } else {
+          console.error(`Chapter not found: ${chapterId}`);
+          // Navigation 组件会自动提供返回按钮
+        }
+      } else {
+        console.error('Invalid chapterId parameter');
+        // Navigation 组件会自动提供返回按钮
       }
+    } else {
+      console.error('Missing chapterId parameter');
+      // Navigation 组件会自动提供返回按钮
     }
   }
 
   private async markChapterAsRead(chapterId: string): Promise<void> {
     try {
       this.prefs = await PreferencesManager.getPreferences('rust_learn');
-      const readChaptersStr = await this.prefs.get('chaptersRead', '[]') as string;
-      const chaptersRead: string[] = JSON.parse(readChaptersStr);
+      const readChaptersStr = await this.prefs.get('chaptersRead', '[]');
+      
+      if (typeof readChaptersStr !== 'string') {
+        console.warn('Invalid chaptersRead format, resetting to empty array');
+        await this.prefs.put('chaptersRead', JSON.stringify([chapterId]));
+        await this.prefs.flush();
+        return;
+      }
+      
+      let chaptersRead: string[] = [];
+      try {
+        const parsed: string[] | null = JSON.parse(readChaptersStr) as string[] | null;
+        if (Array.isArray(parsed)) {
+          chaptersRead = parsed;
+        } else {
+          console.warn('chaptersRead is not an array, resetting');
+          chaptersRead = [];
+        }
+      } catch (parseErr) {
+        console.warn('Failed to parse chaptersRead, resetting');
+        chaptersRead = [];
+      }
 
       if (!chaptersRead.includes(chapterId)) {
         chaptersRead.push(chapterId);
