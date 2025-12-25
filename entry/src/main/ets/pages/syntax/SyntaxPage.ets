@@ -5,6 +5,7 @@ import { PreferencesManager } from '../../utils/PreferencesManager';
 import { preferences } from '@kit.ArkData';
 import pasteboard from '@ohos.pasteboard';
 import promptAction from '@ohos.promptAction';
+import { ToastUtil } from '../../utils/ToastUtil';
 import common from '@ohos.app.ability.common';
 
 @Component
@@ -12,10 +13,11 @@ export struct SyntaxPage {
   @State searchTerm: string = '';
   @State expandedRef: string | null = null;
   @State showCopyTip: boolean = false;
+  @State preventToggle: boolean = false;
   private prefs: preferences.Preferences | null = null;
   private context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
 
-  async aboutToAppear() {
+  async aboutToAppear(): Promise<void> {
     try {
       this.prefs = await PreferencesManager.getPreferences('app_settings');
       // 检查是否已显示过提示
@@ -28,11 +30,12 @@ export struct SyntaxPage {
         }, 500);
       }
     } catch (err) {
-      console.error(`Failed to load preferences: ${JSON.stringify(err)}`);
+      const error = err as Error;
+      console.error(`Failed to load preferences: ${JSON.stringify(error)}`);
     }
   }
 
-  private async onCopyTipDismiss() {
+  private async onCopyTipDismiss(): Promise<void> {
     this.showCopyTip = false;
     try {
       if (!this.prefs) {
@@ -41,16 +44,14 @@ export struct SyntaxPage {
       await this.prefs.put('syntax_copy_tip_shown', true);
       await this.prefs.flush();
     } catch (err) {
-      console.error(`Failed to save copy tip preference: ${JSON.stringify(err)}`);
+      const error = err as Error;
+      console.error(`Failed to save copy tip preference: ${JSON.stringify(error)}`);
     }
   }
 
-  private async copyToClipboard(text: string) {
+  private async copyToClipboard(text: string): Promise<void> {
     if (!text || text.trim() === '') {
-      promptAction.showToast({
-        message: '没有可复制的内容',
-        duration: 1500
-      });
+      ToastUtil.showToast(this.context, '没有可复制的内容', 1500);
       return;
     }
     
@@ -58,20 +59,15 @@ export struct SyntaxPage {
       const systemPasteboard = pasteboard.getSystemPasteboard();
       const pasteData = pasteboard.createPlainTextData(text);
       await systemPasteboard.setPasteData(pasteData);
-      promptAction.showToast({
-        message: '已复制到剪贴板',
-        duration: 2000
-      });
+      ToastUtil.showToast(this.context, '已复制到剪贴板', 2000);
     } catch (err) {
-      console.error(`Failed to copy to clipboard: ${JSON.stringify(err)}`);
-      promptAction.showToast({
-        message: '复制失败，请重试',
-        duration: 2000
-      });
+      const error = err as Error;
+      console.error(`Failed to copy to clipboard: ${JSON.stringify(error)}`);
+      ToastUtil.showToast(this.context, '复制失败，请重试', 2000);
     }
   }
 
-  private toggleReference(keyword: string) {
+  private toggleReference(keyword: string): void {
     this.expandedRef = this.expandedRef === keyword ? null : keyword;
   }
 
@@ -153,8 +149,12 @@ export struct SyntaxPage {
             bottom: Spacing.ELEMENT_SPACING_XS
           })
           .borderRadius(Sizes.RADIUS_SM)
-          .onClick(async () => {
+          .onClick(async (): Promise<void> => {
+            this.preventToggle = true;
             await this.copyToClipboard(item.keyword);
+            setTimeout(() => {
+              this.preventToggle = false;
+            }, 100);
           })
 
         Blank()
@@ -163,9 +163,6 @@ export struct SyntaxPage {
           .fontSize(FontSizes.TINY)
           .fontColor($r(Colors.TEXT_TERTIARY))
           .padding(Spacing.ELEMENT_SPACING_SM)
-          .onClick(() => {
-            this.toggleReference(item.keyword);
-          })
       }
       .width('100%')
       .padding(Spacing.CARD_PADDING)
@@ -189,8 +186,12 @@ export struct SyntaxPage {
               .padding(Spacing.CARD_PADDING)
               .backgroundColor($r(Colors.HARMONY_DARK))
               .borderRadius(Sizes.RADIUS_MD)
-              .onClick(async () => {
+              .onClick(async (): Promise<void> => {
+                this.preventToggle = true;
                 await this.copyToClipboard(item.code || '');
+                setTimeout(() => {
+                  this.preventToggle = false;
+                }, 100);
               })
           }
         }
@@ -207,13 +208,18 @@ export struct SyntaxPage {
     .backgroundColor($r(Colors.BG_CARD))
     .borderRadius(Sizes.RADIUS_XL)
     .margin({ bottom: Spacing.LIST_ITEM_MARGIN })
+    .onClick(() => {
+      if (!this.preventToggle) {
+        this.toggleReference(item.keyword);
+      }
+    })
   }
 
   private isItemVisible(item: ReferenceItem): boolean {
     if (this.searchTerm === '') {
       return true;
     }
-    const searchLower = this.searchTerm.toLowerCase();
+    const searchLower: string = this.searchTerm.toLowerCase();
     return item.keyword.toLowerCase().includes(searchLower) ||
            item.description.toLowerCase().includes(searchLower);
   }
@@ -252,14 +258,14 @@ export struct SyntaxPage {
     .backgroundColor($r(Colors.BG_PAGE))
   }
 
-  private showCopyTipDialog() {
+  private showCopyTipDialog(): void {
     promptAction.showDialog({
       title: '提示',
       message: '点击代码块可复制到剪贴板',
       buttons: [
         {
           text: '知道了',
-          color: $r(Colors.RUST_PRIMARY)
+          color: '#FB923C'
         }
       ]
     }).then(() => {

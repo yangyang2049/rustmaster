@@ -1,9 +1,10 @@
+import router from '@ohos.router';
 import { Spacing, Sizes, FontSizes, FontWeights, Colors } from '../../utils/DesignSystem';
 import { PreferencesManager } from '../../utils/PreferencesManager';
 import { preferences } from '@kit.ArkData';
-import { COURSE_CHAPTERS, QUIZ_MODULES } from '../../data/RustConstants';
 import { ConfigurationConstant } from '@kit.AbilityKit';
 import promptAction from '@ohos.promptAction';
+import { ToastUtil } from '../../utils/ToastUtil';
 import common from '@ohos.app.ability.common';
 import { systemShare } from '@kit.ShareKit';
 import { uniformTypeDescriptor } from '@kit.ArkData';
@@ -12,37 +13,21 @@ import { Want } from '@kit.AbilityKit';
 
 @Component
 export struct SettingsPage {
-  @State chaptersRead: string[] = [];
-  @State quizzesCompleted: number = 0;
   @State colorMode: ConfigurationConstant.ColorMode = ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET;
   @State showThemeDialog: boolean = false;
-  private prefs: preferences.Preferences | null = null;
+  @State dailyTipEnabled: boolean = true; // 每日一贴开关，默认启用
   private appSettingsPrefs: preferences.Preferences | null = null;
   private context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
 
   async aboutToAppear() {
     try {
-      this.prefs = await PreferencesManager.getPreferences('rust_learn');
-
-      // 加载已读章节
-      const readChapters = await this.prefs.get('chaptersRead', '[]');
-      this.chaptersRead = JSON.parse(readChapters as string);
-
-      // 加载完成的测验数
-      const completed = await this.prefs.get('quizzesCompleted', '0');
-      this.quizzesCompleted = Number(completed);
-
       // 加载主题设置（使用单独的 app_settings preferences）
       await this.loadColorMode();
+      // 加载每日一贴设置
+      await this.loadDailyTipSetting();
     } catch (err) {
       console.error(`Failed to load preferences: ${JSON.stringify(err)}`);
     }
-  }
-
-  private getProgressPercentage(): number {
-    const totalChapters = COURSE_CHAPTERS.length;
-    if (totalChapters === 0) return 0;
-    return Math.round((this.chaptersRead.length / totalChapters) * 100);
   }
 
   private async loadColorMode(): Promise<void> {
@@ -97,13 +82,39 @@ export struct SettingsPage {
     }
   }
 
+  private async loadDailyTipSetting(): Promise<void> {
+    try {
+      if (!this.appSettingsPrefs) {
+        this.appSettingsPrefs = await PreferencesManager.getPreferences('app_settings');
+      }
+      const enabled: boolean = await this.appSettingsPrefs.get('dailyTipEnabled', true) as boolean;
+      this.dailyTipEnabled = enabled;
+    } catch (err) {
+      console.error(`Failed to load daily tip setting: ${JSON.stringify(err)}`);
+      this.dailyTipEnabled = true; // 默认启用
+    }
+  }
+
+  private async saveDailyTipSetting(enabled: boolean): Promise<void> {
+    try {
+      if (!this.appSettingsPrefs) {
+        this.appSettingsPrefs = await PreferencesManager.getPreferences('app_settings');
+      }
+      await this.appSettingsPrefs.put('dailyTipEnabled', enabled);
+      await this.appSettingsPrefs.flush();
+      this.dailyTipEnabled = enabled;
+    } catch (err) {
+      console.error(`Failed to save daily tip setting: ${JSON.stringify(err)}`);
+    }
+  }
+
   private showAboutApp(): void {
     try {
       promptAction.showDialog({
         title: '关于应用',
         message: 'Rust 从入门到放弃 v1.0.0\n\n专注于 Rust 编程语言的教学演示与知识巩固，帮助学习者从入门到精通。\n\n本应用不提供任何职业资格认证或考试服务。',
         buttons: [
-          { text: '确定', color: $r(Colors.RUST_PRIMARY) }
+          { text: '确定', color: '#FB923C' }
         ]
       }).then(() => {
       }).catch((err: Error) => {
@@ -120,7 +131,7 @@ export struct SettingsPage {
         title: '意见反馈',
         message: '如有建议或问题，可通过应用商店评论，或者发邮件到 feedback@rustmaster.com 反馈。感谢您的支持。',
         buttons: [
-          { text: '好的', color: $r(Colors.RUST_PRIMARY) }
+          { text: '好的', color: '#FB923C' }
         ]
       }).then(() => {
       }).catch((err: Error) => {
@@ -151,14 +162,7 @@ export struct SettingsPage {
     } catch (err) {
       const error = err as BusinessError;
       console.error(`Failed to share: code: ${error?.code}, message: ${error?.message}`);
-      try {
-        promptAction.showToast({
-          message: '分享失败',
-          duration: 2000
-        });
-      } catch (toastErr) {
-        console.error(`Failed to show toast: ${toastErr instanceof Error ? toastErr.message : String(toastErr)}`);
-      }
+      ToastUtil.showToast(this.context, '分享失败', 2000);
     }
   }
 
@@ -170,120 +174,6 @@ export struct SettingsPage {
       .fontColor($r(Colors.TEXT_PRIMARY))
       .width('100%')
       .margin({ bottom: Spacing.ELEMENT_SPACING_MD })
-  }
-
-  @Builder
-  ProfileCard() {
-    Column() {
-      Text('学习档案')
-        .fontSize(FontSizes.XLARGE)
-        .fontWeight(FontWeights.BOLD)
-        .fontColor($r(Colors.TEXT_PRIMARY))
-        .margin({ bottom: Spacing.ELEMENT_SPACING_XS })
-
-      Text('坚持学习，每天进步一点点')
-        .fontSize(FontSizes.SMALL)
-        .fontColor($r(Colors.TEXT_TERTIARY))
-        .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
-
-      // 进度条
-      Column() {
-        Row() {
-          Text('学习进度')
-            .fontSize(FontSizes.SMALL)
-            .fontColor($r(Colors.TEXT_SECONDARY))
-
-          Blank()
-
-          Text(`${this.getProgressPercentage()}%`)
-            .fontSize(FontSizes.SMALL)
-            .fontWeight(FontWeights.BOLD)
-            .fontColor($r(Colors.RUST_PRIMARY))
-        }
-        .width('100%')
-        .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
-
-        Stack({ alignContent: Alignment.Start }) {
-          // 背景条
-          Row()
-            .width('100%')
-            .height(8)
-            .backgroundColor($r(Colors.BG_SECONDARY))
-            .borderRadius(4)
-
-          // 进度条
-          Row()
-            .width(`${this.getProgressPercentage()}%`)
-            .height(8)
-            .backgroundColor($r(Colors.RUST_PRIMARY))
-            .borderRadius(4)
-        }
-        .width('100%')
-      }
-      .width('100%')
-      .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
-
-      // 统计数据
-      Row({ space: Spacing.ELEMENT_SPACING_MD }) {
-        Column() {
-          Text(`${this.chaptersRead.length}`)
-            .fontSize(FontSizes.TITLE)
-            .fontWeight(FontWeights.BOLD)
-            .fontColor($r(Colors.RUST_PRIMARY))
-            .margin({ bottom: Spacing.ELEMENT_SPACING_XS })
-
-          Text('已读章节')
-            .fontSize(FontSizes.SMALL)
-            .fontColor($r(Colors.TEXT_TERTIARY))
-        }
-        .layoutWeight(1)
-        .padding(Spacing.CARD_PADDING)
-        .backgroundColor($r(Colors.BG_SECONDARY))
-        .borderRadius(Sizes.RADIUS_LG)
-        .alignItems(HorizontalAlign.Center)
-
-        Column() {
-          Text(`${COURSE_CHAPTERS.length}`)
-            .fontSize(FontSizes.TITLE)
-            .fontWeight(FontWeights.BOLD)
-            .fontColor($r(Colors.TEXT_PRIMARY))
-            .margin({ bottom: Spacing.ELEMENT_SPACING_XS })
-
-          Text('总章节数')
-            .fontSize(FontSizes.SMALL)
-            .fontColor($r(Colors.TEXT_TERTIARY))
-        }
-        .layoutWeight(1)
-        .padding(Spacing.CARD_PADDING)
-        .backgroundColor($r(Colors.BG_SECONDARY))
-        .borderRadius(Sizes.RADIUS_LG)
-        .alignItems(HorizontalAlign.Center)
-
-        Column() {
-          Text(`${QUIZ_MODULES.length}`)
-            .fontSize(FontSizes.TITLE)
-            .fontWeight(FontWeights.BOLD)
-            .fontColor($r(Colors.TEXT_PRIMARY))
-            .margin({ bottom: Spacing.ELEMENT_SPACING_XS })
-
-          Text('题库')
-            .fontSize(FontSizes.SMALL)
-            .fontColor($r(Colors.TEXT_TERTIARY))
-        }
-        .layoutWeight(1)
-        .padding(Spacing.CARD_PADDING)
-        .backgroundColor($r(Colors.BG_SECONDARY))
-        .borderRadius(Sizes.RADIUS_LG)
-        .alignItems(HorizontalAlign.Center)
-      }
-      .width('100%')
-    }
-    .width('100%')
-    .padding(Spacing.CARD_PADDING_LARGE)
-    .backgroundColor($r(Colors.BG_CARD))
-    .borderRadius(Sizes.RADIUS_XL)
-    .alignItems(HorizontalAlign.Center)
-    .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
   }
 
   @Builder
@@ -446,10 +336,10 @@ export struct SettingsPage {
         .layoutWeight(1)
 
       if (this.colorMode === value) {
-        Image($r('app.media.icon_check'))
-          .width(18)
-          .height(18)
-          .fillColor($r(Colors.RUST_PRIMARY))
+        Circle()
+          .width(10)
+          .height(10)
+          .fill($r(Colors.RUST_PRIMARY))
       }
     }
     .width('100%')
@@ -466,13 +356,43 @@ export struct SettingsPage {
     Stack() {
       Scroll() {
         Column() {
-          this.ProfileCard()
+          // 顶部部分：学习资源和我的收藏（无标题）
+          Column() {
+            this.settingItem($r('app.media.icon_share'), '学习资源', () => {
+              router.pushUrl({ url: 'pages/settings/LearningResourcesPage' })
+                .catch((err: Error) => {
+                  console.error(`Failed to navigate to LearningResourcesPage: ${err.message}`);
+                });
+            })
+            Divider()
+              .strokeWidth(0.5)
+              .color($r(Colors.BG_SECONDARY))
+              .margin({ left: Spacing.CARD_PADDING, right: Spacing.CARD_PADDING })
+            this.settingItem($r('app.media.icon_favorite'), '我的收藏', () => {
+              router.pushUrl({ url: 'pages/settings/FavoritesPage' })
+                .catch((err: Error) => {
+                  console.error(`Failed to navigate to FavoritesPage: ${err.message}`);
+                });
+            })
+          }
+          .width('100%')
+          .backgroundColor($r(Colors.BG_CARD))
+          .borderRadius(Sizes.RADIUS_XL)
+          .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
+
           this.SectionTitle('设置')
 
           // 设置项
           Column() {
             this.settingItemWithValue($r('app.media.icon_theme'), '深色模式', () => this.getThemeText(), () => {
               this.showThemeSettings();
+            })
+            Divider()
+              .strokeWidth(0.5)
+              .color($r(Colors.BG_SECONDARY))
+              .margin({ left: Spacing.CARD_PADDING, right: Spacing.CARD_PADDING })
+            this.settingItemWithToggle($r('app.media.icon_voice'), '每日一贴', this.dailyTipEnabled, async (enabled: boolean) => {
+              await this.saveDailyTipSetting(enabled);
             })
             Divider()
               .strokeWidth(0.5)

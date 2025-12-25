@@ -7,11 +7,24 @@
         "material": {
           "certpath": "/Users/yangyangshi/.ohos/config/default_rustmaster_8m2uPc09ZfTbdhHAjmwJJ2ioRQxQl2iebomPKN3dT_E=.cer",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001B94D34D51F9191AC0D9A7DC3D69147AD3E1803447160DB9256B992945D340C2EAE16F802EEA3D67",
+          "keyPassword": "0000001B40A4F98039AAFAF3CB4B7C4469F6D924EC02602BB2BF332BEC9544D83BA110A8FD1EBFC831207F",
           "profile": "/Users/yangyangshi/.ohos/config/default_rustmaster_8m2uPc09ZfTbdhHAjmwJJ2ioRQxQl2iebomPKN3dT_E=.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "/Users/yangyangshi/.ohos/config/default_rustmaster_8m2uPc09ZfTbdhHAjmwJJ2ioRQxQl2iebomPKN3dT_E=.p12",
-          "storePassword": "0000001B63B44F9092DE284CEDC042EDC200B04F1857DB38B5FF97136208054D83CE8B5FFD741BF5176B4C"
+          "storePassword": "0000001BBCFC65AABC727E62783623B72B30C772319EF11E1BC7EDF3A3A7056E643A0911FAFE72FD947D10"
+        }
+      },
+      {
+        "name": "release",
+        "type": "HarmonyOS",
+        "material": {
+          "storeFile": "/Users/yangyangshi/Documents/huawei_profile/douhua.p12",
+          "storePassword": "00000038B2FE970DEC4AF7C589453386C9CF792024FCB976256EBC216367622EAF2010C9F971E2BAF54A66B768252B7C39F1792417C9B14E98586BD163F5DB23E16ABB7B84A68A24",
+          "keyAlias": "deveco",
+          "keyPassword": "00000038D08EA8FBA9822E0D358D5D5EDED1378473E86162C5CDD71BE514DA47D1297F7855C5AF9E3AE74049BC4A0CAB5C74A7AB540AD558F277F8046BE0802A93A65DEA3E9A8717",
+          "signAlg": "SHA256withECDSA",
+          "profile": "/Users/yangyangshi/Documents/huawei_profile/rustRelease.p7b",
+          "certpath": "/Users/yangyangshi/Documents/huawei_profile/douhua_release.cer"
         }
       }
     ],

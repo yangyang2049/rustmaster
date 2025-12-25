@@ -8,6 +8,7 @@ import common from '@ohos.app.ability.common';
 
 export class PreferencesManager {
   private static prefsMap: Map<string, preferences.Preferences> = new Map();
+  private static pendingPromises: Map<string, Promise<preferences.Preferences>> = new Map();
   private static context: common.UIAbilityContext | null = null;
 
   /**
@@ -17,6 +18,7 @@ export class PreferencesManager {
   static init(context: common.UIAbilityContext): void {
     // 清除之前的缓存，确保使用新的 context
     PreferencesManager.prefsMap.clear();
+    PreferencesManager.pendingPromises.clear();
     PreferencesManager.context = context;
   }
 
@@ -36,17 +38,35 @@ export class PreferencesManager {
       return existing;
     }
 
-    // 先从系统缓存中移除，确保获取最新数据
-    try {
-      await preferences.removePreferencesFromCache(PreferencesManager.context, name);
-    } catch (e) {
-      // 忽略移除缓存的错误
+    // 如果正在创建中，等待正在进行的 Promise
+    const pendingPromise = PreferencesManager.pendingPromises.get(name);
+    if (pendingPromise) {
+      return pendingPromise;
     }
 
-    // 创建新的 Preferences 实例
-    const prefs = await preferences.getPreferences(PreferencesManager.context, name);
-    PreferencesManager.prefsMap.set(name, prefs);
-    return prefs;
+    // 创建新的 Promise 并立即存储，防止并发调用
+    const createPromise = (async (): Promise<preferences.Preferences> => {
+      try {
+        // 先从系统缓存中移除，确保获取最新数据
+        try {
+          await preferences.removePreferencesFromCache(PreferencesManager.context!, name);
+        } catch (e) {
+          // 忽略移除缓存的错误
+        }
+
+        // 创建新的 Preferences 实例
+        const prefs = await preferences.getPreferences(PreferencesManager.context!, name);
+        PreferencesManager.prefsMap.set(name, prefs);
+        return prefs;
+      } finally {
+        // 创建完成后，从 pendingPromises 中移除
+        PreferencesManager.pendingPromises.delete(name);
+      }
+    })();
+
+    // 立即存储 Promise，防止并发调用
+    PreferencesManager.pendingPromises.set(name, createPromise);
+    return createPromise;
   }
 
   /**
@@ -54,6 +74,7 @@ export class PreferencesManager {
    */
   static clearCache(): void {
     PreferencesManager.prefsMap.clear();
+    PreferencesManager.pendingPromises.clear();
   }
 
   /**
@@ -62,6 +83,7 @@ export class PreferencesManager {
    */
   static removePreferences(name: string): void {
     PreferencesManager.prefsMap.delete(name);
+    PreferencesManager.pendingPromises.delete(name);
   }
 }
 

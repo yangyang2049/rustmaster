@@ -48,10 +48,12 @@ export class Spacing {
 // ==================== 尺寸常量 ====================
 export class Sizes {
   // 圆角
+  static readonly RADIUS_XS: number = 2;
   static readonly RADIUS_SM: number = 8;
   static readonly RADIUS_MD: number = 12;
   static readonly RADIUS_LG: number = 16;
   static readonly RADIUS_XL: number = 20;
+  static readonly RADIUS_XXL: number = 22;
   static readonly RADIUS_FULL: number = 999;
 
   // 图标尺寸
@@ -71,31 +73,67 @@ export class Sizes {
   static readonly BUTTON_HEIGHT_MD: number = 40;
   static readonly BUTTON_HEIGHT_LG: number = 48;
   static readonly BUTTON_HEIGHT_XL: number = 56;
+  static readonly BUTTON_HEIGHT_XXL: number = 52;
 
   // 搜索栏
   static readonly SEARCH_BAR_HEIGHT: number = 44;
+
+  // 标签页高度
+  static readonly TAB_HEIGHT: number = 36;
+  static readonly TAB_BAR_HEIGHT: number = 44;
+  static readonly TAB_BAR_PADDING: number = 4;
+  static readonly TAB_BAR_RADIUS: number = 22;
+
+  // 特殊尺寸
+  static readonly CHIP_HEIGHT: number = 36;
+  static readonly PROGRESS_BAR_HEIGHT: number = 4;
+  static readonly PROGRESS_BAR_RADIUS: number = 2;
+  static readonly AVATAR_BORDER_RADIUS: number = 14;
+  static readonly CIRCLE_BUTTON_SIZE: number = 50;
+  static readonly CIRCLE_BUTTON_RADIUS: number = 25;
+
+  // 游戏相关尺寸
+  static readonly GAME_FLAG_WIDTH: number = 400;
+  static readonly GAME_RESULT_ICON: number = 64;
+  static readonly GAME_RESULT_TITLE: number = 28;
+  static readonly GAME_TIMER_LARGE: number = 72;
+  static readonly GAME_TIMER_MEDIUM: number = 48;
+  static readonly GAME_CARD_HEIGHT: number = 160;
+  static readonly GAME_CARD_HEIGHT_LARGE: number = 180;
+  static readonly GAME_CARD_HEIGHT_XL: number = 280;
+  static readonly GAME_CARD_HEIGHT_XXL: number = 340;
+  static readonly GAME_OVERLAY_HEIGHT: number = 100;
+  static readonly GAME_SHARE_WIDTH: number = 400;
 }
 
 // ==================== 字体尺寸常量 ====================
 export class FontSizes {
-  static readonly TINY: number = 10;
-  static readonly SMALL: number = 12;
-  static readonly BODY: number = 14;
-  static readonly MEDIUM: number = 15;
+  static readonly TINY: number = 12;
+  static readonly SMALL: number = 14;
+  static readonly BODY: number = 16;
+  static readonly MEDIUM: number = 17;
   static readonly LARGE: number = 18;
-  static readonly XLARGE: number = 20;
-  static readonly TITLE: number = 24;
-  static readonly HERO: number = 32;
+  static readonly XLARGE: number = 22;
+  static readonly TITLE: number = 26;
+  static readonly HERO: number = 36;
+
+  // 游戏相关字体
+  static readonly GAME_LEVEL: number = 16;
+  static readonly GAME_COMBO: number = 18;
+  static readonly GAME_BUTTON: number = 18;
+  static readonly GAME_RESULT_TITLE: number = 32;
+  static readonly GAME_RESULT_SCORE: number = 72;
+  static readonly GAME_TIMER: number = 80;
 
   // 兼容旧命名
-  static readonly xs: number = 10;
-  static readonly sm: number = 12;
-  static readonly base: number = 14;
-  static readonly md: number = 16;
+  static readonly xs: number = 12;
+  static readonly sm: number = 14;
+  static readonly base: number = 16;
+  static readonly md: number = 17;
   static readonly lg: number = 18;
-  static readonly xl: number = 20;
-  static readonly xxl: number = 24;
-  static readonly xxxl: number = 32;
+  static readonly xl: number = 22;
+  static readonly xxl: number = 26;
+  static readonly xxxl: number = 36;
 }
 
 // ==================== 字体字重常量 ====================
@@ -205,11 +243,45 @@ export class Colors {
   // 边框颜色
   static readonly BORDER = 'app.color.gray_border';
   static readonly BORDER_LIGHT = 'app.color.bg_secondary';
+  static readonly DIVIDER = 'app.color.gray_border';
 
   // 其他
   static readonly HARMONY_DARK = 'app.color.harmony_dark';
   static readonly ICON_TAB_NORMAL = 'app.color.icon_tab_normal';
   static readonly SHADOW = 'app.color.shadow';
+}
+
+// ==================== 系统颜色常量 ====================
+/**
+ * 系统颜色常量 - 直接使用 Color 枚举值
+ * 用于特殊场景，如透明背景等
+ */
+export class SystemColors {
+  static readonly TRANSPARENT: ResourceColor = Color.Transparent;
+  static readonly WHITE: ResourceColor = Color.White;
+  static readonly BLACK: ResourceColor = Color.Black;
+}
+
+// ==================== 游戏相关颜色常量 ====================
+/**
+ * 游戏相关颜色常量 - 引用 color.json 中的资源
+ * 支持深色模式自动切换
+ */
+export class GameColors {
+  static readonly BUTTON_SECONDARY = 'app.color.game_button_secondary';
+  static readonly BUTTON_PRIMARY = 'app.color.game_button_primary';
+  static readonly ORANGE = 'app.color.game_orange';
+  static readonly RED = 'app.color.game_red';
+  static readonly BLUE_LIGHT = 'app.color.game_blue_light';
+  static readonly BLUE_MEDIUM = 'app.color.game_blue_medium';
+  static readonly GREEN_LIGHT = 'app.color.game_green_light';
+  static readonly GREEN = 'app.color.game_green';
+  static readonly AMBER = 'app.color.game_amber';
+  static readonly OVERLAY = 'app.color.game_overlay';
+  static readonly OVERLAY_DARK = 'app.color.game_overlay_dark';
+  static readonly OVERLAY_LIGHT = 'app.color.game_overlay_light';
+  static readonly BLUE_OVERLAY = 'app.color.game_blue_overlay';
+  static readonly AMBER_OVERLAY = 'app.color.game_amber_overlay';
 }
 
 // ==================== 兼容性导出（保持向后兼容）====================

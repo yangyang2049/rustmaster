@@ -243,6 +243,62 @@
     {
       "name": "info_bg",
       "value": "#DBEAFE"
+    },
+    {
+      "name": "game_button_secondary",
+      "value": "#666666"
+    },
+    {
+      "name": "game_button_primary",
+      "value": "#1677FF"
+    },
+    {
+      "name": "game_orange",
+      "value": "#FB923C"
+    },
+    {
+      "name": "game_red",
+      "value": "#DC2626"
+    },
+    {
+      "name": "game_blue_light",
+      "value": "#E0F2FE"
+    },
+    {
+      "name": "game_blue_medium",
+      "value": "#93C5FD"
+    },
+    {
+      "name": "game_green_light",
+      "value": "#D1FAE5"
+    },
+    {
+      "name": "game_green",
+      "value": "#10B981"
+    },
+    {
+      "name": "game_amber",
+      "value": "#F59E0B"
+    },
+    {
+      "name": "game_overlay",
+      "value": "#80000000"
+    },
+    {
+      "name": "game_overlay_dark",
+      "value": "#99000000"
+    },
+    {
+      "name": "game_overlay_light",
+      "value": "#4D000000"
+    },
+    {
+      "name": "game_blue_overlay",
+      "value": "#801677FF"
+    },
+    {
+      "name": "game_amber_overlay",
+      "value": "#4DF59E0B"
     }
   ]
 }

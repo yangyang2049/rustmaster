@@ -15,7 +15,7 @@ export struct NavBar {
   private navItems: NavItem[] = [
     { tab: Tab.LEARN, icon: $r('app.media.ic_tab_learn'), iconSelected: $r('app.media.ic_tab_learn_selected'), label: '教程' },
     { tab: Tab.SYNTAX, icon: $r('app.media.ic_tab_syntax'), iconSelected: $r('app.media.ic_tab_syntax_selected'), label: '语法' },
-    { tab: Tab.QUIZ, icon: $r('app.media.ic_tab_quiz'), iconSelected: $r('app.media.ic_tab_quiz_selected'), label: '题库' },
+    { tab: Tab.QUIZ, icon: $r('app.media.ic_tab_quiz'), iconSelected: $r('app.media.ic_tab_quiz_selected'), label: '测试' },
     { tab: Tab.INTERVIEW, icon: $r('app.media.ic_tab_interview'), iconSelected: $r('app.media.ic_tab_interview_selected'), label: '面试' },
     { tab: Tab.SETTINGS, icon: $r('app.media.ic_tab_profile'), iconSelected: $r('app.media.ic_tab_profile_selected'), label: '我的' }
   ];
@@ -50,6 +50,6 @@ export struct NavBar {
       top: Spacing.ELEMENT_SPACING_SM,
       bottom: Spacing.ELEMENT_SPACING_SM
     })
-    .backgroundColor($r(Colors.BG_TAB_BAR))
+    .backgroundColor($r(Colors.BG_CARD))
   }
 }

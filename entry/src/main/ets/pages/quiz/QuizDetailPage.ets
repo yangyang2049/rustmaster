@@ -1,9 +1,11 @@
 import router from '@ohos.router';
 import { QuizModule, QuizQuestion, QuestionType } from '../../data/RustTypes';
 import { QUIZ_MODULES } from '../../data/RustConstants';
-import { Spacing, Sizes, FontSizes, FontWeights, Colors } from '../../utils/DesignSystem';
+import { Spacing, Sizes, FontSizes, FontWeights, Colors, SystemColors } from '../../utils/DesignSystem';
 import { PreferencesManager } from '../../utils/PreferencesManager';
 import { preferences } from '@kit.ArkData';
+import { VibratorUtil } from '../../utils/VibratorUtil';
+import common from '@ohos.app.ability.common';
 
 interface RouterParams {
   quizId: string;
@@ -27,8 +29,10 @@ struct QuizDetailPage {
   @State answeredQuestions: number[] = [];
   private prefs: preferences.Preferences | null = null;
   private quizId: string = '';
+  private context = getContext(this) as common.UIAbilityContext;
 
   async aboutToAppear() {
+    await VibratorUtil.init(this.context);
     const params = router.getParams() as Record<string, Object> | null;
     if (params && typeof params === 'object' && params['quizId'] !== undefined) {
       const quizId = params['quizId'] as string;
@@ -162,10 +166,12 @@ struct QuizDetailPage {
     const correctIndices = currentQ.correctIndices ||
       (currentQ.correctIndex !== undefined ? [currentQ.correctIndex] : []);
 
+    let isCorrect = false;
     if (currentQ.type === QuestionType.MULTIPLE_CHOICE) {
       // 多选题：必须全部正确
-      if (this.selectedAnswers.length === correctIndices.length &&
-        this.selectedAnswers.every(idx => correctIndices.includes(idx))) {
+      isCorrect = this.selectedAnswers.length === correctIndices.length &&
+        this.selectedAnswers.every(idx => correctIndices.includes(idx));
+      if (isCorrect) {
         this.score++;
       }
     } else if (currentQ.type === QuestionType.TRUE_FALSE) {
@@ -176,16 +182,24 @@ struct QuizDetailPage {
       // 正确答案是"正确"（0）
       const isAnswerCorrect = correctIndices.includes(0);
       // 用户选择"正确"（0）且答案是正确，或用户选择"错误"（1）且答案是错误
-      const isCorrect = (this.selectedAnswer === 0 && isAnswerCorrect) ||
+      isCorrect = (this.selectedAnswer === 0 && isAnswerCorrect) ||
         (this.selectedAnswer === 1 && !isAnswerCorrect);
       if (isCorrect) {
         this.score++;
       }
     } else {
       // 单选题
-      if (correctIndices.includes(this.selectedAnswer)) {
+      isCorrect = correctIndices.includes(this.selectedAnswer);
+      if (isCorrect) {
         this.score++;
       }
+    }
+
+    // 触觉反馈
+    if (isCorrect) {
+      VibratorUtil.vibrateCorrect();
+    } else {
+      VibratorUtil.vibrateIncorrect();
     }
 
     // 记录已回答的问题
@@ -280,10 +294,10 @@ struct QuizDetailPage {
 
     // 显示结果后 - 高亮的选项使用白色文字
     if (this.isCorrectOption(index)) {
-      return Color.White;
+      return SystemColors.WHITE;
     }
     if (this.isSelectedOption(index) && !this.isCorrectOption(index)) {
-      return Color.White;
+      return SystemColors.WHITE;
     }
     return $r(Colors.TEXT_PRIMARY);
   }
@@ -340,16 +354,16 @@ struct QuizDetailPage {
   ProgressCard() {
     Row() {
       Text(`第 ${this.currentQuestionIndex + 1} 题 / 共 ${this.quiz?.questions.length || 0} 题`)
-        .fontSize(14)
+        .fontSize(FontSizes.BODY)
         .fontColor($r(Colors.TEXT_TERTIARY))
       Blank()
       Text(`得分: ${this.score}`)
-        .fontSize(14)
+        .fontSize(FontSizes.BODY)
         .fontColor($r(Colors.RUST_PRIMARY))
         .fontWeight(FontWeight.Medium)
     }
     .width('100%')
-    .padding(16)
+    .padding(Spacing.CARD_PADDING)
     .backgroundColor($r(Colors.BG_CARD))
     .borderRadius(Sizes.RADIUS_LG)
     .shadow({
@@ -367,23 +381,23 @@ struct QuizDetailPage {
         // 题型标签
         Row() {
           Text(this.getQuestionTypeLabel(this.getCurrentQuestion()!.type))
-            .fontSize(12)
+            .fontSize(FontSizes.SMALL)
             .fontColor($r(Colors.RUST_PRIMARY))
             .backgroundColor($r(Colors.RUST_BG_LIGHT))
-            .padding({ left: 8, right: 8, top: 4, bottom: 4 })
-            .borderRadius(4)
+            .padding({ left: Spacing.SM, right: Spacing.SM, top: Spacing.XS, bottom: Spacing.XS })
+            .borderRadius(Sizes.RADIUS_XS)
         }
         .width('100%')
         .margin({ bottom: 12 })
 
         Text(this.getCurrentQuestion()!.question)
-          .fontSize(16)
+          .fontSize(FontSizes.md)
           .fontWeight(FontWeight.Medium)
           .fontColor($r(Colors.TEXT_PRIMARY))
           .lineHeight(26)
       }
       .width('100%')
-      .padding(16)
+      .padding(Spacing.CARD_PADDING)
       .backgroundColor($r(Colors.BG_CARD))
       .borderRadius(Sizes.RADIUS_LG)
       .shadow({
@@ -414,7 +428,7 @@ struct QuizDetailPage {
         }
       }
       .width('100%')
-      .padding(16)
+      .padding(Spacing.CARD_PADDING)
       .backgroundColor($r(Colors.BG_CARD))
       .borderRadius(Sizes.RADIUS_LG)
       .shadow({
@@ -431,20 +445,20 @@ struct QuizDetailPage {
     Row() {
       // 选项字母圆圈
       Text(String.fromCharCode(65 + index))
-        .fontSize(16)
+        .fontSize(FontSizes.md)
         .fontWeight(FontWeight.Medium)
         .fontColor(this.getOptionTextColor(index))
-        .width(32)
-        .height(32)
+        .width(Sizes.AVATAR_SM)
+        .height(Sizes.AVATAR_SM)
         .textAlign(TextAlign.Center)
-        .borderRadius(16)
+        .borderRadius(Sizes.AVATAR_BORDER_RADIUS)
         .backgroundColor(this.getOptionBgColor(index))
 
       // 选项文字
       Text(option)
-        .fontSize(14)
+        .fontSize(FontSizes.BODY)
         .fontColor(this.getOptionItemTextColor(index))
-        .margin({ left: 12 })
+        .margin({ left: Spacing.MD })
         .layoutWeight(1)
 
       // 正确标记
@@ -452,7 +466,6 @@ struct QuizDetailPage {
         Image($r('app.media.icon_check'))
           .width(20)
           .height(20)
-          .fillColor(Color.White)
       }
 
       // 错误标记
@@ -460,14 +473,13 @@ struct QuizDetailPage {
         Image($r('app.media.icon_close'))
           .width(20)
           .height(20)
-          .fillColor(Color.White)
       }
     }
     .width('100%')
     .padding(14)
     .backgroundColor(this.showResult ? this.getOptionBgColor(index) :
       (this.isSelectedOption(index) ? $r(Colors.RUST_BG_LIGHT) : $r(Colors.BG_SECONDARY)))
-    .borderRadius(12)
+    .borderRadius(Sizes.RADIUS_MD)
     .border({
       width: this.isSelectedOption(index) && !this.showResult ? 1.5 : 0,
       color: $r(Colors.RUST_PRIMARY)
@@ -484,7 +496,6 @@ struct QuizDetailPage {
       Image(isTrue ? $r('app.media.icon_check') : $r('app.media.icon_close'))
         .width(28)
         .height(28)
-        .fillColor(this.getOptionTextColor(index))
 
       Text(isTrue ? '正确' : '错误')
         .fontSize(16)
@@ -497,7 +508,7 @@ struct QuizDetailPage {
     .justifyContent(FlexAlign.Center)
     .backgroundColor(this.showResult ? this.getOptionBgColor(index) :
       (this.isSelectedOption(index) ? $r(Colors.RUST_BG_LIGHT) : $r(Colors.BG_SECONDARY)))
-    .borderRadius(12)
+    .borderRadius(Sizes.RADIUS_MD)
     .border({
       width: this.isSelectedOption(index) && !this.showResult ? 2 : 0,
       color: $r(Colors.RUST_PRIMARY)
@@ -515,7 +526,6 @@ struct QuizDetailPage {
           Image(this.isAnswerCorrect() ? $r('app.media.icon_check') : $r('app.media.icon_close'))
             .width(20)
             .height(20)
-            .fillColor(this.isAnswerCorrect() ? $r(Colors.SUCCESS) : $r(Colors.ERROR))
 
           Text('解析')
             .fontSize(14)
@@ -535,7 +545,7 @@ struct QuizDetailPage {
           .textAlign(TextAlign.Start)
       }
       .width('100%')
-      .padding(16)
+      .padding(Spacing.CARD_PADDING)
       .backgroundColor($r(Colors.BG_CARD))
       .borderRadius(Sizes.RADIUS_LG)
       .alignItems(HorizontalAlign.Start)
@@ -559,10 +569,11 @@ struct QuizDetailPage {
           .fontSize(16)
           .fontWeight(FontWeight.Bold)
           .width('100%')
-          .height(50)
-          .borderRadius(12)
+          .height(Sizes.BUTTON_HEIGHT_XL)
+          .borderRadius(Sizes.RADIUS_MD)
           .enabled(this.canSubmit())
           .onClick(() => {
+            VibratorUtil.vibrateTap();
             this.submitAnswer();
           })
       } else if (!this.isLastQuestion()) {
@@ -573,9 +584,10 @@ struct QuizDetailPage {
           .fontSize(16)
           .fontWeight(FontWeight.Bold)
           .width('100%')
-          .height(50)
-          .borderRadius(12)
+          .height(Sizes.BUTTON_HEIGHT_XL)
+          .borderRadius(Sizes.RADIUS_MD)
           .onClick(() => {
+            VibratorUtil.vibrateTap();
             this.nextQuestion();
           })
       } else {
@@ -608,15 +620,16 @@ struct QuizDetailPage {
           Row({ space: 12 }) {
             Button('再做一次')
               .type(ButtonType.Normal)
-              .backgroundColor(Color.Transparent)
+              .backgroundColor(SystemColors.TRANSPARENT)
               .fontColor($r(Colors.RUST_PRIMARY))
               .fontSize(16)
               .fontWeight(FontWeight.Bold)
               .layoutWeight(1)
-              .height(50)
-              .borderRadius(12)
+              .height(Sizes.BUTTON_HEIGHT_XL)
+              .borderRadius(Sizes.RADIUS_MD)
               .border({ width: 1.5, color: $r(Colors.RUST_PRIMARY) })
               .onClick(() => {
+                VibratorUtil.vibrateTap();
                 this.resetQuiz();
               })
 
@@ -627,8 +640,8 @@ struct QuizDetailPage {
               .fontSize(16)
               .fontWeight(FontWeight.Bold)
               .layoutWeight(1)
-              .height(50)
-              .borderRadius(12)
+              .height(Sizes.BUTTON_HEIGHT_XL)
+              .borderRadius(Sizes.RADIUS_MD)
               .onClick(() => {
                 // Navigation 组件会自动处理返回，通过 hideBackButton(false) 设置的返回按钮
                 // 如果需要程序化返回，可以使用 router.pushUrl 返回到上一页
@@ -647,9 +660,8 @@ struct QuizDetailPage {
   MenuBuilder() {
     Row() {
       Image($r('app.media.icon_more'))
-        .width(24)
-        .height(24)
-        .fillColor($r(Colors.TEXT_PRIMARY))
+        .width(Sizes.ICON_LG)
+        .height(Sizes.ICON_LG)
         .bindMenu([
           {
             value: '重置',

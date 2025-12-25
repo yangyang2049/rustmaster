@@ -2,6 +2,8 @@
   "src": [
     "pages/Index",
     "pages/learn/ChapterDetailPage",
-    "pages/quiz/QuizDetailPage"
+    "pages/quiz/QuizDetailPage",
+    "pages/settings/LearningResourcesPage",
+    "pages/settings/FavoritesPage"
   ]
 }

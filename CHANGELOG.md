@@ -2,7 +2,296 @@
 
 ## [未发布]
 
+### 新增 (Added)
+- **学习资源页面**：在设置页面添加"学习资源"入口
+  - 创建了专门的 LearningResourcesPage 页面
+  - 使用网格布局（2列）展示学习资源
+  - 包含官方网站、论坛、包管理和书籍等 8 个资源
+  - 点击资源卡片会显示对话框，展示资源详情和网址
+  - 资源按类别使用不同颜色和图标区分
+
+- **每日一贴关闭功能**：在"每日一贴"卡片右上角添加关闭按钮
+  - 点击关闭按钮后，卡片会隐藏并显示 Toast "明天见"
+  - 关闭状态会保存到本地，记录关闭日期
+  - 在下一个自然日启动应用时，卡片会自动重新显示
+  - 使用日期字符串（YYYY-MM-DD）来判断是否是新的一天
+
+- **Quiz 页面进度卡片**：在测验页面添加了类似学习页面的进度卡片
+  - 显示测验完成进度，包括环形进度条和完成数量
+  - 实时显示已完成的测验数和总测验数
+  - 使用与学习页面相同的设计风格，保持界面一致性
+
+- **自定义面试问题功能**：允许用户手动添加面试问题并保存到数据库
+  - 创建了 InterviewQuestionsManager 工具类来管理自定义面试问题的存储和加载
+  - 在题库标签页添加"添加问题"按钮，点击后弹出对话框
+  - 对话框支持输入问题、答案/要点、难度（简单/中等/困难）和标签
+  - 自定义问题会保存到本地数据库，并在题库和模拟面试中使用
+  - 自定义问题支持删除功能（仅限用户添加的问题，内置问题不可删除）
+  - 模拟面试功能会自动使用合并后的问题列表（内置+自定义）
+
+- **触觉反馈增强**：为答题页面添加细腻的震动反馈
+  - 在 QuizPage 和 QuizDetailPage 中，答对时触发短促两次振动，答错时触发中长振动
+  - 所有按钮点击时添加轻触反馈，提升交互体验
+  - 使用 VibratorUtil 统一管理震动反馈
+
+- **共享元素转场动画**：章节列表与详情页之间添加平滑转场
+  - 点击章节卡片时，标题平滑"放大"并过渡到详情页位置
+  - 使用 sharedTransition 实现，转场时长 300ms，采用 EaseInOut 曲线
+
+- **课程完成度可视化**：在学习页面添加环形进度条
+  - 使用 Progress 组件配合 ProgressStyle.Ring 展示课程完成度
+  - 显示已完成章节数和总章节数，以及完成百分比
+  - 进度条动态更新，实时反映学习进度
+
+### 优化 (Changed)
+- **面试页面添加按钮位置调整**：将"添加问题"按钮从内容区域移到顶部导航栏
+  - 按钮显示在标题栏右侧，仅在面试标签页时显示
+  - 移除了题库标签页中的"+ 添加问题"按钮
+  - 使用"+"符号作为按钮，保持界面简洁
+
+- **每日一贴设置**：在设置页面添加"每日一贴"开关
+  - 用户可以在设置中启用或禁用每日一贴功能
+  - 如果禁用，每日一贴将不会加载和显示
+  - 默认状态为启用
+  - 设置保存在 app_settings preferences 中
+
+- **设置页面简化**：移除了"学习档案"卡片
+  - 学习进度和测验进度现在分别在学习页面和测验页面显示
+  - 设置页面专注于应用设置功能，界面更加简洁
+
+- **添加问题对话框样式优化**：调整对话框宽度和边距
+  - 对话框宽度从 100% 调整为 90%，最大宽度限制为 400px
+  - 添加居中对齐，使对话框在屏幕上居中显示
+  - 改善对话框的视觉效果，不再占满整个屏幕宽度
+
+- **设置页面布局优化**：重新组织设置页面结构
+  - 将"学习资源"和"我的收藏"移到页面顶部，作为独立的 section（无标题）
+  - 这两个功能项现在显示在"设置"标题之前
+  - 其他设置项保持在"设置"标题下方
+  - 提升重要功能的可见性和可访问性
+
+- **面试问题显示优化**：将星星从难度标签中分离
+  - 星星现在作为独立的元素显示，不再包含在难度标签内
+  - 星星没有背景色，仅显示星星符号
+  - 星星显示在难度标签旁边，两者之间有适当间距
+  - 适用于题库列表和模拟面试界面
+
+- **添加问题按钮优化**：使用 SVG 图标替代文本
+  - 创建了 `icon_add.svg` 图标文件（支持浅色和深色主题）
+  - 将"添加问题"按钮从文本"+"改为使用 SVG 图标
+  - 图标在浅色和深色模式下使用 Rust 主色（#FB923C），保持一致的品牌色彩
+  - 提升界面一致性和视觉效果
+
+- **图标主题适配优化**：为关闭和加号图标添加浅色/深色模式支持
+  - 关闭图标：浅色模式使用深灰色（#1F2937），深色模式使用白色（#FFFFFF）
+  - 加号图标：浅色和深色模式均使用 Rust 主色（#FB923C），保持品牌一致性
+  - 确保图标在不同主题下都有良好的可见性和对比度
+
+- **界面简化**：移除共享元素转场动画和示例代码切换注释功能
+  - 移除了章节列表和详情页之间的共享元素转场动画（sharedTransition）
+  - 移除了示例代码组件中的"显示注释"切换开关和相关功能
+  - 示例代码现在始终显示注释，简化了用户界面和代码逻辑
+
 ### 修复 (Fixed)
+- **编译错误修复**：修复了 ArkTS 编译错误
+  - 移除了 `Image` 组件中不支持的 `tintColor` 属性（LearnPage.ets 和 LearningResourcesPage.ets）
+  - 修复了 `StatsRow()` 构建器方法调用后链式调用 `.width()` 的错误（InterviewPage.ets）
+  - 修复了 `InterviewQuestionsManager.ets` 中的类型错误：将 `unknown` 类型改为更具体的类型
+  - 移除了不支持的 `is` 类型守卫，改用显式类型检查和循环过滤
+  - 修复了 `StarBadge` 构建器方法中不能链式调用 `.margin()` 的错误，将 margin 移到内部 Text 组件上
+  - 修复了 `ExampleCodeView` 组件中 `@Prop onCopyClick` 函数类型错误：移除了函数类型的 `@Prop`，将复制逻辑移到组件内部实现
+  - 所有编译错误已解决，代码可以正常编译
+
+- **示例代码注释高亮**：为示例代码中的注释添加更浅的颜色显示
+  - 创建了 `parseCodeWithComments()` 方法，解析代码并识别行注释（`//`）
+  - 注释部分使用 `TEXT_TERTIARY`（浅灰色 `#9CA3AF`）显示，代码部分保持白色
+  - 使用 `Text` 组件配合 `Span` 子组件实现不同颜色的文本显示
+  - 提升代码可读性，便于区分代码和注释
+
+- **Toast API 统一管理**：创建 ToastUtil 工具类统一管理 Toast 显示
+  - 创建了 `ToastUtil.ets` 工具类，统一管理所有 Toast 显示
+  - 替换了所有页面中的 `promptAction.showToast()` 调用，统一使用 `ToastUtil.showToast()`
+  - 涉及页面：ChapterDetailPage、SyntaxPage、SettingsPage、FavoritesPage、ConnectionsPlayPage、TriviaPlayPage、QuizPlayPage、ProfilePage、TopicDetailPage
+  - 注意：`showToast` 在 API 20 中已标记为弃用，但暂时仍可使用，未来需要迁移到新 API
+  - 统一了 Toast 显示方式，便于未来迁移和维护
+
+### 优化 (Changed)
+- **语法速查页面交互优化**：优化API entry的交互体验
+  - 整个卡片区域可点击切换展开/折叠状态
+  - 黄色chip（复制按钮）点击时不会触发卡片的切换，只执行复制操作
+  - 代码块点击时也不会触发卡片切换，只执行复制操作
+
+- **学习档案界面优化**：重新设计学习档案显示方式
+  - 将原来的进度条和三个统计box改为两个简洁的进度box
+  - 第一个box显示课程进度：格式为 "已读章节数 / 总章节数"（如 4 / 64）
+  - 第二个box显示测试进度：格式为 "已完成测试数 / 总测试数"（如 1 / 10）
+  - 界面更加简洁清晰，信息一目了然
+
+- **课程单元显示优化**：简化单元entry的进度显示
+  - 移除了单元头部的百分比显示（n%），避免信息重复
+  - 保留进度条下方的 "n/m 已完成" 文本显示
+  - 界面更加简洁，减少视觉干扰
+
+- **每日一贴扩展**：将每日一贴从5条扩展到50条
+  - 新增45条高质量的Rust学习小贴士
+  - 涵盖所有权、借用、生命周期、错误处理、并发、异步、宏等核心主题
+  - 提供更多样化的学习提示，增强学习体验
+
+### 新增 (Added)
+- **收藏功能**：为课程章节添加了收藏功能
+  - 创建了 FavoritesManager 工具类，管理收藏数据的增删改查
+  - 在课程详情页导航栏添加收藏按钮，支持一键收藏/取消收藏
+  - 创建了收藏页面（FavoritesPage），展示所有收藏的章节
+  - 在设置页面添加"我的收藏"入口，方便用户访问收藏列表
+  - 支持编辑模式，可批量删除收藏
+  - 添加了收藏相关的图标资源（icon_favorite.svg, icon_favorite_selected.svg）
+
+- **课程详情页分享和朗读功能**：为课程详情页添加了分享和朗读功能
+  - 创建了TextReaderUtil工具类，使用HarmonyOS TTS API实现文本朗读
+  - 在导航栏添加了分享和朗读按钮（参考TopicDetailPage的实现）
+  - 分享功能：支持分享章节标题、描述、内容和知识点总结
+  - 朗读功能：支持朗读完整的章节内容，包括标题、描述、内容和知识点
+  - 实现了getReadContent和buildShareText方法，生成朗读和分享内容
+  - 页面销毁时自动停止朗读，避免资源泄漏
+  - 添加了icon_voice.svg图标资源（base和dark模式）
+
+- **面试题库扩展**：将面试题库从15题扩展到100题
+  - 新增85道高质量Rust面试题，覆盖从基础到高级的各个主题
+  - 涵盖所有权、借用、生命周期、智能指针、并发、异步、错误处理、Trait、泛型等核心概念
+  - 包含系统编程、性能优化、内存管理、类型系统等高级主题
+  - 每题包含：核心要点、常见错误回答、代码推理、追问方向
+  - 所有题目按难度分类（简单/中等/困难），便于筛选和学习
+
+### 优化 (Changed)
+- **课程内容 Markdown 渲染**：为课程章节内容添加 Markdown 渲染支持
+  - 创建了 MarkdownRenderer 组件，支持基本的 Markdown 语法
+  - 支持标题（# ## ###）、段落、粗体（**text**）、斜体（*text*）、行内代码（`code`）、代码块（```code```）、列表（- item）、链接（[text](url)）
+  - 更新了 ChapterDetailPage，使用 MarkdownRenderer 渲染课程内容
+  - 提升课程内容的可读性和格式化效果
+
+- **面试页面标签调整**：调整面试页面的标签文本
+  - 第一个子标签从"测试"改为"题库"
+  - 页面标题从"面试宝典"改为"面试"
+  - 保持与导航栏标签的一致性
+
+- **设计系统统一**：统一整个项目的设计系统，将所有硬编码的设计值迁移到 DesignSystem.ets
+  - 扩展了 DesignSystem.ets，添加了所有缺失的设计常量：
+    - 新增标签页相关尺寸（TAB_HEIGHT, TAB_BAR_HEIGHT, TAB_BAR_PADDING, TAB_BAR_RADIUS）
+    - 新增游戏相关尺寸（GAME_FLAG_WIDTH, GAME_RESULT_ICON, GAME_TIMER_LARGE 等）
+    - 新增游戏相关字体大小（GAME_LEVEL, GAME_COMBO, GAME_BUTTON, GAME_RESULT_TITLE 等）
+    - 新增圆角常量（RADIUS_XS, RADIUS_XXL）
+    - 新增系统颜色类（SystemColors）用于透明、白色、黑色等系统颜色
+    - 新增游戏颜色类（GameColors）用于游戏相关的硬编码颜色（待迁移到资源文件）
+  - 更新了 InterviewPage.ets，将所有硬编码值替换为设计系统常量
+  - 更新了 QuizDetailPage.ets，将大部分硬编码值替换为设计系统常量
+  - 剩余文件需要继续更新：QuizPage.ets, QuizPlayPage.ets, 其他游戏页面, LearnPage, SettingsPage, ProfilePage, SyntaxPage 等
+  - 统一使用 Spacing, Sizes, FontSizes, FontWeights, Colors, SystemColors 等设计系统常量
+  - 提升代码可维护性和设计一致性
+
+### 修复 (Fixed)
+- **UI不一致性问题修复**：修复了UI_INCONSISTENCIES.md中报告的主要问题
+  - **GameColors硬编码颜色迁移**：将GameColors中的所有硬编码颜色值迁移到color.json资源文件
+    - 添加了game_button_secondary、game_button_primary、game_orange、game_red等15个游戏相关颜色到base和dark模式
+    - 更新DesignSystem.ets，GameColors现在引用资源文件，支持深色模式自动切换
+  - **硬编码颜色值修复**：修复了所有页面中硬编码的颜色值
+    - InputPlayPage.ets：修复promptAction对话框中的硬编码颜色，使用资源引用
+    - FakeFlagPlayPage.ets：修复promptAction对话框中的硬编码颜色，使用资源引用
+    - QuizPlayPage.ets：修复promptAction对话框中的硬编码颜色，使用资源引用
+    - TriviaPlayPage.ets：修复promptAction对话框中的硬编码颜色，使用资源引用
+    - 为每个页面添加了getColorValue辅助函数，从资源中获取颜色值用于promptAction API
+  - **Color.White/Color.Black使用修复**：修复了直接使用Color.White/Color.Black的问题
+    - QuizDetailPage.ets：将Color.White替换为SystemColors.WHITE
+    - ConnectionsPlayPage.ets：将Color.White替换为$r('app.color.text_white')，支持深色模式
+  - **深色模式支持改进**：所有修复的颜色现在都支持深色模式自动切换
+    - 游戏相关颜色在dark/element/color.json中都有对应的深色模式值
+    - 确保所有颜色引用都通过资源系统，而不是硬编码
+
+- **移除所有SVG图标的fillColor属性**：移除了所有页面和组件中SVG图标的fillColor代码
+  - 移除了HomePage、ProfilePage、InterviewPage、TopicDetailPage、TopicListPage中图标的fillColor
+  - 移除了ConnectionsPlayPage、TriviaPlayPage、FakeFlagPlayPage、InputPlayPage中图标的fillColor
+  - 移除了QuizPlayPage、QuizPage、QuizDetailPage中图标的fillColor
+  - 移除了SettingsPage、ChapterDetailPage、LearnPage中图标的fillColor
+  - SVG图标现在使用SVG文件本身的颜色，不再通过fillColor动态修改颜色
+  - 确保所有图标在所有情况下都不使用fillColor属性
+
+### 优化 (Changed)
+- **模拟面试时间到UI优化**：在时间到界面保留问题横幅
+  - 在MockTimeoutScreen中添加了问题卡片显示
+  - 显示当前问题的难度标签和问题内容
+  - 用户可以在时间到后继续查看问题内容，方便进行自我评价
+
+- **模拟面试视图布局统一优化**：统一并优化了所有模拟面试状态的布局
+  - **SETUP（准备）屏幕**：
+    - 统一标题区域布局，使用Column居中显示
+    - 计时器选择改为卡片样式，按钮使用layoutWeight均匀分布
+    - 提示卡片样式统一，间距优化
+    - 添加顶部padding和底部按钮margin，保持视觉平衡
+  - **RUNNING（进行中）屏幕**：
+    - 统一按钮样式，使用layoutWeight和统一高度
+    - 计时器添加底部margin，保持间距一致
+    - 添加顶部padding，与其他屏幕对齐
+  - **TIMEOUT（时间到）屏幕**：
+    - 时间到提示改为Column布局，居中显示
+    - 自我评价按钮改为卡片容器包裹，使用layoutWeight均匀分布
+    - 统一按钮高度和样式
+    - 添加Blank()保持底部按钮位置
+  - **REVIEW（结束）屏幕**：
+    - 评价结果改为Column居中显示
+    - 统一卡片内间距和分割线间距
+    - 底部按钮使用layoutWeight均匀分布
+    - 添加顶部padding，与其他屏幕对齐
+  - 所有屏幕统一使用相同的间距、按钮高度和卡片样式，提升视觉一致性和美观度
+  - **计时器字体大小优化**：将模拟面试进行中屏幕的计时器字体从72增大到96，使时间显示更加醒目
+  - **结果详情界面滚动优化**：将模拟面试结果详情界面（REVIEW屏幕）改为可滚动布局
+    - 使用Scroll包裹内容区域，支持滚动查看完整内容
+    - 底部按钮固定在底部，不会被内容遮挡
+    - 添加Spring边缘效果，提升滚动体验
+  - **按钮位置调整**：交换了结果详情界面中"结束"和"下一题"按钮的位置
+    - "结束"按钮现在在左侧，"下一题"按钮在右侧
+    - 更符合用户操作习惯，主要操作按钮（下一题）位于右侧
+
+### 新增 (Added)
+- **模拟面试功能**：新增压力模拟面试模式
+  - 双标签页设计：题库 / 模拟面试（系统 Chip 风格标签栏）
+  - 计时器预设：30秒 / 1分钟 / 2分钟 / 5分钟
+  - 压力增强：计时器变色（绿→黄→红）
+  - 硬停止：时间到自动结束
+  - 自我评价：自信 / 一般 / 慌了
+  - 结束后查看参考要点
+  - 无 AI 评分，无录音，专注思考训练
+
+### 优化 (Changed)
+- **面试页面 UI 简化**：移除多余 emoji，保持简洁专业
+  - 标签栏改为系统风格 Chip Tab Bar（圆角胶囊容器 + 浮动选中项）
+  - 移除所有装饰性 emoji，仅保留 ⭐ 表示面试频率
+  - 难度筛选使用颜色区分，无需 emoji 标记
+  - 自我评价按钮改为简洁文字配色按钮
+
+- **面试题库增强**：全面升级面试题内容和展示
+  - 精选 15 道高质量面试题，覆盖 Rust 核心概念
+  - 每题包含：核心要点、常见错误回答、代码推理、追问方向
+  - 问题标题包含频率标记（⭐⭐⭐ 必问、⭐⭐ 常见）
+  - 新增难度筛选（简单/中等/困难）
+  - 展示统计信息和面试频率说明
+  - 所有内容强调"思考方式"而非死记硬背
+
+- **课程详情页代码复制**：在每个课程章节的示例代码区域添加复制按钮
+  - 点击可将代码复制到剪贴板
+  - 显示 Toast 提示复制结果
+
+- **Rust 概述章节**：在第一个单元（Rust 基础）的开头添加了"Rust 概述"章节
+  - 章节 ID: '0'，作为 unit1 的第一个章节
+  - 内容包含：Rust 的特点、应用场景、为什么学习 Rust 等概述性内容
+  - 包含 Hello World 示例代码和基本编译运行说明
+  - 为初学者提供 Rust 语言的整体介绍，为后续学习打下基础
+
+### 修复 (Fixed)
+- **修复 PreferencesManager 竞态条件**：修复了 `PreferencesManager.getPreferences` 方法中的潜在竞态条件问题
+  - 添加了 `pendingPromises` Map 来跟踪正在进行的创建操作
+  - 当多个并发调用请求同一个 Preferences 实例时，后续调用会等待同一个 Promise，而不是创建多个实例
+  - Promise 在异步操作开始前立即存储，确保并发安全
+  - 更新了 `clearCache()` 和 `removePreferences()` 方法，同时清除待处理的 Promise
+  - 解决了 BUG_REPORT.md 中报告的问题 #3
 - **应用图标配置修复**：修复了应用图标显示问题
   - 优化了 `AppScope/resources/base/media/layered_image.json` 的格式
   - 确认了图标配置：`background.png`（橙色背景）和 `foreground.png`（白色 Rust 文字）

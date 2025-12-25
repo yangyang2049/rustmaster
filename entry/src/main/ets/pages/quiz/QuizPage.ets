@@ -2,6 +2,9 @@ import { QuizModule, QuizQuestion, QuestionType } from '../../data/RustTypes';
 import { QUIZ_MODULES } from '../../data/RustConstants';
 import { Spacing, Sizes, FontSizes, FontWeights, Colors } from '../../utils/DesignSystem';
 import router from '@ohos.router';
+import { VibratorUtil } from '../../utils/VibratorUtil';
+import { PreferencesManager } from '../../utils/PreferencesManager';
+import { preferences } from '@kit.ArkData';
 
 interface ButtonStyle {
   bgColor: ResourceColor;
@@ -18,6 +21,33 @@ export struct QuizPage {
   @State selectedOptions: number[] = [];  // 用于多选题
   @State isQuizFinished: boolean = false;
   @State answeredQuestionIndices: Set<number> = new Set();  // 记录已回答的问题索引
+  @State quizzesCompleted: number = 0;  // 已完成的测验数
+  private prefs: preferences.Preferences | null = null;
+
+  async aboutToAppear() {
+    await this.loadQuizzesCompleted();
+  }
+
+  async onPageShow() {
+    // 每次页面显示时重新加载已完成的测验数
+    await this.loadQuizzesCompleted();
+  }
+
+  private async loadQuizzesCompleted(): Promise<void> {
+    try {
+      this.prefs = await PreferencesManager.getPreferences('rust_learn');
+      const completed = await this.prefs.get('quizzesCompleted', '0');
+      this.quizzesCompleted = Number(completed);
+    } catch (err) {
+      console.error(`Failed to load quizzes completed: ${JSON.stringify(err)}`);
+      this.quizzesCompleted = 0;
+    }
+  }
+
+  private getQuizProgress(): number {
+    if (QUIZ_MODULES.length === 0) return 0;
+    return Math.round((this.quizzesCompleted / QUIZ_MODULES.length) * 100);
+  }
 
   private startQuiz(quiz: QuizModule) {
     this.activeQuiz = quiz;
@@ -77,6 +107,9 @@ export struct QuizPage {
                          (optionIndex === 1 && !isAnswerCorrect);
         if (isCorrect) {
           this.quizScore++;
+          VibratorUtil.vibrateCorrect();
+        } else {
+          VibratorUtil.vibrateIncorrect();
         }
         // 标记为已回答
         this.answeredQuestionIndices.add(this.quizQuestionIndex);
@@ -84,6 +117,9 @@ export struct QuizPage {
         // 单选题
         if (correctIndices.includes(optionIndex)) {
           this.quizScore++;
+          VibratorUtil.vibrateCorrect();
+        } else {
+          VibratorUtil.vibrateIncorrect();
         }
         // 标记为已回答
         this.answeredQuestionIndices.add(this.quizQuestionIndex);
@@ -104,9 +140,13 @@ export struct QuizPage {
     const correctIndices = currentQ.correctIndices || [];
     
     // 检查多选题答案：必须全部正确且数量相同
-    if (this.selectedOptions.length === correctIndices.length &&
-        this.selectedOptions.every(idx => correctIndices.includes(idx))) {
+    const isCorrect = this.selectedOptions.length === correctIndices.length &&
+        this.selectedOptions.every(idx => correctIndices.includes(idx));
+    if (isCorrect) {
       this.quizScore++;
+      VibratorUtil.vibrateCorrect();
+    } else {
+      VibratorUtil.vibrateIncorrect();
     }
     
     // 标记为已回答
@@ -307,7 +347,6 @@ export struct QuizPage {
           Image($r('app.media.icon_check'))
             .width(20)
             .height(20)
-            .fillColor(this.getOptionButtonStyle(0, currentQ, hasAnswered).textColor)
             .margin({ right: Spacing.ELEMENT_SPACING_XS })
           Text('正确')
             .fontSize(FontSizes.BODY)
@@ -331,7 +370,6 @@ export struct QuizPage {
           Image($r('app.media.icon_close'))
             .width(20)
             .height(20)
-            .fillColor(this.getOptionButtonStyle(1, currentQ, hasAnswered).textColor)
             .margin({ right: Spacing.ELEMENT_SPACING_XS })
           Text('错误')
             .fontSize(FontSizes.BODY)
@@ -354,8 +392,70 @@ export struct QuizPage {
   }
 
   @Builder
+  ProgressCard() {
+    Row() {
+      Column() {
+        Stack({ alignContent: Alignment.Center }) {
+          Progress({
+            value: this.getQuizProgress(),
+            total: 100,
+            type: ProgressType.Ring
+          })
+            .width(80)
+            .height(80)
+            .color($r(Colors.RUST_PRIMARY))
+
+          Column() {
+            Text(`${this.getQuizProgress()}%`)
+              .fontSize(FontSizes.LARGE)
+              .fontWeight(FontWeights.BOLD)
+              .fontColor($r(Colors.TEXT_PRIMARY))
+            Text('完成度')
+              .fontSize(FontSizes.TINY)
+              .fontColor($r(Colors.TEXT_TERTIARY))
+          }
+          .alignItems(HorizontalAlign.Center)
+        }
+        .width(80)
+        .height(80)
+      }
+      .alignItems(HorizontalAlign.Center)
+      .justifyContent(FlexAlign.Center)
+
+      Column() {
+        Text('测验进度')
+          .fontSize(FontSizes.BODY)
+          .fontWeight(FontWeights.BOLD)
+          .fontColor($r(Colors.TEXT_PRIMARY))
+          .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
+
+        Text(`${this.quizzesCompleted} / ${QUIZ_MODULES.length}`)
+          .fontSize(FontSizes.TITLE)
+          .fontWeight(FontWeights.BOLD)
+          .fontColor($r(Colors.RUST_PRIMARY))
+          .margin({ bottom: Spacing.ELEMENT_SPACING_XS })
+
+        Text('已完成测验')
+          .fontSize(FontSizes.SMALL)
+          .fontColor($r(Colors.TEXT_TERTIARY))
+      }
+      .layoutWeight(1)
+      .alignItems(HorizontalAlign.Start)
+      .justifyContent(FlexAlign.Center)
+      .margin({ left: Spacing.ELEMENT_SPACING_LG })
+    }
+    .width('100%')
+    .padding(Spacing.CARD_PADDING_LARGE)
+    .backgroundColor($r(Colors.BG_CARD))
+    .borderRadius(Sizes.RADIUS_XL)
+    .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
+  }
+
+  @Builder
   QuizList() {
     Column() {
+      this.ProgressCard()
+      
       List() {
         ForEach(QUIZ_MODULES, (quiz: QuizModule) => {
           ListItem() {
@@ -403,7 +503,7 @@ export struct QuizPage {
             .backgroundColor($r(Colors.BG_CARD))
             .borderRadius(Sizes.RADIUS_XL)
           }
-          .margin({ bottom: Spacing.LIST_ITEM_MARGIN })
+          .margin({ bottom: Spacing.ELEMENT_SPACING_LG })
         }, (quiz: QuizModule) => quiz.id)
       }
       .width('100%')
@@ -428,7 +528,6 @@ export struct QuizPage {
       Image($r('app.media.icon_trophy'))
         .width(80)
         .height(80)
-        .fillColor($r(Colors.RUST_PRIMARY))
         .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
 
       Text('测试完成!')
@@ -487,10 +586,11 @@ export struct QuizPage {
         .fontWeight(FontWeights.BOLD)
         .backgroundColor($r(Colors.RUST_PRIMARY))
         .fontColor($r(Colors.TEXT_WHITE))
-        .borderRadius(Sizes.RADIUS_XL)
-        .onClick(() => {
-          this.closeQuiz();
-        })
+                  .borderRadius(Sizes.RADIUS_XL)
+                  .onClick(() => {
+                    VibratorUtil.vibrateTap();
+                    this.closeQuiz();
+                  })
 
       Blank()
     }
@@ -516,7 +616,6 @@ export struct QuizPage {
           Image($r('app.media.icon_close'))
             .width(24)
             .height(24)
-            .fillColor($r(Colors.TEXT_TERTIARY))
             .padding(Spacing.ELEMENT_SPACING_SM)
             .onClick(() => {
               this.closeQuiz();
@@ -607,7 +706,6 @@ export struct QuizPage {
                     Image(this.isCurrentAnswerCorrect() ? $r('app.media.icon_check') : $r('app.media.icon_close'))
                       .width(20)
                       .height(20)
-                      .fillColor(this.isCurrentAnswerCorrect() ? $r(Colors.SUCCESS) : $r(Colors.ERROR))
                       .margin({ right: Spacing.ELEMENT_SPACING_SM })
 
                     Text(this.isCurrentAnswerCorrect() ? '回答正确！' : '回答错误')
@@ -652,6 +750,7 @@ export struct QuizPage {
                   .borderRadius(Sizes.RADIUS_XL)
                   .enabled(this.selectedOptions.length > 0)
                   .onClick(() => {
+                    VibratorUtil.vibrateTap();
                     this.handleMultipleChoiceSubmit();
                   })
               } else {
@@ -664,6 +763,7 @@ export struct QuizPage {
                   .fontColor($r(Colors.TEXT_WHITE))
                   .borderRadius(Sizes.RADIUS_XL)
                   .onClick(() => {
+                    VibratorUtil.vibrateTap();
                     this.nextQuestion();
                   })
               }

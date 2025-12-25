@@ -10,7 +10,14 @@ import { SettingsPage } from './settings/SettingsPage';
 @Entry
 @Component
 struct Index {
-  @State currentTab: Tab = Tab.LEARN;
+  @State @Watch('onCurrentTabChanged') currentTab: Tab = Tab.LEARN;
+  @State showInterviewAddDialog: boolean = false; // 控制面试页面添加对话框
+
+  private onCurrentTabChanged(): void {
+    if (this.currentTab !== Tab.INTERVIEW && this.showInterviewAddDialog) {
+      this.showInterviewAddDialog = false;
+    }
+  }
 
   private getTitleText(): string {
     switch (this.currentTab) {
@@ -19,9 +26,9 @@ struct Index {
       case Tab.SYNTAX:
         return '语法';
       case Tab.QUIZ:
-        return '题库';
+        return '测试';
       case Tab.INTERVIEW:
-        return '面试宝典';
+        return '面试';
       case Tab.SETTINGS:
         return '我的';
       default:
@@ -29,45 +36,57 @@ struct Index {
     }
   }
 
-  build() {
-    Column() {
-      // 顶部标题栏
-      Row() {
-        Text(this.getTitleText())
-          .fontSize(FontSizes.LARGE)
-          .fontWeight(FontWeights.BOLD)
-          .fontColor($r(Colors.TEXT_PRIMARY))
-      }
-      .width('100%')
-      .height(Spacing.TITLE_BAR_HEIGHT)
-      .padding({ left: Spacing.PAGE_PADDING, right: Spacing.PAGE_PADDING })
-      .backgroundColor($r(Colors.BG_TITLE_BAR))
-      .justifyContent(FlexAlign.Start)
-      .alignItems(VerticalAlign.Center)
-      .shadow(Shadows.SMALL)
-
-      // 主内容区域
-      Stack() {
-        if (this.currentTab === Tab.LEARN) {
-          LearnPage()
-        } else if (this.currentTab === Tab.SYNTAX) {
-          SyntaxPage()
-        } else if (this.currentTab === Tab.QUIZ) {
-          QuizPage()
-        } else if (this.currentTab === Tab.INTERVIEW) {
-          InterviewPage()
-        } else if (this.currentTab === Tab.SETTINGS) {
-          SettingsPage()
-        }
-      }
-      .width('100%')
-      .layoutWeight(1)
-
-      // 底部导航栏
-      NavBar({ currentTab: $currentTab })
+  @Builder
+  AddButtonBuilder() {
+    Row() {
+      Image($r('app.media.icon_add'))
+        .width(24)
+        .height(24)
     }
-    .width('100%')
     .height('100%')
-    .backgroundColor($r(Colors.BG_PAGE))
+    .padding({ right: Spacing.PAGE_PADDING })
+    .justifyContent(FlexAlign.Center)
+    .onClick(() => {
+      this.showInterviewAddDialog = true;
+    })
+  }
+
+  build() {
+    Navigation() {
+      Column() {
+        // 主内容区域
+        Stack() {
+          if (this.currentTab === Tab.LEARN) {
+            LearnPage()
+          } else if (this.currentTab === Tab.SYNTAX) {
+            SyntaxPage()
+          } else if (this.currentTab === Tab.QUIZ) {
+            QuizPage()
+          } else if (this.currentTab === Tab.INTERVIEW) {
+            InterviewPage({
+              showAddDialog: this.showInterviewAddDialog,
+              onChangeShowAddDialog: (show: boolean) => {
+                this.showInterviewAddDialog = show;
+              }
+            })
+          } else if (this.currentTab === Tab.SETTINGS) {
+            SettingsPage()
+          }
+        }
+        .width('100%')
+        .layoutWeight(1)
+
+        // 底部导航栏
+        NavBar({ currentTab: $currentTab })
+      }
+      .width('100%')
+      .height('100%')
+      .backgroundColor($r(Colors.BG_PAGE))
+    }
+    .titleMode(NavigationTitleMode.Mini)
+    .title(this.getTitleText())
+    .menus(this.currentTab === Tab.INTERVIEW ? this.AddButtonBuilder : undefined)
+    .hideBackButton(true)
+    .backgroundColor($r(Colors.BG_CARD))
   }
 }
