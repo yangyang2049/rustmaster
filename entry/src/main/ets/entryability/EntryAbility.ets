@@ -7,6 +7,8 @@ import { PreferencesManager } from '../utils/PreferencesManager';
 const DOMAIN = 0x0000;
 
 export default class EntryAbility extends UIAbility {
+  private currentColorMode: ConfigurationConstant.ColorMode | null = null;
+
   async onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): Promise<void> {
     // 存储 context 到 AppStorage，供 MediaService 等使用
     AppStorage.setOrCreate('context', this.context);
@@ -41,17 +43,29 @@ export default class EntryAbility extends UIAbility {
       hilog.info(DOMAIN, 'testTag', '========== EntryAbility: Loading color mode ==========');
       const prefs = await PreferencesManager.getPreferences('app_settings');
       const savedColorMode: number = await prefs.get('colorMode', ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET) as number;
+      const colorMode = savedColorMode as ConfigurationConstant.ColorMode;
       
-      hilog.info(DOMAIN, 'testTag', 'Loaded color mode: %{public}d', savedColorMode);
+      hilog.info(DOMAIN, 'testTag', 'Loaded color mode: %{public}d', colorMode);
+      
+      // 如果颜色模式与当前已应用的模式相同，则跳过设置（避免重复调用）
+      if (this.currentColorMode === colorMode) {
+        hilog.info(DOMAIN, 'testTag', '⏭️ Color mode unchanged, skipping application: %{public}d', colorMode);
+        return;
+      }
       
       // 应用主题设置
-      this.context.getApplicationContext().setColorMode(savedColorMode as ConfigurationConstant.ColorMode);
+      this.context.getApplicationContext().setColorMode(colorMode);
+      this.currentColorMode = colorMode;
       
-      hilog.info(DOMAIN, 'testTag', '✅ Color mode applied: %{public}d', savedColorMode);
+      hilog.info(DOMAIN, 'testTag', '✅ Color mode applied: %{public}d', colorMode);
     } catch (err) {
       hilog.error(DOMAIN, 'testTag', '❌ Failed to load color mode: %{public}s', JSON.stringify(err));
       // 默认使用系统设置
-      this.context.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET);
+      const defaultMode = ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET;
+      if (this.currentColorMode !== defaultMode) {
+        this.context.getApplicationContext().setColorMode(defaultMode);
+        this.currentColorMode = defaultMode;
+      }
     }
   }
 
@@ -100,12 +114,19 @@ export default class EntryAbility extends UIAbility {
     // Main window is created, set main page for this ability
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
 
-    // 确保主题在窗口创建时已应用（必须在加载内容前完成）
-    try {
-      await this.loadAndApplyColorMode();
-      hilog.info(DOMAIN, 'testTag', '✅ Color mode applied in onWindowStageCreate before loading content');
-    } catch (err) {
-      hilog.error(DOMAIN, 'testTag', '❌ Failed to apply color mode in onWindowStageCreate: %{public}s', JSON.stringify(err));
+    // 注意：颜色模式已在 onCreate 中应用，这里不再重复调用
+    // loadAndApplyColorMode 内部会检查是否已应用，避免重复设置
+    // 如果 onCreate 中的调用失败，这里作为备用方案
+    if (this.currentColorMode === null) {
+      hilog.warn(DOMAIN, 'testTag', '⚠️ Color mode not applied in onCreate, applying in onWindowStageCreate');
+      try {
+        await this.loadAndApplyColorMode();
+        hilog.info(DOMAIN, 'testTag', '✅ Color mode applied in onWindowStageCreate as fallback');
+      } catch (err) {
+        hilog.error(DOMAIN, 'testTag', '❌ Failed to apply color mode in onWindowStageCreate: %{public}s', JSON.stringify(err));
+      }
+    } else {
+      hilog.info(DOMAIN, 'testTag', '✅ Color mode already applied in onCreate: %{public}d', this.currentColorMode);
     }
 
     windowStage.loadContent('pages/Index', (err) => {
@@ -126,9 +147,10 @@ export default class EntryAbility extends UIAbility {
     // Ability has brought to foreground
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onForeground');
     
-    // 确保主题在应用恢复前台时已应用
+    // 确保主题在应用恢复前台时已应用（用户可能在系统设置中更改了主题）
+    // loadAndApplyColorMode 内部会检查是否与当前值相同，避免不必要的重复设置
     this.loadAndApplyColorMode().then(() => {
-      hilog.info(DOMAIN, 'testTag', '✅ Color mode applied in onForeground');
+      hilog.info(DOMAIN, 'testTag', '✅ Color mode checked/applied in onForeground');
     }).catch((err: Error) => {
       hilog.error(DOMAIN, 'testTag', '❌ Failed to apply color mode in onForeground: %{public}s', JSON.stringify(err));
     });

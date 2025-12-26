@@ -1,4 +1,10 @@
 import { Spacing, Sizes, FontSizes, FontWeights, Colors } from '../utils/DesignSystem';
+import pasteboard from '@ohos.pasteboard';
+import promptAction from '@ohos.promptAction';
+import common from '@ohos.app.ability.common';
+import { Want } from '@kit.AbilityKit';
+import { BusinessError } from '@kit.BasicServicesKit';
+import { ToastUtil } from '../utils/ToastUtil';
 
 interface MarkdownNode {
   type: 'text' | 'heading' | 'paragraph' | 'code' | 'codeBlock' | 'bold' | 'italic' | 'list' | 'listItem' | 'link';
@@ -9,9 +15,14 @@ interface MarkdownNode {
   children?: MarkdownNode[];
 }
 
+interface ActionMenuResult {
+  index: number;
+}
+
 @Component
 export struct MarkdownRenderer {
   @Prop content: string = '';
+  private context: common.UIAbilityContext | null = null;
 
   private parseMarkdown(text: string): MarkdownNode[] {
     const nodes: MarkdownNode[] = [];
@@ -182,6 +193,98 @@ export struct MarkdownRenderer {
     return nodes;
   }
 
+  private async handleLinkClick(url: string | undefined): Promise<void> {
+    if (!url || url.trim() === '') {
+      return;
+    }
+
+    // 尝试获取 context
+    if (!this.context) {
+      try {
+        this.context = getContext(this) as common.UIAbilityContext;
+      } catch (err) {
+        console.error(`Failed to get context: ${JSON.stringify(err)}`);
+      }
+    }
+
+    // 如果没有 context，只提供复制功能
+    if (!this.context) {
+      await this.copyUrlToClipboard(url);
+      return;
+    }
+
+    // 显示对话框让用户选择
+    try {
+      promptAction.showActionMenu({
+        title: '链接操作',
+        buttons: [
+          { text: '打开链接', color: $r(Colors.RUST_PRIMARY) },
+          { text: '复制链接', color: $r(Colors.TEXT_PRIMARY) },
+          { text: '取消', color: $r(Colors.TEXT_TERTIARY) }
+        ]
+      }).then((result: ActionMenuResult) => {
+        if (result.index === 0) {
+          // 打开链接
+          this.openUrl(url);
+        } else if (result.index === 1) {
+          // 复制链接
+          this.copyUrlToClipboard(url);
+        }
+      }).catch((err: Error) => {
+        console.error(`Failed to show action menu: ${err.message}`);
+        // 如果对话框失败，直接复制
+        this.copyUrlToClipboard(url);
+      });
+    } catch (err) {
+      console.error(`Failed to show action menu: ${JSON.stringify(err)}`);
+      // 如果对话框失败，直接复制
+      this.copyUrlToClipboard(url);
+    }
+  }
+
+  private async copyUrlToClipboard(url: string): Promise<void> {
+    try {
+      const systemPasteboard = pasteboard.getSystemPasteboard();
+      const pasteData = pasteboard.createPlainTextData(url);
+      await systemPasteboard.setPasteData(pasteData);
+      if (this.context) {
+        ToastUtil.showToast(this.context, '已复制链接', 2000);
+      }
+    } catch (err) {
+      const error = err as Error;
+      console.error(`Failed to copy URL to clipboard: ${JSON.stringify(error)}`);
+      if (this.context) {
+        ToastUtil.showToast(this.context, '复制失败，请重试', 2000);
+      }
+    }
+  }
+
+  private async openUrl(url: string): Promise<void> {
+    if (!this.context) {
+      console.error('Context not available, cannot open URL');
+      // 如果没有 context，尝试复制
+      await this.copyUrlToClipboard(url);
+      return;
+    }
+
+    try {
+      const want: Want = {
+        action: 'ohos.want.action.viewData',
+        uri: url,
+        type: 'text/plain'
+      };
+      await this.context.startAbility(want);
+    } catch (err) {
+      const error = err as BusinessError;
+      console.error(`Failed to open URL: code: ${error?.code}, message: ${error?.message}`);
+      if (this.context) {
+        ToastUtil.showToast(this.context, '无法打开链接，已复制到剪贴板', 2000);
+      }
+      // 如果打开失败，尝试复制
+      await this.copyUrlToClipboard(url);
+    }
+  }
+
   @Builder
   InlineNode(node: MarkdownNode) {
     if (node.type === 'text') {
@@ -216,8 +319,7 @@ export struct MarkdownRenderer {
         .decoration({ type: TextDecorationType.Underline })
         .lineHeight(30)
         .onClick(() => {
-          // 可以在这里处理链接点击
-          console.log(`Link clicked: ${node.url}`);
+          this.handleLinkClick(node.url);
         })
     }
   }

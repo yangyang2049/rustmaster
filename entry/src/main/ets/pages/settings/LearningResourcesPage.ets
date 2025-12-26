@@ -1,7 +1,9 @@
 import router from '@ohos.router';
 import common from '@ohos.app.ability.common';
 import promptAction from '@ohos.promptAction';
+import pasteboard from '@ohos.pasteboard';
 import { Spacing, Sizes, FontSizes, FontWeights, Colors } from '../../utils/DesignSystem';
+import { ToastUtil } from '../../utils/ToastUtil';
 
 interface LearningResource {
   id: string;
@@ -118,6 +120,24 @@ struct LearningResourcesPage {
     this.selectedResource = null;
   }
 
+  private async copyUrlToClipboard(url: string): Promise<void> {
+    if (!url || url.trim() === '') {
+      ToastUtil.showToast(this.context, '没有可复制的内容', 1500);
+      return;
+    }
+
+    try {
+      const systemPasteboard = pasteboard.getSystemPasteboard();
+      const pasteData = pasteboard.createPlainTextData(url);
+      await systemPasteboard.setPasteData(pasteData);
+      ToastUtil.showToast(this.context, '已复制URL', 2000);
+    } catch (err) {
+      const error = err as Error;
+      console.error(`Failed to copy URL to clipboard: ${JSON.stringify(error)}`);
+      ToastUtil.showToast(this.context, '复制失败，请重试', 2000);
+    }
+  }
+
   @Builder
   ResourceCard(resource: LearningResource) {
     Column() {
@@ -173,18 +193,42 @@ struct LearningResourcesPage {
           .width('100%')
           .margin({ bottom: Spacing.ELEMENT_SPACING_LG })
 
-        Text('网址：')
-          .fontSize(FontSizes.SMALL)
-          .fontColor($r(Colors.TEXT_TERTIARY))
-          .width('100%')
-          .margin({ bottom: Spacing.ELEMENT_SPACING_XS })
+        Row() {
+          Text('网址：')
+            .fontSize(FontSizes.SMALL)
+            .fontColor($r(Colors.TEXT_TERTIARY))
+        }
+        .width('100%')
+        .margin({ bottom: Spacing.ELEMENT_SPACING_XS })
 
-        Text(this.selectedResource.url)
-          .fontSize(FontSizes.SMALL)
-          .fontColor($r(Colors.RUST_PRIMARY))
-          .fontFamily('monospace')
-          .width('100%')
-          .margin({ bottom: Spacing.ELEMENT_SPACING_LG })
+        Row() {
+          Text(this.selectedResource.url)
+            .fontSize(FontSizes.SMALL)
+            .fontColor($r(Colors.RUST_PRIMARY))
+            .fontFamily('monospace')
+            .layoutWeight(1)
+            .maxLines(2)
+            .textOverflow({ overflow: TextOverflow.Ellipsis })
+
+          Image($r('app.media.icon_copy'))
+            .width(Sizes.ICON_MD)
+            .height(Sizes.ICON_MD)
+            .margin({ left: Spacing.ELEMENT_SPACING_MD })
+            .onClick(() => {
+              this.copyUrlToClipboard(this.selectedResource!.url);
+            })
+        }
+        .width('100%')
+        .alignItems(VerticalAlign.Center)
+        .padding({ 
+          left: Spacing.ELEMENT_SPACING_MD, 
+          right: Spacing.ELEMENT_SPACING_MD,
+          top: Spacing.ELEMENT_SPACING_SM,
+          bottom: Spacing.ELEMENT_SPACING_SM
+        })
+        .backgroundColor($r(Colors.BG_SECONDARY))
+        .borderRadius(Sizes.RADIUS_MD)
+        .margin({ bottom: Spacing.ELEMENT_SPACING_LG })
 
         Button('确定')
           .type(ButtonType.Normal)
