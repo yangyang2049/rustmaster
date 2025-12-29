@@ -144,7 +144,9 @@ export struct SettingsPage {
 
   private async shareApp(): Promise<void> {
     try {
-      const shareText = 'Rust 从入门到放弃 - 专注于 Rust 编程语言的教学演示与知识巩固，帮助学习者从入门到精通。';
+      const bundleName = 'com.douhua.rustmaster';
+      const appGalleryUrl = `https://appgallery.huawei.com/app/detail?id=${bundleName}&channelId=SHARE&source=appshare`;
+      const shareText = `Rust 从入门到放弃 - 专注于 Rust 编程语言的教学演示与知识巩固，帮助学习者从入门到精通。\n\n下载链接：${appGalleryUrl}`;
 
       const shareData: systemShare.SharedData = new systemShare.SharedData({
         utd: uniformTypeDescriptor.UniformDataType.TEXT,

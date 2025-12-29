@@ -17,10 +17,6 @@
       "value": "For providing haptic feedback during operations"
     },
     {
-      "name": "internet_permission_reason",
-      "value": "For downloading voice models and online voice services"
-    },
-    {
       "name": "app_welcome_title",
       "value": "Rust 从入门到放弃"
     },
@@ -287,18 +283,6 @@
     {
       "name": "description",
       "value": "Description"
-    },
-    {
-      "name": "start_reading",
-      "value": "Start reading"
-    },
-    {
-      "name": "stop_reading",
-      "value": "Reading stopped"
-    },
-    {
-      "name": "reading_unavailable",
-      "value": "Reading feature unavailable"
     },
     {
       "name": "exploration_progress",

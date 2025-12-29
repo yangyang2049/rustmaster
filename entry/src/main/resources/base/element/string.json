@@ -17,10 +17,6 @@
       "value": "用于操作时提供触觉反馈"
     },
     {
-      "name": "internet_permission_reason",
-      "value": "用于下载语音模型和在线语音服务"
-    },
-    {
       "name": "background_running_permission_reason",
       "value": "用于在后台继续播放国歌音乐"
     },
@@ -403,30 +399,6 @@
     {
       "name": "description",
       "value": "简介"
-    },
-    {
-      "name": "start_reading",
-      "value": "开始朗读"
-    },
-    {
-      "name": "stop_reading",
-      "value": "已停止朗读"
-    },
-    {
-      "name": "reading_unavailable",
-      "value": "朗读功能暂不可用"
-    },
-    {
-      "name": "tts_first_use_title",
-      "value": "关于文本朗读功能"
-    },
-    {
-      "name": "tts_first_use_message",
-      "value": "本应用的文本朗读功能依赖于华为手机的TTS（文本转语音）能力。\n\n如果您的设备尚未下载相应的语音包，该功能可能无法正常工作。您可以在系统设置中下载所需的语音包。"
-    },
-    {
-      "name": "tts_first_use_confirm",
-      "value": "我知道了"
     },
     {
       "name": "exploration_progress",

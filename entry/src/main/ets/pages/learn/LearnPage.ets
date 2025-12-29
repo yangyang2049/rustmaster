@@ -257,9 +257,9 @@ export struct LearnPage {
           .fontColor($r(Colors.TEXT_WHITE))
           .layoutWeight(1)
 
-        Image($r('app.media.icon_close'))
-          .width(Sizes.ICON_SM)
-          .height(Sizes.ICON_SM)
+        Image($r('app.media.icon_close_white'))
+          .width(Sizes.ICON_MD)
+          .height(Sizes.ICON_MD)
           .onClick(() => {
             this.closeDailyTip();
           })
