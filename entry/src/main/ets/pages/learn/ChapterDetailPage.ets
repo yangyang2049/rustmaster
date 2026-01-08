@@ -1,6 +1,6 @@
 import router from '@ohos.router';
-import { CourseChapter } from '../../data/RustTypes';
-import { COURSE_CHAPTERS } from '../../data/RustConstants';
+import { CourseChapter, CourseUnit } from '../../data/RustTypes';
+import { COURSE_CHAPTERS, COURSE_UNITS } from '../../data/RustConstants';
 import { Spacing, Sizes, FontSizes, FontWeights, Colors } from '../../utils/DesignSystem';
 import { PreferencesManager } from '../../utils/PreferencesManager';
 import { preferences } from '@kit.ArkData';
@@ -26,6 +26,7 @@ struct ChapterDetailPage {
   @State isFavorite: boolean = false;
   private prefs: preferences.Preferences | null = null;
   private context = getContext(this) as common.UIAbilityContext;
+  private scroller: Scroller = new Scroller();
 
   async aboutToAppear(): Promise<void> {
     // 初始化收藏管理器
@@ -54,6 +55,12 @@ struct ChapterDetailPage {
 
     // 加载完成
     this.isLoading = false;
+  }
+
+  onPageHide(): void {
+    // 当页面隐藏时（返回时），通知需要刷新 LearnPage
+    // 通过 router 的返回机制，LearnPage 的 onPageShow 应该会被调用
+    // 但为了确保，我们可以在返回时设置一个标记
   }
 
   private async copyToClipboard(text: string): Promise<void> {
@@ -174,6 +181,109 @@ struct ChapterDetailPage {
     .padding({ right: 16 })
   }
 
+  @Builder
+  ChapterNavigation() {
+    Row({ space: Spacing.ELEMENT_SPACING_MD }) {
+      // 前一章按钮（始终显示，第一章时禁用）
+      Button() {
+        Row() {
+          Image($r('app.media.icon_arrow_right'))
+            .width(16)
+            .height(16)
+            .rotate({ angle: 180 })
+            .opacity(this.isFirstChapter() ? 0.4 : 1)
+            .margin({ right: Spacing.ELEMENT_SPACING_SM })
+          Column() {
+            Text('前一章')
+              .fontSize(FontSizes.TINY)
+              .fontColor($r(Colors.TEXT_TERTIARY))
+              .opacity(this.isFirstChapter() ? 0.6 : 1)
+              .width('100%')
+            Text(this.isFirstChapter() ? '已是第一章' : (this.getPreviousChapter() ? this.getPreviousChapter()!.title : ''))
+              .fontSize(FontSizes.SMALL)
+              .fontWeight(FontWeights.MEDIUM)
+              .fontColor(this.isFirstChapter() ? $r(Colors.TEXT_TERTIARY) : $r(Colors.TEXT_PRIMARY))
+              .opacity(this.isFirstChapter() ? 0.6 : 1)
+              .width('100%')
+              .maxLines(1)
+              .textOverflow({ overflow: TextOverflow.Ellipsis })
+          }
+          .alignItems(HorizontalAlign.Start)
+          .layoutWeight(1)
+          .width('100%')
+        }
+        .width('100%')
+        .justifyContent(FlexAlign.Start)
+      }
+      .type(ButtonType.Normal)
+      .backgroundColor($r(Colors.BG_CARD))
+      .borderColor($r(Colors.BG_SECONDARY))
+      .borderWidth(1)
+      .layoutWeight(1)
+      .height(64)
+      .borderRadius(Sizes.RADIUS_LG)
+      .enabled(!this.isFirstChapter())
+      .opacity(this.isFirstChapter() ? 0.6 : 1)
+      .onClick(() => {
+        const previousChapter = this.getPreviousChapter();
+        if (previousChapter && !this.isFirstChapter()) {
+          this.navigateToChapter(previousChapter);
+        }
+      })
+
+      // 后一章按钮（始终显示，最后一章时禁用）
+      Button() {
+        Row() {
+          Column() {
+            Text('后一章')
+              .fontSize(FontSizes.TINY)
+              .fontColor(this.isLastChapter() ? $r(Colors.TEXT_TERTIARY) : $r(Colors.TEXT_TERTIARY))
+              .opacity(this.isLastChapter() ? 0.6 : 1)
+              .textAlign(TextAlign.End)
+              .width('100%')
+              .maxLines(1)
+            Text(this.isLastChapter() ? '已是最后一章' : (this.getNextChapter() ? this.getNextChapter()!.title : ''))
+              .fontSize(FontSizes.SMALL)
+              .fontWeight(FontWeights.MEDIUM)
+              .fontColor(this.isLastChapter() ? $r(Colors.TEXT_TERTIARY) : $r(Colors.TEXT_PRIMARY))
+              .opacity(this.isLastChapter() ? 0.6 : 1)
+              .width('100%')
+              .maxLines(1)
+              .textOverflow({ overflow: TextOverflow.Ellipsis })
+              .textAlign(TextAlign.End)
+          }
+          .alignItems(HorizontalAlign.End)
+          .layoutWeight(1)
+          .width('100%')
+          Image($r('app.media.icon_arrow_right'))
+            .width(16)
+            .height(16)
+            .opacity(this.isLastChapter() ? 0.6 : 1)
+            .margin({ left: Spacing.ELEMENT_SPACING_SM })
+        }
+        .width('100%')
+        .justifyContent(FlexAlign.End)
+      }
+      .type(ButtonType.Normal)
+      .backgroundColor($r(Colors.BG_CARD))
+      .borderColor($r(Colors.BG_SECONDARY))
+      .borderWidth(1)
+      .layoutWeight(1)
+      .height(64)
+      .borderRadius(Sizes.RADIUS_LG)
+      .enabled(!this.isLastChapter())
+      .opacity(this.isLastChapter() ? 0.6 : 1)
+      .onClick(() => {
+        const nextChapter = this.getNextChapter();
+        if (nextChapter && !this.isLastChapter()) {
+          this.navigateToChapter(nextChapter);
+        }
+      })
+    }
+    .width('100%')
+    .margin({ top: Spacing.ELEMENT_SPACING_LG, bottom: Spacing.PAGE_PADDING })
+  }
+
   private async markChapterAsRead(chapterId: string): Promise<void> {
     try {
       this.prefs = await PreferencesManager.getPreferences('rust_learn');
@@ -220,10 +330,93 @@ struct ChapterDetailPage {
     }
   }
 
+  // 获取所有章节的排序列表（按照单元顺序和章节ID顺序）
+  private getAllChaptersSorted(): CourseChapter[] {
+    // 先按照单元顺序排序
+    const sortedUnits = [...COURSE_UNITS].sort((a, b) => a.order - b.order);
+    
+    // 收集所有章节，按照单元顺序和章节ID排序
+    const allChapters: CourseChapter[] = [];
+    for (const unit of sortedUnits) {
+      const unitChapters = COURSE_CHAPTERS.filter(chapter => chapter.unitId === unit.id);
+      // 按照 id 的数值顺序排序
+      const sortedChapters = unitChapters.sort((a, b) => {
+        const aNum = parseInt(a.id);
+        const bNum = parseInt(b.id);
+        if (isNaN(aNum) || isNaN(bNum)) {
+          return a.id.localeCompare(b.id);
+        }
+        return aNum - bNum;
+      });
+      allChapters.push(...sortedChapters);
+    }
+    
+    return allChapters;
+  }
+
+  // 获取前一章
+  private getPreviousChapter(): CourseChapter | null {
+    if (!this.chapter) return null;
+    
+    const allChapters = this.getAllChaptersSorted();
+    const currentIndex = allChapters.findIndex(ch => ch.id === this.chapter!.id);
+    
+    if (currentIndex > 0) {
+      return allChapters[currentIndex - 1];
+    }
+    
+    return null;
+  }
+
+  // 获取后一章
+  private getNextChapter(): CourseChapter | null {
+    if (!this.chapter) return null;
+    
+    const allChapters = this.getAllChaptersSorted();
+    const currentIndex = allChapters.findIndex(ch => ch.id === this.chapter!.id);
+    
+    if (currentIndex >= 0 && currentIndex < allChapters.length - 1) {
+      return allChapters[currentIndex + 1];
+    }
+    
+    return null;
+  }
+
+  // 检查是否是第一章
+  private isFirstChapter(): boolean {
+    if (!this.chapter) return false;
+    const allChapters = this.getAllChaptersSorted();
+    const currentIndex = allChapters.findIndex(ch => ch.id === this.chapter!.id);
+    return currentIndex === 0;
+  }
+
+  // 检查是否是最后一章
+  private isLastChapter(): boolean {
+    if (!this.chapter) return false;
+    const allChapters = this.getAllChaptersSorted();
+    const currentIndex = allChapters.findIndex(ch => ch.id === this.chapter!.id);
+    return currentIndex === allChapters.length - 1;
+  }
+
+  // 导航到指定章节（直接加载新内容，不推入新页面）
+  private async navigateToChapter(chapter: CourseChapter): Promise<void> {
+    // 更新当前章节
+    this.chapter = chapter;
+    
+    // 标记新章节为已读
+    await this.markChapterAsRead(chapter.id);
+    
+    // 检查新章节的收藏状态
+    await this.checkFavoriteStatus();
+    
+    // 滚动到页面顶部
+    this.scroller.scrollTo({ xOffset: 0, yOffset: 0, animation: { duration: 300 } });
+  }
+
   build() {
     Navigation() {
       if (this.chapter) {
-        Scroll() {
+        Scroll(this.scroller) {
           Column() {
             // 标题
             Text(this.chapter.title)
@@ -311,6 +504,9 @@ struct ChapterDetailPage {
             .backgroundColor($r(Colors.RUST_BG_LIGHT))
             .borderRadius(Sizes.RADIUS_XL)
             .margin({ top: Spacing.CARD_MARGIN_BOTTOM, bottom: 24 })
+
+            // 章节导航按钮
+            this.ChapterNavigation()
           }
           .width('100%')
           .padding({ left: Spacing.PAGE_PADDING_LARGE, right: Spacing.PAGE_PADDING_LARGE, top: Spacing.PAGE_PADDING, bottom: Spacing.PAGE_PADDING_LARGE })

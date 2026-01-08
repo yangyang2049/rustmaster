@@ -9,12 +9,21 @@ import common from '@ohos.app.ability.common';
 
 @Component
 export struct LearnPage {
+  @Prop @Watch('onRefreshTriggerChanged') refreshTrigger: number = 0; // 接收刷新触发器
   @State dailyTip: string = '';
   @State chaptersRead: string[] = [];
   @State expandedUnits: Set<string> = new Set<string>();
   @State showDailyTip: boolean = true; // 控制每日一贴的显示
   private prefs: preferences.Preferences | null = null;
   private context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
+  private scroller: Scroller = new Scroller();
+  private isFirstLoad: boolean = true; // 是否是首次加载
+
+  private onRefreshTriggerChanged(): void {
+    // 当 refreshTrigger 变化时，重新加载章节进度
+    // 这会在从 ChapterDetailPage 返回时被 Index 的 onPageShow 触发
+    this.loadChaptersRead();
+  }
 
   async aboutToAppear() {
     // 检查每日一贴是否启用
@@ -35,9 +44,17 @@ export struct LearnPage {
     // 加载已读章节
     await this.loadChaptersRead();
     
-    // 默认展开前两个单元
-    const sortedUnits = [...COURSE_UNITS].sort((a, b) => a.order - b.order);
-    this.expandedUnits = new Set(sortedUnits.slice(0, 2).map(u => u.id));
+    // 只展开最新章节所在的单元
+    this.expandLatestUnit();
+    
+    // 首次加载时滚动到最新章节
+    if (this.isFirstLoad) {
+      this.isFirstLoad = false;
+      // 延迟执行滚动，确保UI已渲染
+      setTimeout(() => {
+        this.scrollToLatestChapter();
+      }, 300);
+    }
   }
 
   async onPageShow() {
@@ -166,6 +183,85 @@ export struct LearnPage {
     return Math.round((readCount / chapters.length) * 100);
   }
 
+  // 获取所有章节按顺序排列
+  private getAllChaptersSorted(): CourseChapter[] {
+    const sortedUnits = [...COURSE_UNITS].sort((a, b) => a.order - b.order);
+    const allChapters: CourseChapter[] = [];
+    for (const unit of sortedUnits) {
+      const unitChapters = this.getUnitChapters(unit.id);
+      allChapters.push(...unitChapters);
+    }
+    return allChapters;
+  }
+
+  // 获取最新章节（第一个未读章节，如果全部已读则返回最后一个已读章节）
+  private getLatestChapter(): CourseChapter | null {
+    const allChapters = this.getAllChaptersSorted();
+    if (allChapters.length === 0) return null;
+
+    // 找到第一个未读章节
+    const firstUnread = allChapters.find(ch => !this.chaptersRead.includes(ch.id));
+    if (firstUnread) {
+      return firstUnread;
+    }
+
+    // 如果全部已读，返回最后一个章节
+    return allChapters[allChapters.length - 1];
+  }
+
+  // 展开最新章节所在的单元
+  private expandLatestUnit(): void {
+    const latestChapter = this.getLatestChapter();
+    if (latestChapter) {
+      this.expandedUnits = new Set([latestChapter.unitId]);
+    } else {
+      // 没有章节时，展开第一个单元
+      const sortedUnits = [...COURSE_UNITS].sort((a, b) => a.order - b.order);
+      if (sortedUnits.length > 0) {
+        this.expandedUnits = new Set([sortedUnits[0].id]);
+      }
+    }
+  }
+
+  // 滚动到最新章节
+  private scrollToLatestChapter(): void {
+    const latestChapter = this.getLatestChapter();
+    if (!latestChapter) return;
+
+    // 计算需要滚动的位置
+    // 首先找到该章节所在的单元的索引
+    const sortedUnits = [...COURSE_UNITS].sort((a, b) => a.order - b.order);
+    const unitIndex = sortedUnits.findIndex(u => u.id === latestChapter.unitId);
+    
+    if (unitIndex < 0) return;
+
+    // 计算滚动位置：每个单元卡片大约 120px，展开后每个章节大约 80px
+    // 由于有每日一贴和进度卡片，需要额外偏移
+    const unitCardHeight = 120; // 折叠状态的单元卡片高度
+    const chapterItemHeight = 72; // 每个章节项的高度
+
+    // 计算到该单元顶部的距离
+    let scrollY = 0;
+    
+    // 前面的单元（都是折叠的）
+    scrollY += unitIndex * (unitCardHeight + 12); // 12 是 margin
+
+    // 如果单元已展开，计算章节的偏移
+    const unitChapters = this.getUnitChapters(latestChapter.unitId);
+    const chapterIndex = unitChapters.findIndex(ch => ch.id === latestChapter.id);
+    
+    if (chapterIndex > 0) {
+      scrollY += chapterIndex * chapterItemHeight;
+    }
+
+    // 执行滚动，带动画效果
+    this.scroller.scrollTo({
+      xOffset: 0,
+      yOffset: scrollY,
+      animation: { duration: 500, curve: Curve.EaseOut }
+    });
+  }
+
   private getUnitProgressText(unitId: string): string {
     const chapters = this.getUnitChapters(unitId);
     const readCount = chapters.filter(ch => this.chaptersRead.includes(ch.id)).length;
@@ -285,7 +381,7 @@ export struct LearnPage {
     Column() {
       this.SectionTitle('课程单元')
 
-      Scroll() {
+      Scroll(this.scroller) {
         Column() {
           ForEach([...COURSE_UNITS].sort((a, b) => a.order - b.order), (unit: CourseUnit) => {
             this.UnitCard(unit)

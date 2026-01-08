@@ -12,10 +12,23 @@ import { SettingsPage } from './settings/SettingsPage';
 struct Index {
   @State @Watch('onCurrentTabChanged') currentTab: Tab = Tab.LEARN;
   @State showInterviewAddDialog: boolean = false; // 控制面试页面添加对话框
+  @State learnPageRefreshTrigger: number = 0; // 用于触发 LearnPage 刷新
+
+  // 当页面显示时（从其他页面返回时），触发刷新
+  onPageShow(): void {
+    // 如果当前是 LEARN 标签页，触发刷新以更新章节进度
+    if (this.currentTab === Tab.LEARN) {
+      this.learnPageRefreshTrigger++;
+    }
+  }
 
   private onCurrentTabChanged(): void {
     if (this.currentTab !== Tab.INTERVIEW && this.showInterviewAddDialog) {
       this.showInterviewAddDialog = false;
+    }
+    // 当切换回 LEARN 标签页时，触发刷新
+    if (this.currentTab === Tab.LEARN) {
+      this.learnPageRefreshTrigger++;
     }
   }
 
@@ -57,7 +70,7 @@ struct Index {
         // 主内容区域
         Stack() {
           if (this.currentTab === Tab.LEARN) {
-            LearnPage()
+            LearnPage({ refreshTrigger: this.learnPageRefreshTrigger })
           } else if (this.currentTab === Tab.SYNTAX) {
             SyntaxPage()
           } else if (this.currentTab === Tab.QUIZ) {
@@ -88,5 +101,11 @@ struct Index {
     .menus(this.currentTab === Tab.INTERVIEW ? this.AddButtonBuilder : undefined)
     .hideBackButton(true)
     .backgroundColor($r(Colors.BG_CARD))
+    .onTitleModeChange((titleMode: NavigationTitleMode) => {
+      // 当 Navigation 标题模式变化时（通常表示页面返回），如果当前是 LEARN 标签页，触发刷新
+      if (this.currentTab === Tab.LEARN) {
+        this.learnPageRefreshTrigger++;
+      }
+    })
   }
 }

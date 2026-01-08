@@ -102,9 +102,15 @@ export struct SettingsPage {
       }
       await this.appSettingsPrefs.put('dailyTipEnabled', enabled);
       await this.appSettingsPrefs.flush();
-      this.dailyTipEnabled = enabled;
+      // 状态已经在 onChange 中更新，这里确保一致性
+      // 如果状态不一致，同步一下（虽然理论上不应该发生）
+      if (this.dailyTipEnabled !== enabled) {
+        this.dailyTipEnabled = enabled;
+      }
     } catch (err) {
       console.error(`Failed to save daily tip setting: ${JSON.stringify(err)}`);
+      // 保存失败时恢复之前的状态
+      this.dailyTipEnabled = !enabled;
     }
   }
 
@@ -129,7 +135,7 @@ export struct SettingsPage {
     try {
       promptAction.showDialog({
         title: '意见反馈',
-        message: '如有建议或问题，可通过应用商店评论，或者发邮件到 feedback@rustmaster.com 反馈。感谢您的支持。',
+        message: '如有建议或问题，可通过应用商店评论，或者发邮件到 ssz2048@163.com 反馈。感谢您的支持。',
         buttons: [
           { text: '好的', color: '#FB923C' }
         ]
@@ -165,6 +171,22 @@ export struct SettingsPage {
       const error = err as BusinessError;
       console.error(`Failed to share: code: ${error?.code}, message: ${error?.message}`);
       ToastUtil.showToast(this.context, '分享失败', 2000);
+    }
+  }
+
+  private openAppInGallery(bundleName: string): void {
+    try {
+      const want: Want = {
+        action: 'ohos.want.action.appdetail',
+        uri: `store://appgallery.huawei.com/app/detail?id=${bundleName}`
+      };
+      this.context.startAbility(want).catch((err: BusinessError) => {
+        console.error(`Failed to open app gallery: ${err.message}`);
+        ToastUtil.showToast(this.context, '打开应用商店失败', 2000);
+      });
+    } catch (err) {
+      console.error(`Failed to open app gallery: ${err instanceof Error ? err.message : String(err)}`);
+      ToastUtil.showToast(this.context, '打开应用商店失败', 2000);
     }
   }
 
@@ -276,6 +298,36 @@ export struct SettingsPage {
   }
 
   @Builder
+  DailyTipToggle() {
+    Row() {
+      Row() {
+        Image($r('app.media.icon_voice'))
+          .width(16)
+          .height(16)
+          .margin({ right: 12 })
+        Text('每日一贴')
+          .fontSize(FontSizes.BODY)
+          .fontWeight(FontWeights.MEDIUM)
+          .fontColor($r(Colors.TEXT_PRIMARY))
+      }
+      .layoutWeight(1)
+
+      Toggle({ type: ToggleType.Switch, isOn: this.dailyTipEnabled })
+        .selectedColor($r(Colors.RUST_PRIMARY))
+        .switchPointColor($r(Colors.TEXT_WHITE))
+        .onChange((isOn: boolean) => {
+          // 立即更新状态，确保 UI 响应（乐观更新）
+          this.dailyTipEnabled = isOn;
+          // 异步保存到存储
+          this.saveDailyTipSetting(isOn);
+        })
+    }
+    .width('100%')
+    .height(56)
+    .padding({ left: Spacing.CARD_PADDING, right: Spacing.CARD_PADDING })
+  }
+
+  @Builder
   ThemeDialog() {
     Stack({ alignContent: Alignment.Center }) {
       // 遮罩层
@@ -327,6 +379,42 @@ export struct SettingsPage {
     }
     .width('100%')
     .height('100%')
+  }
+
+  @Builder
+  OtherAppItem(icon: Resource, name: string, description: string, bundleName: string) {
+    Row() {
+      Image(icon)
+        .width(48)
+        .height(48)
+        .borderRadius(Sizes.RADIUS_LG)
+        .margin({ right: Spacing.ELEMENT_SPACING_MD })
+
+      Column() {
+        Text(name)
+          .fontSize(FontSizes.BODY)
+          .fontWeight(FontWeights.MEDIUM)
+          .fontColor($r(Colors.TEXT_PRIMARY))
+          .margin({ bottom: 4 })
+        Text(description)
+          .fontSize(FontSizes.SMALL)
+          .fontColor($r(Colors.TEXT_TERTIARY))
+          .maxLines(1)
+          .textOverflow({ overflow: TextOverflow.Ellipsis })
+      }
+      .layoutWeight(1)
+      .alignItems(HorizontalAlign.Start)
+
+      Image($r('app.media.icon_arrow_right'))
+        .width(Sizes.ICON_SM)
+        .height(Sizes.ICON_SM)
+    }
+    .width('100%')
+    .height(72)
+    .padding({ left: Spacing.CARD_PADDING, right: Spacing.CARD_PADDING })
+    .onClick(() => {
+      this.openAppInGallery(bundleName);
+    })
   }
 
   @Builder
@@ -393,8 +481,13 @@ export struct SettingsPage {
               .strokeWidth(0.5)
               .color($r(Colors.BG_SECONDARY))
               .margin({ left: Spacing.CARD_PADDING, right: Spacing.CARD_PADDING })
-            this.settingItemWithToggle($r('app.media.icon_voice'), '每日一贴', this.dailyTipEnabled, async (enabled: boolean) => {
-              await this.saveDailyTipSetting(enabled);
+            this.DailyTipToggle()
+            Divider()
+              .strokeWidth(0.5)
+              .color($r(Colors.BG_SECONDARY))
+              .margin({ left: Spacing.CARD_PADDING, right: Spacing.CARD_PADDING })
+            this.settingItem($r('app.media.icon_star'), '评分', () => {
+              this.openAppInGallery('com.douhua.rustmaster');
             })
             Divider()
               .strokeWidth(0.5)
@@ -417,6 +510,32 @@ export struct SettingsPage {
             this.settingItem($r('app.media.icon_share'), '分享应用', () => {
               this.shareApp();
             })
+          }
+          .width('100%')
+          .backgroundColor($r(Colors.BG_CARD))
+          .borderRadius(Sizes.RADIUS_XL)
+          .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
+
+          this.SectionTitle('其他应用')
+
+          // 其他应用
+          Column() {
+            this.OtherAppItem(
+              $r('app.media.icon_arkts'),
+              'ArkTS 轻松学',
+              '鸿蒙开发语言学习',
+              'com.douhua.arcts'
+            )
+            Divider()
+              .strokeWidth(0.5)
+              .color($r(Colors.BG_SECONDARY))
+              .margin({ left: Spacing.CARD_PADDING, right: Spacing.CARD_PADDING })
+            this.OtherAppItem(
+              $r('app.media.icon_kaifazhushou'),
+              '独立开发助手',
+              '开发者工具箱',
+              'com.douhua.kaifazhushou'
+            )
           }
           .width('100%')
           .backgroundColor($r(Colors.BG_CARD))
