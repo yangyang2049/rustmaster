@@ -1,6 +1,6 @@
 import router from '@ohos.router';
-import { CourseChapter, CourseUnit } from '../../data/RustTypes';
-import { COURSE_CHAPTERS, COURSE_UNITS, DAILY_TIPS } from '../../data/RustConstants';
+import { CourseChapter, CourseUnit, Language } from '../../data/RustTypes';
+import { LanguageDataManager } from '../../utils/LanguageDataManager';
 import { Spacing, Sizes, FontSizes, FontWeights, Colors } from '../../utils/DesignSystem';
 import { PreferencesManager } from '../../utils/PreferencesManager';
 import { preferences } from '@kit.ArkData';
@@ -9,44 +9,82 @@ import common from '@ohos.app.ability.common';
 
 @Component
 export struct LearnPage {
+  @Prop @Watch('onLanguageChanged') language: Language = Language.RUST; // 编程语言
   @Prop @Watch('onRefreshTriggerChanged') refreshTrigger: number = 0; // 接收刷新触发器
-  @State dailyTip: string = '';
   @State chaptersRead: string[] = [];
   @State expandedUnits: Set<string> = new Set<string>();
-  @State showDailyTip: boolean = true; // 控制每日一贴的显示
+  @State courseChaptersData: CourseChapter[] = []; // 课程章节数据
+  @State courseUnitsData: CourseUnit[] = []; // 课程单元数据
   private prefs: preferences.Preferences | null = null;
   private context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
   private scroller: Scroller = new Scroller();
   private isFirstLoad: boolean = true; // 是否是首次加载
 
-  private onRefreshTriggerChanged(): void {
-    // 当 refreshTrigger 变化时，重新加载章节进度
-    // 这会在从 ChapterDetailPage 返回时被 Index 的 onPageShow 触发
-    this.loadChaptersRead();
+  // 动态获取当前语言的数据
+  private get courseChapters(): CourseChapter[] {
+    return this.courseChaptersData;
+  }
+
+  private get courseUnits(): CourseUnit[] {
+    return this.courseUnitsData;
+  }
+
+  private loadLanguageData(): void {
+    console.info(`[LearnPage] loadLanguageData, language: ${this.language}`);
+    const chapters = LanguageDataManager.getCourseChapters(this.language);
+    const units = LanguageDataManager.getCourseUnits(this.language);
+    console.info(`[LearnPage] loaded ${chapters.length} chapters, ${units.length} units`);
+    
+    // Clear first to ensure state change is detected, then assign new data
+    this.courseChaptersData = [];
+    this.courseUnitsData = [];
+    
+    // Assign new arrays - this creates new references that ArkTS will detect
+    this.courseChaptersData = chapters;
+    this.courseUnitsData = units;
+    
+    console.info(`[LearnPage] State updated - chaptersData.length: ${this.courseChaptersData.length}, unitsData.length: ${this.courseUnitsData.length}`);
+    if (this.courseUnitsData.length > 0) {
+      console.info(`[LearnPage] First unit: id=${this.courseUnitsData[0].id}, name=${this.courseUnitsData[0].name}`);
+    }
+  }
+
+  private async onLanguageChanged(): Promise<void> {
+    console.info(`[LearnPage] onLanguageChanged, new language: ${this.language}`);
+    // 当语言改变时，重新加载数据
+    this.loadLanguageData();
+    // Wait for data to be loaded before loading chapters read
+    await this.loadChaptersRead();
+    // Then expand the latest unit
+    this.expandLatestUnit();
+  }
+
+  private async onRefreshTriggerChanged(): Promise<void> {
+    // 当 refreshTrigger 变化时，重新加载数据（可能是语言改变触发的）
+    console.info(`[LearnPage] onRefreshTriggerChanged, language: ${this.language}`);
+    // Reload language data to ensure we have the latest data for current language
+    this.loadLanguageData();
+    // 重新加载章节进度
+    await this.loadChaptersRead();
+    // Update expanded units
+    this.expandLatestUnit();
   }
 
   async aboutToAppear() {
-    // 检查每日一贴是否启用
-    const isEnabled = await this.checkDailyTipEnabled();
-    
-    if (isEnabled) {
-      // 随机每日提示
-      const randomIndex = Math.floor(Math.random() * DAILY_TIPS.length);
-      this.dailyTip = DAILY_TIPS[randomIndex];
-      
-      // 检查每日一贴是否应该显示（日期检查）
-      await this.checkDailyTipVisibility();
-    } else {
-      // 如果禁用，直接隐藏
-      this.showDailyTip = false;
-    }
+    console.info(`[LearnPage] aboutToAppear, language: ${this.language}`);
+
+    // 加载语言数据
+    this.loadLanguageData();
+
+    console.info(`[LearnPage] courseUnits.length: ${this.courseUnits.length}`);
+    console.info(`[LearnPage] courseChapters.length: ${this.courseChapters.length}`);
 
     // 加载已读章节
     await this.loadChaptersRead();
-    
+
     // 只展开最新章节所在的单元
     this.expandLatestUnit();
-    
+
     // 首次加载时滚动到最新章节
     if (this.isFirstLoad) {
       this.isFirstLoad = false;
@@ -64,7 +102,7 @@ export struct LearnPage {
 
   private async loadChaptersRead(): Promise<void> {
     try {
-      this.prefs = await PreferencesManager.getPreferences('rust_learn');
+      this.prefs = await PreferencesManager.getPreferences(LanguageDataManager.getLearnPreferencesKey(this.language));
       const readChapters = await this.prefs.get('chaptersRead', '[]');
       
       if (typeof readChapters !== 'string') {
@@ -86,61 +124,12 @@ export struct LearnPage {
     }
   }
 
-  private async checkDailyTipEnabled(): Promise<boolean> {
-    try {
-      const appSettingsPrefs = await PreferencesManager.getPreferences('app_settings');
-      const enabled: boolean = await appSettingsPrefs.get('dailyTipEnabled', true) as boolean;
-      return enabled;
-    } catch (err) {
-      console.error(`Failed to check daily tip enabled: ${JSON.stringify(err)}`);
-      return true; // 默认启用
-    }
-  }
 
-  private getTodayDateString(): string {
-    const today = new Date();
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-  }
-
-  private async checkDailyTipVisibility(): Promise<void> {
-    try {
-      if (!this.prefs) {
-        this.prefs = await PreferencesManager.getPreferences('rust_learn');
-      }
-      const lastClosedDate: string = await this.prefs.get('dailyTipLastClosedDate', '') as string;
-      const today = this.getTodayDateString();
-      
-      // 如果是新的一天，显示每日一贴
-      if (lastClosedDate !== today) {
-        this.showDailyTip = true;
-      } else {
-        this.showDailyTip = false;
-      }
-    } catch (err) {
-      console.error(`Failed to check daily tip visibility: ${JSON.stringify(err)}`);
-      this.showDailyTip = true; // 出错时默认显示
-    }
-  }
-
-  private async closeDailyTip(): Promise<void> {
-    try {
-      if (!this.prefs) {
-        this.prefs = await PreferencesManager.getPreferences('rust_learn');
-      }
-      const today = this.getTodayDateString();
-      await this.prefs.put('dailyTipLastClosedDate', today);
-      await this.prefs.flush();
-      this.showDailyTip = false;
-      ToastUtil.showToast(this.context, '明天见');
-    } catch (err) {
-      console.error(`Failed to close daily tip: ${JSON.stringify(err)}`);
-    }
-  }
 
   private openChapter(chapter: CourseChapter): void {
     router.pushUrl({
       url: 'pages/learn/ChapterDetailPage',
-      params: { chapterId: chapter.id }
+      params: { chapterId: chapter.id, language: this.language }
     }).catch((err: Error) => {
       console.error(`Failed to navigate to ChapterDetailPage: ${err.message}`);
     });
@@ -157,9 +146,12 @@ export struct LearnPage {
   }
 
   private getUnitChapters(unitId: string): CourseChapter[] {
-    const chapters = COURSE_CHAPTERS.filter(chapter => chapter.unitId === unitId);
+    if (!this.courseChaptersData || this.courseChaptersData.length === 0) {
+      return [];
+    }
+    const chapters = this.courseChaptersData.filter((chapter: CourseChapter) => chapter && chapter.unitId === unitId);
     // 按照 id 的数值顺序排序，确保每个单元内的课程按顺序显示
-    return chapters.sort((a, b) => {
+    return chapters.sort((a: CourseChapter, b: CourseChapter) => {
       const aNum = parseInt(a.id);
       const bNum = parseInt(b.id);
       // 如果解析失败，使用字符串比较
@@ -179,17 +171,23 @@ export struct LearnPage {
   private getUnitProgress(unitId: string): number {
     const chapters = this.getUnitChapters(unitId);
     if (chapters.length === 0) return 0;
-    const readCount = chapters.filter(ch => this.chaptersRead.includes(ch.id)).length;
+    const readCount = chapters.filter((ch: CourseChapter) => this.chaptersRead.includes(ch.id)).length;
     return Math.round((readCount / chapters.length) * 100);
   }
 
   // 获取所有章节按顺序排列
   private getAllChaptersSorted(): CourseChapter[] {
-    const sortedUnits = [...COURSE_UNITS].sort((a, b) => a.order - b.order);
+    if (!this.courseUnitsData || this.courseUnitsData.length === 0) {
+      return [];
+    }
+    const units = this.courseUnitsData;
+    const sortedUnits = units.slice().sort((a: CourseUnit, b: CourseUnit) => a.order - b.order);
     const allChapters: CourseChapter[] = [];
     for (const unit of sortedUnits) {
       const unitChapters = this.getUnitChapters(unit.id);
-      allChapters.push(...unitChapters);
+      for (const ch of unitChapters) {
+        allChapters.push(ch);
+      }
     }
     return allChapters;
   }
@@ -200,7 +198,7 @@ export struct LearnPage {
     if (allChapters.length === 0) return null;
 
     // 找到第一个未读章节
-    const firstUnread = allChapters.find(ch => !this.chaptersRead.includes(ch.id));
+    const firstUnread = allChapters.find((ch: CourseChapter) => !this.chaptersRead.includes(ch.id));
     if (firstUnread) {
       return firstUnread;
     }
@@ -211,12 +209,16 @@ export struct LearnPage {
 
   // 展开最新章节所在的单元
   private expandLatestUnit(): void {
+    if (!this.courseUnitsData || this.courseUnitsData.length === 0) {
+      return;
+    }
     const latestChapter = this.getLatestChapter();
     if (latestChapter) {
       this.expandedUnits = new Set([latestChapter.unitId]);
     } else {
       // 没有章节时，展开第一个单元
-      const sortedUnits = [...COURSE_UNITS].sort((a, b) => a.order - b.order);
+      const units = this.courseUnitsData;
+      const sortedUnits = units.slice().sort((a: CourseUnit, b: CourseUnit) => a.order - b.order);
       if (sortedUnits.length > 0) {
         this.expandedUnits = new Set([sortedUnits[0].id]);
       }
@@ -228,11 +230,15 @@ export struct LearnPage {
     const latestChapter = this.getLatestChapter();
     if (!latestChapter) return;
 
+    if (!this.courseUnitsData || this.courseUnitsData.length === 0) {
+      return;
+    }
     // 计算需要滚动的位置
     // 首先找到该章节所在的单元的索引
-    const sortedUnits = [...COURSE_UNITS].sort((a, b) => a.order - b.order);
+    const units = this.courseUnitsData;
+    const sortedUnits = units.slice().sort((a: CourseUnit, b: CourseUnit) => a.order - b.order);
     const unitIndex = sortedUnits.findIndex(u => u.id === latestChapter.unitId);
-    
+
     if (unitIndex < 0) return;
 
     // 计算滚动位置：每个单元卡片大约 120px，展开后每个章节大约 80px
@@ -264,8 +270,9 @@ export struct LearnPage {
 
   private getUnitProgressText(unitId: string): string {
     const chapters = this.getUnitChapters(unitId);
-    const readCount = chapters.filter(ch => this.chaptersRead.includes(ch.id)).length;
-    return `${readCount}/${chapters.length} 已完成`;
+    if (chapters.length === 0) return '0/0';
+    const readCount = chapters.filter((ch: CourseChapter) => this.chaptersRead.includes(ch.id)).length;
+    return `${readCount}/${chapters.length}`;
   }
 
   @Builder
@@ -279,8 +286,9 @@ export struct LearnPage {
   }
 
   private getCourseProgress(): number {
-    if (COURSE_CHAPTERS.length === 0) return 0;
-    return Math.round((this.chaptersRead.length / COURSE_CHAPTERS.length) * 100);
+    if (!this.courseChaptersData || this.courseChaptersData.length === 0) return 0;
+    const readList = this.chaptersRead || [];
+    return Math.round((readList.length / this.courseChaptersData.length) * 100);
   }
 
   @Builder
@@ -295,13 +303,12 @@ export struct LearnPage {
           })
             .width(80)
             .height(80)
-            .color($r(Colors.RUST_PRIMARY))
 
           Column() {
             Text(`${this.getCourseProgress()}%`)
               .fontSize(FontSizes.LARGE)
               .fontWeight(FontWeights.BOLD)
-              .fontColor($r(Colors.TEXT_PRIMARY))
+              .fontColor($r(Colors.RUST_PRIMARY))
             Text('完成度')
               .fontSize(FontSizes.TINY)
               .fontColor($r(Colors.TEXT_TERTIARY))
@@ -321,7 +328,7 @@ export struct LearnPage {
           .fontColor($r(Colors.TEXT_PRIMARY))
           .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
 
-        Text(`${this.chaptersRead.length} / ${COURSE_CHAPTERS.length}`)
+        Text(`${(this.chaptersRead || []).length} / ${this.courseChaptersData.length}`)
           .fontSize(FontSizes.TITLE)
           .fontWeight(FontWeights.BOLD)
           .fontColor($r(Colors.RUST_PRIMARY))
@@ -343,38 +350,7 @@ export struct LearnPage {
     .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
   }
 
-  @Builder
-  DailyTipCard() {
-    Column() {
-      Row() {
-        Text('每日一贴')
-          .fontSize(FontSizes.SMALL)
-          .fontWeight(FontWeights.BOLD)
-          .fontColor($r(Colors.TEXT_WHITE))
-          .layoutWeight(1)
 
-        Image($r('app.media.icon_close_white'))
-          .width(Sizes.ICON_MD)
-          .height(Sizes.ICON_MD)
-          .onClick(() => {
-            this.closeDailyTip();
-          })
-      }
-      .width('100%')
-      .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
-
-      Text(this.dailyTip)
-        .fontSize(FontSizes.BODY)
-        .fontWeight(FontWeights.MEDIUM)
-        .fontColor($r(Colors.TEXT_WHITE))
-        .lineHeight(22)
-    }
-    .width('100%')
-    .padding(Spacing.CARD_PADDING_LARGE)
-    .borderRadius(Sizes.RADIUS_XL)
-    .backgroundColor($r(Colors.RUST_PRIMARY))
-    .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
-  }
 
   @Builder
   ChapterList() {
@@ -383,9 +359,9 @@ export struct LearnPage {
 
       Scroll(this.scroller) {
         Column() {
-          ForEach([...COURSE_UNITS].sort((a, b) => a.order - b.order), (unit: CourseUnit) => {
+          ForEach(this.courseUnitsData.slice().sort((a: CourseUnit, b: CourseUnit) => a.order - b.order), (unit: CourseUnit) => {
             this.UnitCard(unit)
-          }, (unit: CourseUnit) => unit.id)
+          }, (unit: CourseUnit) => `${this.language}_${unit.id}`)
         }
         .width('100%')
       }
@@ -541,9 +517,6 @@ export struct LearnPage {
 
   build() {
     Column() {
-      if (this.showDailyTip) {
-        this.DailyTipCard()
-      }
       this.ProgressCard()
       this.ChapterList()
     }

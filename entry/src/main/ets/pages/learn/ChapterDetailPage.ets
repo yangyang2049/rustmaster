@@ -1,6 +1,7 @@
 import router from '@ohos.router';
-import { CourseChapter, CourseUnit } from '../../data/RustTypes';
-import { COURSE_CHAPTERS, COURSE_UNITS } from '../../data/RustConstants';
+import { CourseChapter, CourseUnit, Language } from '../../data/RustTypes';
+import { LanguageDataManager } from '../../utils/LanguageDataManager';
+import { LanguageManager } from '../../utils/LanguageManager';
 import { Spacing, Sizes, FontSizes, FontWeights, Colors } from '../../utils/DesignSystem';
 import { PreferencesManager } from '../../utils/PreferencesManager';
 import { preferences } from '@kit.ArkData';
@@ -16,11 +17,13 @@ import common from '@ohos.app.ability.common';
 
 interface RouterParams {
   chapterId: string;
+  language?: number;
 }
 
 @Entry
 @Component
 struct ChapterDetailPage {
+  @State language: Language = Language.RUST;
   @State chapter: CourseChapter | null = null;
   @State isLoading: boolean = true;
   @State isFavorite: boolean = false;
@@ -28,33 +31,134 @@ struct ChapterDetailPage {
   private context = getContext(this) as common.UIAbilityContext;
   private scroller: Scroller = new Scroller();
 
-  async aboutToAppear(): Promise<void> {
-    // 初始化收藏管理器
-    await FavoritesManager.init(this.context);
+  private get courseChapters(): CourseChapter[] {
+    const chapters = LanguageDataManager.getCourseChapters(this.language);
+    return chapters || [];
+  }
 
-    const params: Record<string, Object> | null = router.getParams() as Record<string, Object> | null;
-    if (params && typeof params === 'object' && params['chapterId'] !== undefined) {
-      const chapterId: string = params['chapterId'] as string;
-      if (typeof chapterId === 'string' && chapterId.trim() !== '') {
-        this.chapter = COURSE_CHAPTERS.find((c: CourseChapter) => c.id === chapterId) || null;
+  private get courseUnits(): CourseUnit[] {
+    const units = LanguageDataManager.getCourseUnits(this.language);
+    return units || [];
+  }
 
-        // 标记章节为已读
+  // 加载章节数据的方法，可以在 aboutToAppear 和 onPageShow 中复用
+  private async loadChapterData(chapterId: string): Promise<void> {
+    try {
+      // 优先从 LanguageManager 获取当前语言，确保使用最新的语言设置
+      const currentLanguage = await LanguageManager.getCurrentLanguage();
+      console.info(`[ChapterDetailPage] loadChapterData - currentLanguage from LanguageManager: ${currentLanguage}, this.language: ${this.language}`);
+      
+      // 更新语言状态
+      this.language = currentLanguage;
+      console.info(`[ChapterDetailPage] Updated this.language to: ${this.language}`);
+
+      // 直接从 LanguageDataManager 获取章节数据，不使用 getter（避免缓存问题）
+      const chapters = LanguageDataManager.getCourseChapters(currentLanguage) || [];
+      console.info(`[ChapterDetailPage] Loading chapter ${chapterId}, language: ${currentLanguage}, chapters available: ${chapters.length}`);
+      
+      if (chapters.length > 0) {
+        console.info(`[ChapterDetailPage] First chapter title: ${chapters[0].title}`);
+      }
+
+      if (chapters && Array.isArray(chapters) && chapters.length > 0) {
+        this.chapter = chapters.find((c: CourseChapter) => String(c.id) === String(chapterId)) || null;
+        console.info(`[ChapterDetailPage] Chapter found: ${!!this.chapter}, title: ${this.chapter?.title || 'none'}`);
+      } else {
+        console.warn(`[ChapterDetailPage] No chapters available for language ${currentLanguage}, trying RUST as fallback`);
+        const rustChapters = LanguageDataManager.getCourseChapters(Language.RUST) || [];
+        this.chapter = rustChapters.find((c: CourseChapter) => String(c.id) === String(chapterId)) || null;
         if (this.chapter) {
-          await this.markChapterAsRead(this.chapter.id);
-          // 检查收藏状态
-          await this.checkFavoriteStatus();
+          console.info(`[ChapterDetailPage] Found chapter in RUST data, switching language`);
+          this.language = Language.RUST;
         } else {
-          console.error(`Chapter not found: ${chapterId}`);
+          console.error(`[ChapterDetailPage] Chapter not found in RUST data either`);
+        }
+      }
+
+      // 标记章节为已读（不阻塞）
+      if (this.chapter) {
+        this.markChapterAsRead(this.chapter.id).catch((err: Error) => {
+          console.warn(`[ChapterDetailPage] markChapterAsRead failed: ${JSON.stringify(err)}`);
+        });
+        // 检查收藏状态（不阻塞）
+        this.checkFavoriteStatus().catch((err: Error) => {
+          console.warn(`[ChapterDetailPage] checkFavoriteStatus failed: ${JSON.stringify(err)}`);
+        });
+      } else {
+        const chapterIds = chapters.length > 0 
+          ? chapters.map((c: CourseChapter) => c.id).join(', ')
+          : 'none';
+        console.error(`[ChapterDetailPage] Chapter not found: ${chapterId}, available chapters: ${chapterIds}`);
+      }
+    } catch (err) {
+      const error = err as Error;
+      console.error(`[ChapterDetailPage] Error loading chapter data: ${error.message || JSON.stringify(error)}`);
+    }
+  }
+
+  async aboutToAppear(): Promise<void> {
+    try {
+      console.info(`[ChapterDetailPage] aboutToAppear, isLoading: ${this.isLoading}`);
+      
+      // 初始化收藏管理器（不阻塞页面加载）
+      FavoritesManager.init(this.context).catch((err: Error) => {
+        console.warn(`[ChapterDetailPage] FavoritesManager.init failed: ${JSON.stringify(err)}`);
+      });
+
+      const params: RouterParams | null = router.getParams() as RouterParams | null;
+      console.info(`[ChapterDetailPage] params: ${JSON.stringify(params)}`);
+      
+      if (params && typeof params === 'object') {
+        const chapterIdValue: string | undefined = params.chapterId;
+
+        if (chapterIdValue && (typeof chapterIdValue === 'string' || typeof chapterIdValue === 'number')) {
+          const chapterId: string = String(chapterIdValue).trim();
+          console.info(`[ChapterDetailPage] chapterId: ${chapterId}`);
+          
+          // 使用 loadChapterData 方法加载章节数据
+          // 它会自动从 LanguageManager 获取当前语言
+          await this.loadChapterData(chapterId);
+        } else {
+          console.error(`[ChapterDetailPage] Invalid chapterId parameter: ${typeof chapterIdValue}, value: ${chapterIdValue}`);
         }
       } else {
-        console.error('Invalid chapterId parameter');
+        console.error('[ChapterDetailPage] Missing or invalid params');
       }
-    } else {
-      console.error('Missing chapterId parameter');
+    } catch (err) {
+      const error = err as Error;
+      console.error(`[ChapterDetailPage] Error in aboutToAppear: ${error.message || error.toString() || JSON.stringify(error)}`);
+      console.error(`[ChapterDetailPage] Error stack: ${error.stack || 'no stack'}`);
+    } finally {
+      // 确保加载状态总是被设置
+      this.isLoading = false;
+      console.info(`[ChapterDetailPage] isLoading set to false`);
     }
+  }
 
-    // 加载完成
-    this.isLoading = false;
+  async onPageShow(): Promise<void> {
+    // 当页面显示时（从其他页面返回或语言切换后），重新检查语言并重新加载数据
+    try {
+      const params: RouterParams | null = router.getParams() as RouterParams | null;
+      if (params && typeof params === 'object') {
+        const chapterIdValue: string | undefined = params.chapterId;
+        if (chapterIdValue && (typeof chapterIdValue === 'string' || typeof chapterIdValue === 'number')) {
+          const chapterId: string = String(chapterIdValue).trim();
+          
+          // 检查语言是否改变
+          const currentLanguage = await LanguageManager.getCurrentLanguage();
+          if (currentLanguage !== this.language) {
+            console.info(`[ChapterDetailPage] Language changed on page show, reloading chapter data`);
+            this.isLoading = true;
+            await this.loadChapterData(chapterId);
+            this.isLoading = false;
+          }
+        }
+      }
+    } catch (err) {
+      const error = err as Error;
+      console.warn(`[ChapterDetailPage] Error in onPageShow: ${error.message || JSON.stringify(error)}`);
+      this.isLoading = false;
+    }
   }
 
   onPageHide(): void {
@@ -137,7 +241,7 @@ struct ChapterDetailPage {
 
   private async checkFavoriteStatus(): Promise<void> {
     if (!this.chapter) return;
-    const pageUrl = `chapter:${this.chapter.id}`;
+    const pageUrl = `chapter:${this.language}:${this.chapter.id}`;
     this.isFavorite = await FavoritesManager.isFavorite(pageUrl);
   }
 
@@ -145,7 +249,7 @@ struct ChapterDetailPage {
     if (!this.chapter) return;
 
     const name = this.chapter.title;
-    const pageUrl = `chapter:${this.chapter.id}`;
+    const pageUrl = `chapter:${this.language}:${this.chapter.id}`;
 
     if (this.isFavorite) {
       await FavoritesManager.removeFavorite(pageUrl);
@@ -286,7 +390,7 @@ struct ChapterDetailPage {
 
   private async markChapterAsRead(chapterId: string): Promise<void> {
     try {
-      this.prefs = await PreferencesManager.getPreferences('rust_learn');
+      this.prefs = await PreferencesManager.getPreferences(LanguageDataManager.getLearnPreferencesKey(this.language));
       const readChaptersStr: string = await this.prefs.get('chaptersRead', '[]') as string;
       
       if (typeof readChaptersStr !== 'string') {
@@ -332,15 +436,25 @@ struct ChapterDetailPage {
 
   // 获取所有章节的排序列表（按照单元顺序和章节ID顺序）
   private getAllChaptersSorted(): CourseChapter[] {
+    // 直接从 LanguageDataManager 获取数据，确保使用正确的语言
+    const units = LanguageDataManager.getCourseUnits(this.language) || [];
+    const chapters = LanguageDataManager.getCourseChapters(this.language) || [];
+    
+    console.info(`[ChapterDetailPage] getAllChaptersSorted - language: ${this.language}, units: ${units.length}, chapters: ${chapters.length}`);
+    
+    if (units.length === 0 || chapters.length === 0) {
+      return [];
+    }
+    
     // 先按照单元顺序排序
-    const sortedUnits = [...COURSE_UNITS].sort((a, b) => a.order - b.order);
+    const sortedUnits = units.slice().sort((a: CourseUnit, b: CourseUnit) => a.order - b.order);
     
     // 收集所有章节，按照单元顺序和章节ID排序
     const allChapters: CourseChapter[] = [];
     for (const unit of sortedUnits) {
-      const unitChapters = COURSE_CHAPTERS.filter(chapter => chapter.unitId === unit.id);
+      const unitChapters = chapters.filter((chapter: CourseChapter) => chapter.unitId === unit.id);
       // 按照 id 的数值顺序排序
-      const sortedChapters = unitChapters.sort((a, b) => {
+      const sortedChapters = unitChapters.sort((a: CourseChapter, b: CourseChapter) => {
         const aNum = parseInt(a.id);
         const bNum = parseInt(b.id);
         if (isNaN(aNum) || isNaN(bNum)) {
@@ -348,7 +462,9 @@ struct ChapterDetailPage {
         }
         return aNum - bNum;
       });
-      allChapters.push(...sortedChapters);
+      for (const ch of sortedChapters) {
+        allChapters.push(ch);
+      }
     }
     
     return allChapters;
@@ -359,7 +475,9 @@ struct ChapterDetailPage {
     if (!this.chapter) return null;
     
     const allChapters = this.getAllChaptersSorted();
-    const currentIndex = allChapters.findIndex(ch => ch.id === this.chapter!.id);
+    if (allChapters.length === 0) return null;
+    
+    const currentIndex = allChapters.findIndex((ch: CourseChapter) => ch.id === this.chapter!.id);
     
     if (currentIndex > 0) {
       return allChapters[currentIndex - 1];
@@ -373,7 +491,9 @@ struct ChapterDetailPage {
     if (!this.chapter) return null;
     
     const allChapters = this.getAllChaptersSorted();
-    const currentIndex = allChapters.findIndex(ch => ch.id === this.chapter!.id);
+    if (allChapters.length === 0) return null;
+    
+    const currentIndex = allChapters.findIndex((ch: CourseChapter) => ch.id === this.chapter!.id);
     
     if (currentIndex >= 0 && currentIndex < allChapters.length - 1) {
       return allChapters[currentIndex + 1];
@@ -386,7 +506,9 @@ struct ChapterDetailPage {
   private isFirstChapter(): boolean {
     if (!this.chapter) return false;
     const allChapters = this.getAllChaptersSorted();
-    const currentIndex = allChapters.findIndex(ch => ch.id === this.chapter!.id);
+    if (allChapters.length === 0) return false;
+    
+    const currentIndex = allChapters.findIndex((ch: CourseChapter) => ch.id === this.chapter!.id);
     return currentIndex === 0;
   }
 
@@ -394,8 +516,11 @@ struct ChapterDetailPage {
   private isLastChapter(): boolean {
     if (!this.chapter) return false;
     const allChapters = this.getAllChaptersSorted();
-    const currentIndex = allChapters.findIndex(ch => ch.id === this.chapter!.id);
-    return currentIndex === allChapters.length - 1;
+    if (allChapters.length === 0) return false;
+    
+    const currentIndex = allChapters.findIndex((ch: CourseChapter) => ch.id === this.chapter!.id);
+    // 确保找到了章节且确实是最后一个
+    return currentIndex >= 0 && currentIndex === allChapters.length - 1;
   }
 
   // 导航到指定章节（直接加载新内容，不推入新页面）

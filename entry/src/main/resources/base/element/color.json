@@ -221,6 +221,54 @@
       "value": "#FED7AA"
     },
     {
+      "name": "python_primary",
+      "value": "#3776AB"
+    },
+    {
+      "name": "python_primary_dark",
+      "value": "#306998"
+    },
+    {
+      "name": "python_secondary",
+      "value": "#5B9FFF"
+    },
+    {
+      "name": "python_bg_light",
+      "value": "#E3F2FD"
+    },
+    {
+      "name": "python_text",
+      "value": "#1E3A5F"
+    },
+    {
+      "name": "go_primary",
+      "value": "#00ADD8"
+    },
+    {
+      "name": "go_primary_dark",
+      "value": "#007D9C"
+    },
+    {
+      "name": "go_secondary",
+      "value": "#5DC9E2"
+    },
+    {
+      "name": "go_bg_light",
+      "value": "#E6F7FB"
+    },
+    {
+      "name": "go_text",
+      "value": "#004D5C"
+    },
+    {
+      "name": "go_bg_card",
+      "value": "#C8EBF5"
+    },
+    {
+      "name": "go_border",
+      "value": "#7DD3F0"
+    },
+    {
       "name": "success",
       "value": "#10B981"
     },

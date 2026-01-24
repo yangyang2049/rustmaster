@@ -2,7 +2,7 @@
   "string": [
     {
       "name": "module_desc",
-      "value": "Rust 从入门到放弃"
+      "value": "码上学"
     },
     {
       "name": "EntryAbility_desc",
@@ -10,7 +10,7 @@
     },
     {
       "name": "EntryAbility_label",
-      "value": "Rust 从入门到放弃"
+      "value": "码上学"
     },
     {
       "name": "vibrate_permission_reason",
@@ -18,7 +18,7 @@
     },
     {
       "name": "app_welcome_title",
-      "value": "Rust 从入门到放弃"
+      "value": "码上学"
     },
     {
       "name": "app_welcome_subtitle",
@@ -60,62 +60,7 @@
       "name": "fun_facts",
       "value": "💡 Fun Facts"
     },
-    {
-      "name": "explore_flag_quiz",
-      "value": "Flag Quiz"
-    },
-    {
-      "name": "explore_flag_quiz_desc",
-      "value": "Guess country by flag, guess flag by country"
-    },
-    {
-      "name": "explore_fake_flag",
-      "value": "Find the Fake"
-    },
-    {
-      "name": "explore_fake_flag_desc",
-      "value": "Find the fake flag among four flags"
-    },
-    {
-      "name": "explore_spelling",
-      "value": "Spelling Challenge"
-    },
-    {
-      "name": "explore_spelling_desc",
-      "value": "Look at the flag, type the country name"
-    },
-    {
-      "name": "explore_trivia",
-      "value": "Trivia"
-    },
-    {
-      "name": "explore_trivia_desc",
-      "value": "Fun flag knowledge quiz"
-    },
-    {
-      "name": "explore_memory",
-      "value": "Memory Match"
-    },
-    {
-      "name": "explore_memory_desc",
-      "value": "Flip cards and match pairs to train memory"
-    },
-    {
-      "name": "explore_connections",
-      "value": "Connections"
-    },
-    {
-      "name": "explore_connections_desc",
-      "value": "Group flags into four themed groups"
-    },
-    {
-      "name": "explore_headsup",
-      "value": "Heads Up"
-    },
-    {
-      "name": "explore_headsup_desc",
-      "value": "Quickly identify flags, challenge your reaction"
-    },
+
     {
       "name": "basic_info",
       "value": "Basic Information"
@@ -214,7 +159,7 @@
     },
     {
       "name": "from_app",
-      "value": "来自 Rust 从入门到放弃"
+      "value": "来自 码上学"
     },
     {
       "name": "historical_flags",
@@ -430,7 +375,7 @@
     },
     {
       "name": "about_app_message",
-      "value": "Rust 从入门到放弃 1.0.1\n\n一款全面的 Rust 编程学习应用，包含语法参考、题库和互动练习。"
+      "value": "码上学 1.0.1\n\n一款全面的编程学习应用，包含多语言语法参考、题库和互动练习。"
     },
     {
       "name": "feedback_message",
@@ -438,7 +383,7 @@
     },
     {
       "name": "share_app_text",
-      "value": "Rust 从入门到放弃 - 一款全面的 Rust 编程学习应用，包含语法参考、题库和互动练习。\n\n下载链接：{url}"
+      "value": "码上学 - 一款全面的编程学习应用，包含多语言语法参考、题库和互动练习。\n\n下载链接：{url}"
     },
     {
       "name": "share_app_description",

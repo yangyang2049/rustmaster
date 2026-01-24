@@ -1,5 +1,5 @@
-import { QuizModule, QuizQuestion, QuestionType } from '../../data/RustTypes';
-import { QUIZ_MODULES } from '../../data/RustConstants';
+import { QuizModule, QuizQuestion, QuestionType, Language } from '../../data/RustTypes';
+import { LanguageDataManager } from '../../utils/LanguageDataManager';
 import { Spacing, Sizes, FontSizes, FontWeights, Colors } from '../../utils/DesignSystem';
 import router from '@ohos.router';
 import { VibratorUtil } from '../../utils/VibratorUtil';
@@ -14,6 +14,7 @@ interface ButtonStyle {
 
 @Component
 export struct QuizPage {
+  @Prop @Watch('onLanguageChanged') language: Language = Language.RUST;
   @State activeQuiz: QuizModule | null = null;
   @State quizQuestionIndex: number = 0;
   @State quizScore: number = 0;
@@ -22,9 +23,37 @@ export struct QuizPage {
   @State isQuizFinished: boolean = false;
   @State answeredQuestionIndices: Set<number> = new Set();  // 记录已回答的问题索引
   @State quizzesCompleted: number = 0;  // 已完成的测验数
+  @State quizModulesData: QuizModule[] = []; // 测验模块数据
   private prefs: preferences.Preferences | null = null;
 
+  // Dynamic data based on language
+  private get quizModules(): QuizModule[] {
+    return this.quizModulesData;
+  }
+
+  private loadLanguageData(): void {
+    console.info(`[QuizPage] loadLanguageData, language: ${this.language}`);
+    const modules = LanguageDataManager.getQuizModules(this.language);
+    console.info(`[QuizPage] loaded ${modules.length} quiz modules`);
+    if (modules.length > 0) {
+      console.info(`[QuizPage] First module: ${modules[0]?.title || 'none'}, questions: ${modules[0]?.questions?.length || 0}`);
+    }
+    // Clear first, then assign new data to ensure state change is detected
+    this.quizModulesData = [];
+    // Assign directly - the array from LanguageDataManager is already a new reference
+    this.quizModulesData = modules;
+    console.info(`[QuizPage] State updated - quizModulesData.length: ${this.quizModulesData.length}`);
+  }
+
+  private async onLanguageChanged(): Promise<void> {
+    console.info(`[QuizPage] onLanguageChanged, new language: ${this.language}`);
+    this.loadLanguageData();
+    await this.loadQuizzesCompleted();
+  }
+
   async aboutToAppear() {
+    console.info(`[QuizPage] aboutToAppear, language: ${this.language}`);
+    this.loadLanguageData();
     await this.loadQuizzesCompleted();
   }
 
@@ -35,7 +64,7 @@ export struct QuizPage {
 
   private async loadQuizzesCompleted(): Promise<void> {
     try {
-      this.prefs = await PreferencesManager.getPreferences('rust_learn');
+      this.prefs = await PreferencesManager.getPreferences(LanguageDataManager.getLearnPreferencesKey(this.language));
       const completed = await this.prefs.get('quizzesCompleted', '0');
       this.quizzesCompleted = Number(completed);
     } catch (err) {
@@ -45,8 +74,9 @@ export struct QuizPage {
   }
 
   private getQuizProgress(): number {
-    if (QUIZ_MODULES.length === 0) return 0;
-    return Math.round((this.quizzesCompleted / QUIZ_MODULES.length) * 100);
+    const modules = this.quizModules || [];
+    if (modules.length === 0) return 0;
+    return Math.round((this.quizzesCompleted / modules.length) * 100);
   }
 
   private startQuiz(quiz: QuizModule) {
@@ -154,7 +184,7 @@ export struct QuizPage {
   }
 
   private nextQuestion() {
-    if (!this.activeQuiz) return;
+    if (!this.activeQuiz || !this.activeQuiz.questions) return;
 
     if (this.quizQuestionIndex < this.activeQuiz.questions.length - 1) {
       this.quizQuestionIndex++;
@@ -166,7 +196,7 @@ export struct QuizPage {
   }
 
   private getCurrentQuestion(): QuizQuestion | null {
-    if (!this.activeQuiz) return null;
+    if (!this.activeQuiz || !this.activeQuiz.questions) return null;
     // 添加边界检查
     if (this.quizQuestionIndex < 0 || 
         this.quizQuestionIndex >= this.activeQuiz.questions.length) {
@@ -429,7 +459,7 @@ export struct QuizPage {
           .fontColor($r(Colors.TEXT_PRIMARY))
           .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
 
-        Text(`${this.quizzesCompleted} / ${QUIZ_MODULES.length}`)
+        Text(`${this.quizzesCompleted} / ${(this.quizModules || []).length}`)
           .fontSize(FontSizes.TITLE)
           .fontWeight(FontWeights.BOLD)
           .fontColor($r(Colors.RUST_PRIMARY))
@@ -457,7 +487,7 @@ export struct QuizPage {
       this.ProgressCard()
       
       List() {
-        ForEach(QUIZ_MODULES, (quiz: QuizModule) => {
+        ForEach(this.quizModulesData, (quiz: QuizModule) => {
           ListItem() {
             Column() {
               Row() {
@@ -467,7 +497,7 @@ export struct QuizPage {
                   .fontColor($r(Colors.TEXT_PRIMARY))
                   .layoutWeight(1)
 
-                Text(`${quiz.questions.length} 题`)
+                Text(`${(quiz.questions || []).length} 题`)
                   .fontSize(FontSizes.TINY)
                   .fontColor($r(Colors.TEXT_TERTIARY))
                   .fontFamily('monospace')
@@ -494,7 +524,7 @@ export struct QuizPage {
                 .onClick(() => {
                   router.pushUrl({
                     url: 'pages/quiz/QuizDetailPage',
-                    params: { quizId: quiz.id }
+                    params: { quizId: quiz.id, language: this.language }
                   });
                 })
             }
@@ -504,7 +534,7 @@ export struct QuizPage {
             .borderRadius(Sizes.RADIUS_XL)
           }
           .margin({ bottom: Spacing.ELEMENT_SPACING_LG })
-        }, (quiz: QuizModule) => quiz.id)
+        }, (quiz: QuizModule) => `${this.language}_${quiz.id}`)
       }
       .width('100%')
       .layoutWeight(1)
@@ -609,7 +639,7 @@ export struct QuizPage {
 
   @Builder
   QuizQuestionView() {
-    if (this.activeQuiz) {
+    if (this.activeQuiz && this.activeQuiz.questions && this.activeQuiz.questions.length > 0) {
       Column() {
         // 顶部栏
         Row() {
@@ -621,7 +651,7 @@ export struct QuizPage {
               this.closeQuiz();
             })
 
-          Text(`${this.quizQuestionIndex + 1} / ${this.activeQuiz.questions.length}`)
+          Text(`${this.quizQuestionIndex + 1} / ${this.activeQuiz?.questions?.length || 0}`)
             .fontSize(FontSizes.BODY)
             .fontWeight(FontWeights.BOLD)
             .fontColor($r(Colors.TEXT_PRIMARY))
@@ -639,13 +669,13 @@ export struct QuizPage {
 
         // 进度条
         Row() {
-          ForEach(Array.from({ length: this.activeQuiz.questions.length }), (item: undefined, idx: number) => {
+          ForEach(Array.from({ length: this.activeQuiz?.questions?.length || 0 }), (item: undefined, idx: number) => {
             Column()
               .layoutWeight(1)
               .height(4)
               .backgroundColor(idx <= this.quizQuestionIndex ? $r(Colors.RUST_PRIMARY) : $r(Colors.BG_SECONDARY))
               .borderRadius(2)
-              .margin({ right: idx < this.activeQuiz!.questions.length - 1 ? 2 : 0 })
+              .margin({ right: idx < (this.activeQuiz?.questions?.length || 0) - 1 ? 2 : 0 })
           }, (item: undefined, idx: number) => `progress-${idx}`)
         }
         .width('100%')
@@ -754,7 +784,7 @@ export struct QuizPage {
                     this.handleMultipleChoiceSubmit();
                   })
               } else {
-                Button(this.quizQuestionIndex < this.activeQuiz.questions.length - 1 ? '下一题' : '查看结果')
+                Button(this.quizQuestionIndex < (this.activeQuiz?.questions?.length || 0) - 1 ? '下一题' : '查看结果')
                   .width('100%')
                   .height(Sizes.BUTTON_HEIGHT_LG)
                   .fontSize(FontSizes.BODY)
@@ -778,7 +808,7 @@ export struct QuizPage {
         } else if (this.hasAnswered()) {
           // 单选题和判断题：直接显示下一题按钮
           Column() {
-            Button(this.quizQuestionIndex < this.activeQuiz.questions.length - 1 ? '下一题' : '查看结果')
+            Button(this.quizQuestionIndex < (this.activeQuiz?.questions?.length || 0) - 1 ? '下一题' : '查看结果')
               .width('100%')
               .height(Sizes.BUTTON_HEIGHT_LG)
               .fontSize(FontSizes.BODY)

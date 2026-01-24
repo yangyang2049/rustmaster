@@ -230,6 +230,20 @@ export class Colors {
   static readonly RUST_BG_LIGHT = 'app.color.rust_bg_light';
   static readonly RUST_TEXT = 'app.color.rust_text';
 
+  // Python 主题颜色
+  static readonly PYTHON_PRIMARY = 'app.color.python_primary';
+  static readonly PYTHON_PRIMARY_DARK = 'app.color.python_primary_dark';
+  static readonly PYTHON_SECONDARY = 'app.color.python_secondary';
+  static readonly PYTHON_BG_LIGHT = 'app.color.python_bg_light';
+  static readonly PYTHON_TEXT = 'app.color.python_text';
+
+  // Go 主题颜色
+  static readonly GO_PRIMARY = 'app.color.go_primary';
+  static readonly GO_PRIMARY_DARK = 'app.color.go_primary_dark';
+  static readonly GO_SECONDARY = 'app.color.go_secondary';
+  static readonly GO_BG_LIGHT = 'app.color.go_bg_light';
+  static readonly GO_TEXT = 'app.color.go_text';
+
   // 功能颜色
   static readonly SUCCESS = 'app.color.success';
   static readonly SUCCESS_BG = 'app.color.success_bg';

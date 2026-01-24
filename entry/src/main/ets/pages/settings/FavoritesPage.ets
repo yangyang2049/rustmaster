@@ -4,6 +4,7 @@ import promptAction from '@ohos.promptAction';
 import { ToastUtil } from '../../utils/ToastUtil';
 import { FavoritesManager, FavoriteItem } from '../../utils/FavoritesManager';
 import { Spacing, Sizes, FontSizes, FontWeights, Colors } from '../../utils/DesignSystem';
+import { Language } from '../../data/RustTypes';
 
 @Entry
 @Component
@@ -35,10 +36,21 @@ struct FavoritesPage {
 
   private navigateToChapter(pageUrl: string): void {
     if (pageUrl.startsWith('chapter:')) {
-      const chapterId = pageUrl.substring(8);
+      const parts = pageUrl.split(':');
+      let chapterId = '';
+      let language: Language = Language.RUST;
+      if (parts.length >= 3) {
+        const langValue = Number(parts[1]);
+        if (!Number.isNaN(langValue)) {
+          language = langValue as Language;
+        }
+        chapterId = parts.slice(2).join(':');
+      } else {
+        chapterId = pageUrl.substring(8);
+      }
       router.pushUrl({
         url: 'pages/learn/ChapterDetailPage',
-        params: { chapterId: chapterId }
+        params: { chapterId: chapterId, language: language }
       }, router.RouterMode.Standard).catch((err: Error) => {
         console.error(`Failed to push url: ${err.message}`);
         ToastUtil.showToast(this.context, '导航失败', 2000);

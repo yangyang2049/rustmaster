@@ -1,20 +1,13 @@
 /**
- * Rust 大师应用类型定义
+ * Go 学习应用类型定义
  */
 
 export enum Tab {
-  LEARN,
-  SYNTAX,
-  QUIZ,
-  INTERVIEW,
-  SETTINGS
-}
-
-export enum Language {
-  RUST,
-  PYTHON,
-  GO,
-  ARKTS
+  LEARN = 'LEARN',
+  SYNTAX = 'SYNTAX',
+  QUIZ = 'QUIZ',
+  INTERVIEW = 'INTERVIEW',
+  SETTINGS = 'SETTINGS'
 }
 
 export type Difficulty = '入门' | '进阶' | '高阶';
@@ -80,3 +73,4 @@ export interface InterviewItem {
   difficulty: InterviewDifficulty;
   tags: string[];
 }
+

@@ -1,5 +1,5 @@
-import { ReferenceCategory, ReferenceItem } from '../../data/RustTypes';
-import { REFERENCE_DATA } from '../../data/RustConstants';
+import { ReferenceCategory, ReferenceItem, Language } from '../../data/RustTypes';
+import { LanguageDataManager } from '../../utils/LanguageDataManager';
 import { Spacing, Sizes, FontSizes, FontWeights, Colors } from '../../utils/DesignSystem';
 import { PreferencesManager } from '../../utils/PreferencesManager';
 import { preferences } from '@kit.ArkData';
@@ -10,14 +10,44 @@ import common from '@ohos.app.ability.common';
 
 @Component
 export struct SyntaxPage {
+  @Prop @Watch('onLanguageChanged') language: Language = Language.RUST;
   @State searchTerm: string = '';
   @State expandedRef: string | null = null;
   @State showCopyTip: boolean = false;
   @State preventToggle: boolean = false;
+  @State referenceDataState: ReferenceCategory[] = []; // 语法参考数据
   private prefs: preferences.Preferences | null = null;
   private context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
 
+  // Dynamic data based on language - returns ReferenceCategory[]
+  private get referenceData(): ReferenceCategory[] {
+    return this.referenceDataState;
+  }
+
+  private loadLanguageData(): void {
+    console.info(`[SyntaxPage] loadLanguageData, language: ${this.language}`);
+    const data = LanguageDataManager.getReferenceData(this.language);
+    console.info(`[SyntaxPage] loaded ${data.length} categories`);
+    if (data.length > 0) {
+      console.info(`[SyntaxPage] First category: ${data[0]?.title || 'none'}`);
+    }
+    // Clear first, then assign new data to ensure state change is detected
+    this.referenceDataState = [];
+    // Assign directly - the array from LanguageDataManager is already a new reference
+    this.referenceDataState = data;
+    console.info(`[SyntaxPage] State updated - referenceDataState.length: ${this.referenceDataState.length}`);
+  }
+
+  private onLanguageChanged(): void {
+    console.info(`[SyntaxPage] onLanguageChanged, new language: ${this.language}`);
+    this.loadLanguageData();
+  }
+
   async aboutToAppear(): Promise<void> {
+    console.info(`[SyntaxPage] aboutToAppear, language: ${this.language}`);
+    // 加载语言数据
+    this.loadLanguageData();
+    
     try {
       this.prefs = await PreferencesManager.getPreferences('app_settings');
       // 检查是否已显示过提示
@@ -84,7 +114,7 @@ export struct SyntaxPage {
   @Builder
   HeaderCard() {
     Column() {
-      Text('Rust 语法速查')
+      Text(`${LanguageDataManager.getLanguageDisplayName(this.language)} 语法速查`)
         .fontSize(FontSizes.TITLE)
         .fontWeight(FontWeights.BOLD)
         .fontColor($r(Colors.TEXT_WHITE))
@@ -229,21 +259,21 @@ export struct SyntaxPage {
       this.SearchBar()
 
       List() {
-        ForEach(REFERENCE_DATA, (category: ReferenceCategory, catIdx: number) => {
+        ForEach(this.referenceDataState, (category: ReferenceCategory, catIdx: number) => {
           ListItem() {
             Column() {
               this.SectionTitle(category.title)
 
-              ForEach(category.items, (item: ReferenceItem, itemIdx: number) => {
+              ForEach((category.items || []), (item: ReferenceItem, itemIdx: number) => {
                 if (this.isItemVisible(item)) {
                   this.ReferenceItemCard(item)
                 }
-              }, (item: ReferenceItem, itemIdx: number) => `${catIdx}-${itemIdx}`)
+              }, (item: ReferenceItem, itemIdx: number) => `${this.language}_${catIdx}-${itemIdx}`)
             }
             .width('100%')
             .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
           }
-        }, (category: ReferenceCategory, catIdx: number) => `cat-${catIdx}`)
+        }, (category: ReferenceCategory, catIdx: number) => `${this.language}_cat-${catIdx}`)
       }
       .width('100%')
       .layoutWeight(1)
@@ -275,4 +305,3 @@ export struct SyntaxPage {
     });
   }
 }
-

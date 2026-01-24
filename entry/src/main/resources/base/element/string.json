@@ -2,15 +2,15 @@
   "string": [
     {
       "name": "module_desc",
-      "value": "Rust 从入门到放弃"
+      "value": "码上学"
     },
     {
       "name": "EntryAbility_desc",
-      "value": "Rust 编程学习应用"
+      "value": "多语言编程学习应用"
     },
     {
       "name": "EntryAbility_label",
-      "value": "Rust 从入门到放弃"
+      "value": "码上学"
     },
     {
       "name": "vibrate_permission_reason",
@@ -22,59 +22,15 @@
     },
     {
       "name": "app_welcome_title",
-      "value": "Rust 从入门到放弃"
+      "value": "码上学"
     },
     {
       "name": "app_welcome_subtitle",
-      "value": "Rust 编程学习应用"
-    },
-    {
-      "name": "tab_home",
-      "value": "首页"
-    },
-    {
-      "name": "tab_gallery",
-      "value": "画廊"
-    },
-    {
-      "name": "tab_anthem",
-      "value": "国歌"
-    },
-    {
-      "name": "tab_paint",
-      "value": "涂鸦"
-    },
-    {
-      "name": "tab_explore",
-      "value": "探索"
+      "value": "多语言编程学习应用"
     },
     {
       "name": "tab_profile",
       "value": "我的"
-    },
-    {
-      "name": "game_quiz",
-      "value": "国旗猜猜"
-    },
-    {
-      "name": "game_fake_flag",
-      "value": "假旗找茬"
-    },
-    {
-      "name": "game_input",
-      "value": "输入游戏"
-    },
-    {
-      "name": "game_trivia",
-      "value": "知识问答"
-    },
-    {
-      "name": "game_memory",
-      "value": "记忆翻牌"
-    },
-    {
-      "name": "game_connections",
-      "value": "分组连线"
     },
     {
       "name": "quiz_flag_to_name",
@@ -155,62 +111,6 @@
     {
       "name": "fun_facts",
       "value": "💡 趣味小知识"
-    },
-    {
-      "name": "explore_flag_quiz",
-      "value": "国旗猜猜"
-    },
-    {
-      "name": "explore_flag_quiz_desc",
-      "value": "看旗猜国名、看名猜国旗"
-    },
-    {
-      "name": "explore_fake_flag",
-      "value": "假旗找茬"
-    },
-    {
-      "name": "explore_fake_flag_desc",
-      "value": "在四面国旗中找出假旗"
-    },
-    {
-      "name": "explore_spelling",
-      "value": "输入游戏"
-    },
-    {
-      "name": "explore_spelling_desc",
-      "value": "看国旗，输入国家名称"
-    },
-    {
-      "name": "explore_trivia",
-      "value": "知识问答"
-    },
-    {
-      "name": "explore_trivia_desc",
-      "value": "趣味国旗百科问答"
-    },
-    {
-      "name": "explore_memory",
-      "value": "记忆翻牌"
-    },
-    {
-      "name": "explore_memory_desc",
-      "value": "翻牌配对，锻炼记忆力"
-    },
-    {
-      "name": "explore_connections",
-      "value": "分组连线"
-    },
-    {
-      "name": "explore_connections_desc",
-      "value": "将国旗按主题分成四组"
-    },
-    {
-      "name": "explore_headsup",
-      "value": "国旗猜猜乐"
-    },
-    {
-      "name": "explore_headsup_desc",
-      "value": "快速识别国旗，挑战你的反应"
     },
     {
       "name": "headsup_tutorial_title",
@@ -334,7 +234,7 @@
     },
     {
       "name": "from_app",
-      "value": "来自 Rust 从入门到放弃"
+      "value": "来自 码上学"
     },
     {
       "name": "unknown",
@@ -590,7 +490,7 @@
     },
     {
       "name": "about_app_message",
-      "value": "Rust 从入门到放弃 v1.0.1\n\n一款全面的 Rust 编程学习应用，包含语法参考、题库和互动练习。"
+      "value": "码上学 v1.0.1\n\n一款全面的编程学习应用，包含多语言语法参考、题库和互动练习。"
     },
     {
       "name": "feedback_message",
@@ -598,7 +498,7 @@
     },
     {
       "name": "share_app_text",
-      "value": "Rust 从入门到放弃 - 一款全面的 Rust 编程学习应用，包含语法参考、题库和互动练习。\n\n下载链接：{url}"
+      "value": "码上学 - 一款全面的编程学习应用，包含多语言语法参考、题库和互动练习。\n\n下载链接：{url}"
     },
     {
       "name": "share_app_description",

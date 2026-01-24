@@ -1,6 +1,7 @@
 import router from '@ohos.router';
-import { QuizModule, QuizQuestion, QuestionType } from '../../data/RustTypes';
-import { QUIZ_MODULES } from '../../data/RustConstants';
+import { QuizModule, QuizQuestion, QuestionType, Language } from '../../data/RustTypes';
+import { LanguageDataManager } from '../../utils/LanguageDataManager';
+import { LanguageManager } from '../../utils/LanguageManager';
 import { Spacing, Sizes, FontSizes, FontWeights, Colors, SystemColors } from '../../utils/DesignSystem';
 import { PreferencesManager } from '../../utils/PreferencesManager';
 import { preferences } from '@kit.ArkData';
@@ -9,6 +10,7 @@ import common from '@ohos.app.ability.common';
 
 interface RouterParams {
   quizId: string;
+  language?: number;
 }
 
 interface QuizProgress {
@@ -20,6 +22,7 @@ interface QuizProgress {
 @Entry
 @Component
 struct QuizDetailPage {
+  @State language: Language = Language.RUST;
   @State quiz: QuizModule | null = null;
   @State currentQuestionIndex: number = 0;
   @State selectedAnswer: number = -1;
@@ -31,26 +34,44 @@ struct QuizDetailPage {
   private quizId: string = '';
   private context = getContext(this) as common.UIAbilityContext;
 
+  private get quizModules(): QuizModule[] {
+    return LanguageDataManager.getQuizModules(this.language);
+  }
+
+  private getProgressKey(): string {
+    return `quiz_${this.language}_${this.quizId}`;
+  }
+
   async aboutToAppear() {
     await VibratorUtil.init(this.context);
+    
+    // 优先从 LanguageManager 获取当前语言
+    const currentLanguage = await LanguageManager.getCurrentLanguage();
+    this.language = currentLanguage;
+    console.info(`[QuizDetailPage] aboutToAppear - language from LanguageManager: ${this.language}`);
+    
     const params = router.getParams() as Record<string, Object> | null;
     if (params && typeof params === 'object' && params['quizId'] !== undefined) {
       const quizId = params['quizId'] as string;
       if (typeof quizId === 'string' && quizId.trim() !== '') {
         this.quizId = quizId;
-        this.quiz = QUIZ_MODULES.find(q => q.id === quizId) || null;
+        // 直接从 LanguageDataManager 获取数据，确保使用正确的语言
+        const quizModules = LanguageDataManager.getQuizModules(this.language) || [];
+        console.info(`[QuizDetailPage] Searching for quiz ${quizId}, available modules: ${quizModules.length}`);
+        this.quiz = quizModules.find(q => q.id === quizId) || null;
         if (this.quiz) {
+          console.info(`[QuizDetailPage] Quiz found: ${this.quiz.title}`);
           await this.loadProgress();
         } else {
-          console.error(`Quiz not found: ${quizId}`);
+          console.error(`[QuizDetailPage] Quiz not found: ${quizId}`);
           // Navigation 组件会自动提供返回按钮
         }
       } else {
-        console.error('Invalid quizId parameter');
+        console.error('[QuizDetailPage] Invalid quizId parameter');
         // Navigation 组件会自动提供返回按钮
       }
     } else {
-      console.error('Missing quizId parameter');
+      console.error('[QuizDetailPage] Missing quizId parameter');
       // Navigation 组件会自动提供返回按钮
     }
   }
@@ -58,7 +79,17 @@ struct QuizDetailPage {
   private async loadProgress(): Promise<void> {
     try {
       this.prefs = await PreferencesManager.getPreferences('quiz_progress');
-      const savedProgress = await this.prefs.get(`quiz_${this.quizId}`, '');
+      const newKey = this.getProgressKey();
+      const legacyKey = `quiz_${this.quizId}`;
+      let savedProgress = await this.prefs.get(newKey, '');
+      if ((!savedProgress || savedProgress === '') && legacyKey !== newKey) {
+        const legacyProgress = await this.prefs.get(legacyKey, '');
+        if (legacyProgress && typeof legacyProgress === 'string' && legacyProgress !== '') {
+          savedProgress = legacyProgress;
+          await this.prefs.put(newKey, legacyProgress);
+          await this.prefs.flush();
+        }
+      }
       if (savedProgress && typeof savedProgress === 'string' && savedProgress !== '') {
         let progress: QuizProgress;
         try {
@@ -101,7 +132,7 @@ struct QuizDetailPage {
         score: this.score,
         answeredQuestions: this.answeredQuestions
       };
-      await this.prefs.put(`quiz_${this.quizId}`, JSON.stringify(progress));
+      await this.prefs.put(this.getProgressKey(), JSON.stringify(progress));
       await this.prefs.flush();
     } catch (err) {
       console.error(`Failed to save quiz progress: ${JSON.stringify(err)}`);
@@ -113,7 +144,7 @@ struct QuizDetailPage {
       if (!this.prefs) {
         this.prefs = await PreferencesManager.getPreferences('quiz_progress');
       }
-      await this.prefs.delete(`quiz_${this.quizId}`);
+      await this.prefs.delete(this.getProgressKey());
       await this.prefs.flush();
     } catch (err) {
       console.error(`Failed to clear quiz progress: ${JSON.stringify(err)}`);

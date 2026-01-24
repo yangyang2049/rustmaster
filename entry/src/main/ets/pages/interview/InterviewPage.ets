@@ -1,5 +1,5 @@
-import { InterviewItem } from '../../data/RustTypes';
-import { INTERVIEW_QUESTIONS } from '../../data/RustConstants';
+import { InterviewItem, Language } from '../../data/RustTypes';
+import { LanguageDataManager } from '../../utils/LanguageDataManager';
 import { Spacing, Sizes, FontSizes, FontWeights, Colors, SystemColors } from '../../utils/DesignSystem';
 import { InterviewQuestionsManager } from '../../utils/InterviewQuestionsManager';
 import { ToastUtil } from '../../utils/ToastUtil';
@@ -23,6 +23,7 @@ interface TimerPreset {
 
 @Component
 export struct InterviewPage {
+  @Prop language: Language = Language.RUST;
   // 主标签页
   @State activeTab: number = 0; // 0: 题库, 1: 模拟面试
 
@@ -65,10 +66,11 @@ export struct InterviewPage {
   private async loadAllQuestions(): Promise<void> {
     try {
       const customQuestions = await InterviewQuestionsManager.getCustomQuestions();
-      this.allQuestions = [...INTERVIEW_QUESTIONS, ...customQuestions];
+      const builtinQuestions = LanguageDataManager.getInterviewQuestions(this.language);
+      this.allQuestions = builtinQuestions.concat(customQuestions);
     } catch (err) {
       console.error(`Failed to load custom questions: ${JSON.stringify(err)}`);
-      this.allQuestions = INTERVIEW_QUESTIONS;
+      this.allQuestions = LanguageDataManager.getInterviewQuestions(this.language);
     }
   }
 

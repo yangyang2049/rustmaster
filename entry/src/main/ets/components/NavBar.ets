@@ -40,7 +40,7 @@ export struct NavBar {
         .onClick(() => {
           this.currentTab = item.tab;
         })
-      }, (item: NavItem) => item.tab)
+      }, (item: NavItem, index: number) => `nav_item_${index}`)
     }
     .width('100%')
     .height(Spacing.NAV_BAR_HEIGHT)
