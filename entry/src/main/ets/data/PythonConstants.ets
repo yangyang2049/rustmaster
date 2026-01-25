@@ -8997,333 +8997,97 @@ export const REFERENCE_DATA: ReferenceCategory[] = [
   {
     title: "关键字",
     items: [
-      { keyword: "let", description: "声明变量（默认不可变）。", code: `let x = 5;` },
-      { keyword: "mut", description: "标记变量为可变。", code: `let mut x = 5;` },
-      { keyword: "const", description: "声明常量。", code: `const MAX: i32 = 100;` },
-      { keyword: "static", description: "声明静态变量。", code: `static COUNTER: i32 = 0;` },
-      { keyword: "fn", description: "定义函数。", code: `fn add(x: i32, y: i32) -> i32 { x + y }` },
-      { keyword: "return", description: "返回值。", code: `return 42;` },
-      { keyword: "if", description: "条件分支。", code: `if x > 0 { ... }` },
-      { keyword: "else", description: "否则分支。", code: `if x > 0 { ... } else { ... }` },
-      { keyword: "match", description: "模式匹配。", code: `match x { 1 => "one", _ => "other" }` },
-      { keyword: "loop", description: "无限循环。", code: `loop { break; }` },
-      { keyword: "while", description: "条件循环。", code: `while x > 0 { x -= 1; }` },
-      { keyword: "for", description: "遍历迭代器。", code: `for i in 0..10 { ... }` },
-      { keyword: "break", description: "跳出循环。", code: `break;` },
-      { keyword: "continue", description: "跳过当前迭代。", code: `continue;` },
-      { keyword: "struct", description: "定义结构体。", code: `struct Point { x: i32, y: i32 }` },
-      { keyword: "enum", description: "定义枚举。", code: `enum Color { Red, Green, Blue }` },
-      { keyword: "impl", description: "实现方法或 trait。", code: `impl Point { fn new() -> Self { ... } }` },
-      { keyword: "trait", description: "定义 trait。", code: `trait Draw { fn draw(&self); }` },
-      { keyword: "type", description: "类型别名。", code: `type Kilometers = i32;` },
-      { keyword: "mod", description: "定义模块。", code: `mod my_module { ... }` },
-      { keyword: "use", description: "引入路径。", code: `use std::collections::HashMap;` },
-      { keyword: "pub", description: "公有可见性。", code: `pub fn public_fn() { ... }` },
-      { keyword: "as", description: "类型转换或别名。", code: `let x = 5 as f64;` },
-      { keyword: "ref", description: "模式绑定引用。", code: `let ref r = x;` },
-      { keyword: "move", description: "闭包获取所有权。", code: `move || { ... }` },
-      { keyword: "dyn", description: "Trait 对象。", code: `&dyn Display` },
-      { keyword: "async", description: "异步函数。", code: `async fn fetch() { ... }` },
-      { keyword: "await", description: "等待 Future。", code: `result.await` },
-      { keyword: "C 扩展", description: "不安全代码块。", code: `C 扩展 { ... }` },
-      { keyword: "extern", description: "外部函数接口。", code: `extern "C" { ... }` },
-      { keyword: "crate", description: "crate 根路径。", code: `crate::module::item` },
-      { keyword: "super", description: "父模块路径。", code: `super::parent_item` },
-      { keyword: "Self", description: "当前类型别名。", code: `Self { x: 0, y: 0 }` },
-      { keyword: "self", description: "方法接收者（获取所有权）。", code: `fn take(self) { ... }` },
-      { keyword: "where", description: "where 子句。", code: `where T: Display + Clone` },
-      { keyword: "true", description: "布尔值真。", code: `let b = true;` },
-      { keyword: "false", description: "布尔值假。", code: `let b = false;` },
-      { keyword: "in", description: "for 循环中的关键字。", code: `for x in vec { ... }` }
+      { keyword: "def", description: "定义函数。", code: "def add(x, y): return x + y" },
+      { keyword: "class", description: "定义类。", code: "class User: pass" },
+      { keyword: "import", description: "导入模块。", code: "import os" },
+      { keyword: "from", description: "按名导入。", code: "from math import sqrt" },
+      { keyword: "as", description: "别名。", code: "import numpy as np" },
+      { keyword: "if/elif/else", description: "条件分支。", code: "if x > 0: ..." },
+      { keyword: "for", description: "循环遍历。", code: "for x in items: ..." },
+      { keyword: "while", description: "条件循环。", code: "while x < 10: ..." },
+      { keyword: "try/except", description: "异常处理。", code: "try: ... except ValueError: ..." },
+      { keyword: "with", description: "上下文管理。", code: "with open(path) as f: ..." },
+      { keyword: "lambda", description: "匿名函数。", code: "lambda x: x * 2" },
+      { keyword: "yield", description: "生成器返回。", code: "yield value" },
+      { keyword: "global", description: "声明全局变量。" },
+      { keyword: "nonlocal", description: "声明外层非全局变量。" }
     ]
   } as ReferenceCategory,
   {
-    title: "Cargo 常用命令",
+    title: "内置函数",
     items: [
-      { keyword: "python -m venv [name]", description: "创建一个新的 Python 虚拟环境。" },
-      { keyword: "cargo run", description: "编译并运行当前项目。" },
-      { keyword: "cargo build", description: "编译项目（默认 Debug 模式）。" },
-      { keyword: "cargo check", description: "快速检查代码能否编译，不生成可执行文件。" },
-      { keyword: "cargo build --release", description: "编译优化的 Release 版本。" },
-      { keyword: "black", description: "格式化所有 Python 代码文件。" }
-    ]
-  } as ReferenceCategory,
-  {
-    title: "基本数据类型",
-    items: [
-      { keyword: "i8, i16, i32, i64, i128", description: "有符号整数。" },
-      { keyword: "u8, u16, u32, u64, u128", description: "无符号整数。" },
-      { keyword: "f32, f64", description: "浮点数（默认 f64）。" },
-      { keyword: "bool", description: "布尔值 (true, false)。" },
-      { keyword: "char", description: "字符类型，使用单引号，4字节 Unicode。" },
-      { keyword: "tuple", description: "元组，固定长度不同类型组合。", code: "let tup: (i32, f64) = (500, 6.4);" },
-      { keyword: "array", description: "数组，固定长度相同类型。", code: "let a = [1, 2, 3, 4, 5];" }
-    ]
-  } as ReferenceCategory,
-  {
-    title: "常用宏 (Macros)",
-    items: [
-      { keyword: "println!", description: "打印并换行。", code: `println!("Hello, {}!", name);` },
-      { keyword: "print!", description: "打印但不换行。" },
-      { keyword: "format!", description: "格式化字符串并返回。", code: `let s = format!("x = {}", 10);` },
-      { keyword: "vec!", description: "创建 Vec<T>。", code: `let v = vec![1, 2, 3];` },
-      { keyword: "panic!", description: "程序崩溃并抛出信息。", code: `panic!("Something went wrong");` },
-      { keyword: "todo!", description: "标记未完成代码，运行时触发 panic。", code: `fn later() { todo!(); }` }
+      { keyword: "len()", description: "获取长度。", code: "len([1,2,3])" },
+      { keyword: "range()", description: "生成范围序列。", code: "range(0, 10)" },
+      { keyword: "enumerate()", description: "带索引遍历。", code: "for i, v in enumerate(xs)" },
+      { keyword: "zip()", description: "并行遍历。", code: "zip(a, b)" },
+      { keyword: "sorted()", description: "排序并返回新列表。", code: "sorted(nums)" },
+      { keyword: "map()", description: "映射函数。", code: "map(str, nums)" },
+      { keyword: "filter()", description: "过滤元素。", code: "filter(fn, items)" },
+      { keyword: "sum()", description: "求和。", code: "sum(nums)" },
+      { keyword: "min()/max()", description: "最小/最大值。", code: "max(nums)" }
     ]
   } as ReferenceCategory,
   {
     title: "字符串方法",
     items: [
-      { keyword: ".len()", description: "返回字符串的字节长度。", code: `s.len()` },
-      { keyword: ".push_str()", description: "追加字符串切片 (仅对 String 有效)。", code: `s.push_str("bar");` },
-      { keyword: ".contains()", description: "检查是否包含子串。", code: `s.contains("foo")` },
-      { keyword: ".replace()", description: "替换模式。", code: `s.replace("old", "new")` },
-      { keyword: ".trim()", description: "去除首尾空白字符。" }
+      { keyword: ".strip()", description: "去除首尾空白。", code: "s.strip()" },
+      { keyword: ".split()", description: "分割字符串。", code: "s.split(',')" },
+      { keyword: ".join()", description: "拼接字符串。", code: "','.join(items)" },
+      { keyword: ".replace()", description: "替换子串。", code: "s.replace('a','b')" },
+      { keyword: ".startswith()", description: "是否以某前缀开头。" },
+      { keyword: ".endswith()", description: "是否以某后缀结尾。" }
     ]
   } as ReferenceCategory,
   {
-    title: "流程控制",
+    title: "列表方法",
     items: [
-      { keyword: "if / else", description: "条件分支。", code: `if x < 5 { ... } else { ... }` },
-      { keyword: "match", description: "模式匹配。", code: `match x { 1 => "one", _ => "other" }` },
-      { keyword: "loop", description: "无限循环。", code: `loop { println!("again!"); break; }` },
-      { keyword: "while", description: "条件循环。", code: `while n != 0 { n -= 1; }` },
-      { keyword: "for", description: "遍历迭代器。", code: `for x in 0..5 { println!("{}", x); }` },
-      { keyword: "if let", description: "单模式匹配。", code: `if let Some(x) = opt { ... }` },
-      { keyword: "while let", description: "循环直到模式不匹配。", code: `while let Some(x) = stack.pop() { ... }` },
-      { keyword: "break", description: "跳出循环，可返回值。", code: `break 42` },
-      { keyword: "continue", description: "跳过当前迭代。", code: `continue` }
+      { keyword: ".append()", description: "追加元素。", code: "lst.append(x)" },
+      { keyword: ".extend()", description: "追加多个元素。", code: "lst.extend(xs)" },
+      { keyword: ".insert()", description: "插入元素。", code: "lst.insert(0, x)" },
+      { keyword: ".pop()", description: "弹出元素。", code: "lst.pop()" },
+      { keyword: ".remove()", description: "删除首个匹配元素。", code: "lst.remove(x)" },
+      { keyword: ".sort()", description: "原地排序。", code: "lst.sort()" }
     ]
   } as ReferenceCategory,
   {
-    title: "所有权与借用",
+    title: "字典方法",
     items: [
-      { keyword: "let", description: "声明变量（默认不可变）。", code: `let x = 5;` },
-      { keyword: "let mut", description: "声明可变变量。", code: `let mut x = 5;` },
-      { keyword: "&", description: "创建不可变引用。", code: `let r = &x;` },
-      { keyword: "&mut", description: "创建可变引用。", code: `let r = &mut x;` },
-      { keyword: "*", description: "解引用。", code: `*r = 10;` },
-      { keyword: ".clone()", description: "深度复制。", code: `let y = x.clone();` },
-      { keyword: ".copy()", description: "复制（Copy trait）。", code: `let y = x; // 自动复制` },
-      { keyword: "move", description: "闭包获取所有权。", code: `move || { ... }` },
-      { keyword: "Box::new()", description: "在堆上分配。", code: `let b = Box::new(5);` }
+      { keyword: ".get()", description: "安全获取值。", code: "d.get('k', 0)" },
+      { keyword: ".keys()/.values()", description: "获取键/值视图。" },
+      { keyword: ".items()", description: "键值对遍历。", code: "for k, v in d.items()" },
+      { keyword: ".update()", description: "更新字典。", code: "d.update(other)" },
+      { keyword: "in", description: "判断键是否存在。", code: "'k' in d" }
     ]
   } as ReferenceCategory,
   {
-    title: "集合类型方法",
+    title: "集合方法",
     items: [
-      { keyword: "Vec::new()", description: "创建空向量。", code: `let v: Vec<i32> = Vec::new();` },
-      { keyword: "vec![]", description: "创建向量宏。", code: `let v = vec![1, 2, 3];` },
-      { keyword: ".push()", description: "添加元素。", code: `v.push(4);` },
-      { keyword: ".pop()", description: "移除并返回最后一个元素。", code: `let x = v.pop();` },
-      { keyword: ".get()", description: "安全访问元素。", code: `v.get(0)` },
-      { keyword: ".len()", description: "获取长度。", code: `v.len()` },
-      { keyword: ".is_empty()", description: "检查是否为空。", code: `v.is_empty()` },
-      { keyword: ".contains()", description: "检查是否包含。", code: `v.contains(&5)` },
-      { keyword: ".insert()", description: "在索引处插入。", code: `v.insert(1, 99);` },
-      { keyword: ".remove()", description: "移除索引处元素。", code: `v.remove(1);` },
-      { keyword: "HashMap::new()", description: "创建哈希映射。", code: `let mut map = HashMap::new();` },
-      { keyword: ".insert()", description: "插入键值对。", code: `map.insert("key", "value");` },
-      { keyword: ".get()", description: "获取值。", code: `map.get("key")` },
-      { keyword: ".entry()", description: "获取条目。", code: `map.entry("key").or_insert(0);` },
-      { keyword: ".or_insert()", description: "不存在时插入。", code: `map.entry("k").or_insert(1);` }
+      { keyword: ".add()", description: "添加元素。", code: "s.add(x)" },
+      { keyword: ".discard()", description: "删除元素（不存在不报错）。", code: "s.discard(x)" },
+      { keyword: ".remove()", description: "删除元素（不存在报错）。", code: "s.remove(x)" },
+      { keyword: ".union()", description: "并集。", code: "s.union(t)" },
+      { keyword: ".intersection()", description: "交集。", code: "s.intersection(t)" }
     ]
   } as ReferenceCategory,
   {
-    title: "字符串方法",
+    title: "文件与 I/O",
     items: [
-      { keyword: "String::from()", description: "从字符串字面量创建。", code: `let s = String::from("hello");` },
-      { keyword: ".to_string()", description: "转换为 String。", code: `"hello".to_string()` },
-      { keyword: ".len()", description: "返回字节长度。", code: `s.len()` },
-      { keyword: ".push_str()", description: "追加字符串切片。", code: `s.push_str(" world");` },
-      { keyword: ".push()", description: "追加字符。", code: `s.push('!');` },
-      { keyword: ".contains()", description: "检查是否包含子串。", code: `s.contains("hello")` },
-      { keyword: ".replace()", description: "替换子串。", code: `s.replace("old", "new")` },
-      { keyword: ".trim()", description: "去除首尾空白。", code: `s.trim()` },
-      { keyword: ".split()", description: "分割字符串。", code: `s.split(' ')` },
-      { keyword: ".chars()", description: "获取字符迭代器。", code: `s.chars()` },
-      { keyword: ".bytes()", description: "获取字节迭代器。", code: `s.bytes()` },
-      { keyword: ".as_str()", description: "转换为 &str。", code: `s.as_str()` }
+      { keyword: "open()", description: "打开文件。", code: "with open(p) as f: ..." },
+      { keyword: "read()/write()", description: "读取/写入文件。" },
+      { keyword: "json", description: "JSON 编解码。", code: "json.dumps(obj)" },
+      { keyword: "pathlib", description: "路径处理库。", code: "Path('a/b').exists()" }
     ]
   } as ReferenceCategory,
   {
-    title: "迭代器方法",
+    title: "虚拟环境与包管理",
     items: [
-      { keyword: ".iter()", description: "获取不可变引用迭代器。", code: `v.iter()` },
-      { keyword: ".iter_mut()", description: "获取可变引用迭代器。", code: `v.iter_mut()` },
-      { keyword: ".into_iter()", description: "获取所有权迭代器。", code: `v.into_iter()` },
-      { keyword: ".map()", description: "转换每个元素。", code: `v.iter().map(|x| x * 2)` },
-      { keyword: ".filter()", description: "过滤元素。", code: `v.iter().filter(|x| *x > 5)` },
-      { keyword: ".collect()", description: "收集到集合。", code: `v.iter().collect::<Vec<_>>()` },
-      { keyword: ".sum()", description: "求和。", code: `v.iter().sum::<i32>()` },
-      { keyword: ".product()", description: "求积。", code: `v.iter().product::<i32>()` },
-      { keyword: ".fold()", description: "累积。", code: `v.iter().fold(0, |acc, x| acc + x)` },
-      { keyword: ".find()", description: "查找元素。", code: `v.iter().find(|x| *x > 5)` },
-      { keyword: ".enumerate()", description: "获取索引和值。", code: `v.iter().enumerate()` },
-      { keyword: ".zip()", description: "组合两个迭代器。", code: `v1.iter().zip(v2.iter())` },
-      { keyword: ".take()", description: "取前 n 个。", code: `v.iter().take(5)` },
-      { keyword: ".skip()", description: "跳过前 n 个。", code: `v.iter().skip(5)` },
-      { keyword: ".rev()", description: "反转迭代器。", code: `v.iter().rev()` }
+      { keyword: "python -m venv .venv", description: "创建虚拟环境。" },
+      { keyword: "pip install", description: "安装依赖。" },
+      { keyword: "pip list", description: "查看已安装包。" },
+      { keyword: "pip freeze > requirements.txt", description: "导出依赖。" }
     ]
-  } as ReferenceCategory,
-  {
-    title: "Option 和 Result",
-    items: [
-      { keyword: "Some()", description: "Option 的有值变体。", code: `Some(5)` },
-      { keyword: "None", description: "Option 的无值变体。", code: `None` },
-      { keyword: "Ok()", description: "Result 的成功变体。", code: `Ok(42)` },
-      { keyword: "Err()", description: "Result 的错误变体。", code: `Err("error")` },
-      { keyword: ".unwrap()", description: "解包，None/Err 时 panic。", code: `opt.unwrap()` },
-      { keyword: ".unwrap_or()", description: "解包或返回默认值。", code: `opt.unwrap_or(0)` },
-      { keyword: ".unwrap_or_else()", description: "解包或执行闭包。", code: `opt.unwrap_or_else(|| 0)` },
-      { keyword: ".expect()", description: "解包，带错误消息。", code: `opt.expect("msg")` },
-      { keyword: ".map()", description: "转换值。", code: `opt.map(|x| x * 2)` },
-      { keyword: ".map_err()", description: "转换错误。", code: `res.map_err(|e| ...)` },
-      { keyword: ".and_then()", description: "链式操作。", code: `opt.and_then(|x| ...)` },
-      { keyword: ".or_else()", description: "None 时执行闭包。", code: `opt.or_else(|| ...)` },
-      { keyword: "?", description: "错误传播运算符。", code: `let x = func()?;` },
-      { keyword: ".is_some()", description: "检查是否为 Some。", code: `opt.is_some()` },
-      { keyword: ".is_none()", description: "检查是否为 None。", code: `opt.is_none()` },
-      { keyword: ".is_ok()", description: "检查是否为 Ok。", code: `res.is_ok()` },
-      { keyword: ".is_err()", description: "检查是否为 Err。", code: `res.is_err()` }
-    ]
-  } as ReferenceCategory,
-  {
-    title: "结构体和枚举",
-    items: [
-      { keyword: "struct", description: "定义结构体。", code: `struct Point { x: i32, y: i32 }` },
-      { keyword: "enum", description: "定义枚举。", code: `enum Color { Red, Green, Blue }` },
-      { keyword: "impl", description: "实现方法。", code: `impl Point { fn new() -> Self { ... } }` },
-      { keyword: "Self", description: "当前类型别名。", code: `Self { x: 0, y: 0 }` },
-      { keyword: "self", description: "获取所有权。", code: `fn take(self) { ... }` },
-      { keyword: "&self", description: "不可变引用。", code: `fn read(&self) { ... }` },
-      { keyword: "&mut self", description: "可变引用。", code: `fn modify(&mut self) { ... }` },
-      { keyword: "::", description: "关联函数调用。", code: `Point::new()` },
-      { keyword: ".", description: "方法调用。", code: `point.x` },
-      { keyword: "..", description: "结构体更新语法。", code: `Point { x: 1, ..other }` },
-      { keyword: "#[derive()]", description: "自动实现 trait。", code: `#[derive(Debug, Clone)]` }
-    ]
-  } as ReferenceCategory,
-  {
-    title: "模块和可见性",
-    items: [
-      { keyword: "mod", description: "定义模块。", code: `mod my_module { ... }` },
-      { keyword: "pub", description: "公有可见性。", code: `pub fn public_fn() { ... }` },
-      { keyword: "use", description: "引入路径。", code: `use std::collections::HashMap;` },
-      { keyword: "pub use", description: "重新导出。", code: `pub use crate::module::Item;` },
-      { keyword: "as", description: "创建别名。", code: `use std::io::Result as IoResult;` },
-      { keyword: "crate::", description: "绝对路径（从 crate 根）。", code: `crate::module::item` },
-      { keyword: "super::", description: "父模块。", code: `super::parent_item` },
-      { keyword: "self::", description: "当前模块。", code: `self::current_item` }
-    ]
-  } as ReferenceCategory,
-  {
-    title: "泛型和 Trait",
-    items: [
-      { keyword: "<T>", description: "泛型类型参数。", code: `fn func<T>(x: T) { ... }` },
-      { keyword: "T: Trait", description: "Trait bound。", code: `fn func<T: Display>(x: T) { ... }` },
-      { keyword: "where", description: "where 子句。", code: `where T: Display + Clone` },
-      { keyword: "impl Trait", description: "impl Trait 语法。", code: `fn func(x: impl Display) { ... }` },
-      { keyword: "dyn Trait", description: "Trait 对象。", code: `&dyn Display` },
-      { keyword: "trait", description: "定义 trait。", code: `trait MyTrait { fn method(&self); }` },
-      { keyword: "impl Trait for Type", description: "实现 trait。", code: `impl MyTrait for MyType { ... }` },
-      { keyword: "type", description: "关联类型。", code: `type Item = i32;` },
-      { keyword: "default", description: "默认实现。", code: `default fn method() { ... }` }
-    ]
-  } as ReferenceCategory,
-  {
-    title: "智能指针",
-    items: [
-      { keyword: "Box<T>", description: "堆分配指针。", code: `let b = Box::new(5);` },
-      { keyword: "Rc<T>", description: "引用计数（单线程）。", code: `let r = Rc::new(data);` },
-      { keyword: "Arc<T>", description: "原子引用计数（多线程）。", code: `let a = Arc::new(data);` },
-      { keyword: "RefCell<T>", description: "内部可变性。", code: `let r = RefCell::new(5);` },
-      { keyword: "Rc::clone()", description: "增加引用计数。", code: `Rc::clone(&rc)` },
-      { keyword: "Arc::clone()", description: "增加引用计数。", code: `Arc::clone(&arc)` },
-      { keyword: ".borrow()", description: "不可变借用（RefCell）。", code: `r.borrow()` },
-      { keyword: ".borrow_mut()", description: "可变借用（RefCell）。", code: `r.borrow_mut()` },
-      { keyword: "Weak<T>", description: "弱引用。", code: `Rc::downgrade(&rc)` },
-      { keyword: ".upgrade()", description: "升级 Weak 为 Rc。", code: `weak.upgrade()` }
-    ]
-  } as ReferenceCategory,
-  {
-    title: "并发编程",
-    items: [
-      { keyword: "thread::spawn()", description: "创建线程。", code: `thread::spawn(|| { ... })` },
-      { keyword: ".join()", description: "等待线程完成。", code: `handle.join()` },
-      { keyword: "mpsc::channel()", description: "创建通道。", code: `let (tx, rx) = mpsc::channel();` },
-      { keyword: ".send()", description: "发送消息。", code: `tx.send(msg)` },
-      { keyword: ".recv()", description: "接收消息。", code: `rx.recv()` },
-      { keyword: "Mutex::new()", description: "创建互斥锁。", code: `let m = Mutex::new(0);` },
-      { keyword: ".lock()", description: "获取锁。", code: `m.lock().unwrap()` },
-      { keyword: "Send", description: "可以在线程间转移。", code: `T: Send` },
-      { keyword: "Sync", description: "可以在线程间共享。", code: `T: Sync` }
-    ]
-  } as ReferenceCategory,
-  {
-    title: "异步编程",
-    items: [
-      { keyword: "async", description: "异步函数。", code: `async fn func() { ... }` },
-      { keyword: "await", description: "等待 Future。", code: `result.await` },
-      { keyword: "Future", description: "Future trait。", code: `impl Future for MyType` },
-      { keyword: "tokio::spawn()", description: "创建异步任务。", code: `tokio::spawn(async { ... })` },
-      { keyword: "futures::join!()", description: "并发执行多个 Future。", code: `join!(f1, f2)` },
-      { keyword: "futures::select!()", description: "选择第一个完成的。", code: `select! { ... }` }
-    ]
-  } as ReferenceCategory,
-  {
-    title: "错误处理",
-    items: [
-      { keyword: "panic!()", description: "触发 panic。", code: `panic!("error message")` },
-      { keyword: "Result<T, E>", description: "结果类型。", code: `Result<i32, String>` },
-      { keyword: "Option<T>", description: "可选类型。", code: `Option<i32>` },
-      { keyword: ".unwrap()", description: "解包，失败时 panic。", code: `res.unwrap()` },
-      { keyword: ".expect()", description: "解包，带消息。", code: `res.expect("msg")` },
-      { keyword: "?", description: "错误传播。", code: `let x = func()?;` },
-      { keyword: ".map_err()", description: "转换错误类型。", code: `res.map_err(|e| ...)` },
-      { keyword: ".or_else()", description: "错误时执行闭包。", code: `res.or_else(|e| ...)` }
-    ]
-  } as ReferenceCategory,
-  {
-    title: "生命周期",
-    items: [
-      { keyword: "'a", description: "生命周期参数。", code: `fn func<'a>(x: &'a str) -> &'a str` },
-      { keyword: "'static", description: "静态生命周期。", code: `&'static str` },
-      { keyword: "'_", description: "匿名生命周期。", code: `StrWrap<'_>` },
-      { keyword: "'b: 'a", description: "生命周期子类型。", code: `where 'b: 'a` }
-    ]
-  } as ReferenceCategory,
-  {
-    title: "常用类型转换",
-    items: [
-      { keyword: ".to_string()", description: "转换为 String。", code: `5.to_string()` },
-      { keyword: ".parse()", description: "解析字符串。", code: `"42".parse::<i32>()` },
-      { keyword: ".as_ref()", description: "转换为引用。", code: `opt.as_ref()` },
-      { keyword: ".as_mut()", description: "转换为可变引用。", code: `opt.as_mut()` },
-      { keyword: ".into()", description: "Into trait 转换。", code: `x.into()` },
-      { keyword: ".from()", description: "From trait 转换。", code: `String::from("hello")` },
-      { keyword: "as", description: "类型转换。", code: `x as i32` },
-      { keyword: ".try_into()", description: "尝试转换。", code: `x.try_into()` }
-    ]
-  } as ReferenceCategory,
-  {
-    title: "常用标准库类型",
-    items: [
-      { keyword: "Vec<T>", description: "动态数组。", code: `Vec<i32>` },
-      { keyword: "String", description: "可增长字符串。", code: `String` },
-      { keyword: "&str", description: "字符串切片。", code: `&str` },
-      { keyword: "HashMap<K, V>", description: "哈希映射。", code: `HashMap<String, i32>` },
-      { keyword: "HashSet<T>", description: "哈希集合。", code: `HashSet<i32>` },
-      { keyword: "Option<T>", description: "可选值。", code: `Option<i32>` },
-      { keyword: "Result<T, E>", description: "结果类型。", code: `Result<i32, String>` },
-      { keyword: "Box<T>", description: "堆指针。", code: `Box<i32>` },
-      { keyword: "Rc<T>", description: "引用计数。", code: `Rc<i32>` },
-      { keyword: "Arc<T>", description: "原子引用计数。", code: `Arc<i32>` },
-      { keyword: "Mutex<T>", description: "互斥锁。", code: `Mutex<i32>` },
-      { keyword: "RefCell<T>", description: "内部可变性。", code: `RefCell<i32>` }
-    ]
-  }
-] as ReferenceCategory[];
+  } as ReferenceCategory
+];
 
 export const INTERVIEW_QUESTIONS: InterviewItem[] = [
   {
@@ -9370,17 +9134,17 @@ export const INTERVIEW_QUESTIONS: InterviewItem[] = [
   },
   {
     id: 'i7',
-    question: '⭐⭐ 泛型和 Trait Object 有什么区别？',
-    answer: '【核心要点】\n• 泛型：静态分发，编译时单态化\n• Trait Object：动态分发，运行时虚表\n• 泛型性能更好，但代码膨胀\n• Trait Object 更灵活，但有运行时开销\n\n【常见错误回答】\n❌ "动态分发总是更慢"\n❌ "应该总是用泛型"\n\n【代码推理】\nVec<Box<dyn Display>> 为什么要用 dyn？\n→ Vec 中可以存储不同具体类型',
-    difficulty: '困难' as InterviewDifficulty,
-    tags: ['泛型', 'Trait', '性能']
+    question: '⭐⭐ Python 的类型提示有什么实际价值？',
+    answer: '【核心要点】\n• 提高可读性与可维护性\n• 支持静态检查（mypy/pyright）\n• 改善 IDE 自动补全与重构\n• 对运行时几乎无影响\n\n【常见错误回答】\n❌ \"类型提示会影响运行时性能\"\n❌ \"加了类型提示就不会有错误\"\n\n【追问】什么时候必须写类型提示？什么时候可以省略？',
+    difficulty: '中等' as InterviewDifficulty,
+    tags: ['类型提示', '工程实践', '基础']
   },
   {
     id: 'i8',
-    question: '⭐⭐ C 扩展 代码是什么？什么时候需要用？',
-    answer: '【核心要点】\n• 绕过编译器安全检查的代码块\n• 用于：解引用裸指针、调用 C 扩展 函数、FFI\n• C 扩展 不意味着代码危险\n• 应封装在安全 API 中\n\n【常见错误回答】\n❌ "C 扩展 代码就是不安全的代码"\n❌ "好的 Python 代码不应该有 C 扩展"\n\n【追问】C 扩展 能做哪些普通代码不能做的事？',
-    difficulty: '困难' as InterviewDifficulty,
-    tags: ['C 扩展', '系统编程', '高级']
+    question: '⭐⭐ Python 性能优化的常见手段？',
+    answer: '【核心要点】\n• 使用内置库和数据结构（list/dict/set）\n• 选择合适算法与数据结构\n• 避免频繁创建临时对象\n• I/O 场景使用缓存与批量处理\n\n【常见错误回答】\n❌ \"只要用多线程就能变快\"\n❌ \"全部用 C 扩展就行\"\n\n【追问】GIL 对 CPU 密集型任务有什么影响？如何绕开？',
+    difficulty: '中等' as InterviewDifficulty,
+    tags: ['性能', '优化', '实践']
   },
   {
     id: 'i11',

@@ -484,60 +484,65 @@ export struct QuizPage {
   @Builder
   QuizList() {
     Column() {
-      this.ProgressCard()
-      
-      List() {
-        ForEach(this.quizModulesData, (quiz: QuizModule) => {
-          ListItem() {
-            Column() {
-              Row() {
-                Text(quiz.title)
-                  .fontSize(FontSizes.BODY)
-                  .fontWeight(FontWeights.BOLD)
-                  .fontColor($r(Colors.TEXT_PRIMARY))
-                  .layoutWeight(1)
+      Column() {
+        this.ProgressCard()
+        
+        List() {
+          ForEach(this.quizModulesData, (quiz: QuizModule) => {
+            ListItem() {
+              Column() {
+                Row() {
+                  Text(quiz.title)
+                    .fontSize(FontSizes.BODY)
+                    .fontWeight(FontWeights.BOLD)
+                    .fontColor($r(Colors.TEXT_PRIMARY))
+                    .layoutWeight(1)
 
-                Text(`${(quiz.questions || []).length} 题`)
-                  .fontSize(FontSizes.TINY)
-                  .fontColor($r(Colors.TEXT_TERTIARY))
-                  .fontFamily('monospace')
-                  .backgroundColor($r(Colors.BG_SECONDARY))
-                  .padding({
-                    left: Spacing.ELEMENT_SPACING_SM,
-                    right: Spacing.ELEMENT_SPACING_SM,
-                    top: Spacing.ELEMENT_SPACING_XS,
-                    bottom: Spacing.ELEMENT_SPACING_XS
+                  Text(`${(quiz.questions || []).length} 题`)
+                    .fontSize(FontSizes.TINY)
+                    .fontColor($r(Colors.TEXT_TERTIARY))
+                    .fontFamily('monospace')
+                    .backgroundColor($r(Colors.BG_SECONDARY))
+                    .padding({
+                      left: Spacing.ELEMENT_SPACING_SM,
+                      right: Spacing.ELEMENT_SPACING_SM,
+                      top: Spacing.ELEMENT_SPACING_XS,
+                      bottom: Spacing.ELEMENT_SPACING_XS
+                    })
+                    .borderRadius(Sizes.RADIUS_SM)
+                }
+                .width('100%')
+                .margin({ bottom: Spacing.ELEMENT_SPACING_LG })
+
+                Button('开始测试')
+                  .width('100%')
+                  .height(Sizes.BUTTON_HEIGHT_MD)
+                  .fontSize(FontSizes.SMALL)
+                  .fontWeight(FontWeights.BOLD)
+                  .backgroundColor($r(Colors.RUST_BG_LIGHT))
+                  .fontColor($r(Colors.RUST_PRIMARY))
+                  .borderRadius(Sizes.RADIUS_LG)
+                  .onClick(() => {
+                    router.pushUrl({
+                      url: 'pages/quiz/QuizDetailPage',
+                      params: { quizId: quiz.id, language: this.language }
+                    });
                   })
-                  .borderRadius(Sizes.RADIUS_SM)
               }
               .width('100%')
-              .margin({ bottom: Spacing.ELEMENT_SPACING_LG })
-
-              Button('开始测试')
-                .width('100%')
-                .height(Sizes.BUTTON_HEIGHT_MD)
-                .fontSize(FontSizes.SMALL)
-                .fontWeight(FontWeights.BOLD)
-                .backgroundColor($r(Colors.RUST_BG_LIGHT))
-                .fontColor($r(Colors.RUST_PRIMARY))
-                .borderRadius(Sizes.RADIUS_LG)
-                .onClick(() => {
-                  router.pushUrl({
-                    url: 'pages/quiz/QuizDetailPage',
-                    params: { quizId: quiz.id, language: this.language }
-                  });
-                })
+              .padding(Spacing.CARD_PADDING_LARGE)
+              .backgroundColor($r(Colors.BG_CARD))
+              .borderRadius(Sizes.RADIUS_XL)
             }
-            .width('100%')
-            .padding(Spacing.CARD_PADDING_LARGE)
-            .backgroundColor($r(Colors.BG_CARD))
-            .borderRadius(Sizes.RADIUS_XL)
-          }
-          .margin({ bottom: Spacing.ELEMENT_SPACING_LG })
-        }, (quiz: QuizModule) => `${this.language}_${quiz.id}`)
+            .margin({ bottom: Spacing.ELEMENT_SPACING_LG })
+          }, (quiz: QuizModule) => `${this.language}_${quiz.id}`)
+        }
+        .width('100%')
+        .layoutWeight(1)
       }
       .width('100%')
       .layoutWeight(1)
+      .constraintSize({ maxWidth: 800 })
     }
     .width('100%')
     .height('100%')
@@ -547,82 +552,88 @@ export struct QuizPage {
       right: Spacing.PAGE_PADDING,
       bottom: Spacing.PAGE_PADDING
     })
+    .alignItems(HorizontalAlign.Center)
     .backgroundColor($r(Colors.BG_PAGE))
   }
 
   @Builder
   QuizResult() {
     Column() {
-      Blank()
+      Column() {
+        Blank()
 
-      Image($r('app.media.icon_trophy'))
-        .width(80)
-        .height(80)
-        .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
+        Image($r('app.media.icon_trophy'))
+          .width(80)
+          .height(80)
+          .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
 
-      Text('测试完成!')
-        .fontSize(FontSizes.TITLE)
-        .fontWeight(FontWeights.BOLD)
-        .fontColor($r(Colors.TEXT_PRIMARY))
-        .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
+        Text('测试完成!')
+          .fontSize(FontSizes.TITLE)
+          .fontWeight(FontWeights.BOLD)
+          .fontColor($r(Colors.TEXT_PRIMARY))
+          .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
 
-      Text(`你完成了 ${this.activeQuiz?.title}`)
-        .fontSize(FontSizes.BODY)
-        .fontColor($r(Colors.TEXT_SECONDARY))
+        Text(`你完成了 ${this.activeQuiz?.title}`)
+          .fontSize(FontSizes.BODY)
+          .fontColor($r(Colors.TEXT_SECONDARY))
+          .margin({ bottom: Spacing.XXL })
+
+        Row({ space: Spacing.ELEMENT_SPACING_MD }) {
+          Column() {
+            Text(`${this.quizScore}`)
+              .fontSize(FontSizes.HERO)
+              .fontWeight(FontWeights.BOLD)
+              .fontColor($r(Colors.RUST_PRIMARY))
+              .margin({ bottom: Spacing.ELEMENT_SPACING_XS })
+
+            Text('正确回答')
+              .fontSize(FontSizes.SMALL)
+              .fontColor($r(Colors.TEXT_TERTIARY))
+          }
+          .layoutWeight(1)
+          .padding(Spacing.CARD_PADDING_LARGE)
+          .backgroundColor($r(Colors.BG_CARD))
+          .borderRadius(Sizes.RADIUS_XL)
+          .alignItems(HorizontalAlign.Center)
+
+          Column() {
+            Text(`${this.activeQuiz?.questions.length || 0}`)
+              .fontSize(FontSizes.HERO)
+              .fontWeight(FontWeights.BOLD)
+              .fontColor($r(Colors.TEXT_PRIMARY))
+              .margin({ bottom: Spacing.ELEMENT_SPACING_XS })
+
+            Text('总题目数')
+              .fontSize(FontSizes.SMALL)
+              .fontColor($r(Colors.TEXT_TERTIARY))
+          }
+          .layoutWeight(1)
+          .padding(Spacing.CARD_PADDING_LARGE)
+          .backgroundColor($r(Colors.BG_CARD))
+          .borderRadius(Sizes.RADIUS_XL)
+          .alignItems(HorizontalAlign.Center)
+        }
+        .width('100%')
         .margin({ bottom: Spacing.XXL })
 
-      Row({ space: Spacing.ELEMENT_SPACING_MD }) {
-        Column() {
-          Text(`${this.quizScore}`)
-            .fontSize(FontSizes.HERO)
-            .fontWeight(FontWeights.BOLD)
-            .fontColor($r(Colors.RUST_PRIMARY))
-            .margin({ bottom: Spacing.ELEMENT_SPACING_XS })
+        Button('返回题库')
+          .width('100%')
+          .height(Sizes.BUTTON_HEIGHT_LG)
+          .fontSize(FontSizes.BODY)
+          .fontWeight(FontWeights.BOLD)
+          .backgroundColor($r(Colors.RUST_PRIMARY))
+          .fontColor($r(Colors.TEXT_WHITE))
+          .borderRadius(Sizes.RADIUS_XL)
+          .onClick(() => {
+            VibratorUtil.vibrateTap();
+            this.closeQuiz();
+          })
 
-          Text('正确回答')
-            .fontSize(FontSizes.SMALL)
-            .fontColor($r(Colors.TEXT_TERTIARY))
-        }
-        .layoutWeight(1)
-        .padding(Spacing.CARD_PADDING_LARGE)
-        .backgroundColor($r(Colors.BG_CARD))
-        .borderRadius(Sizes.RADIUS_XL)
-        .alignItems(HorizontalAlign.Center)
-
-        Column() {
-          Text(`${this.activeQuiz?.questions.length || 0}`)
-            .fontSize(FontSizes.HERO)
-            .fontWeight(FontWeights.BOLD)
-            .fontColor($r(Colors.TEXT_PRIMARY))
-            .margin({ bottom: Spacing.ELEMENT_SPACING_XS })
-
-          Text('总题目数')
-            .fontSize(FontSizes.SMALL)
-            .fontColor($r(Colors.TEXT_TERTIARY))
-        }
-        .layoutWeight(1)
-        .padding(Spacing.CARD_PADDING_LARGE)
-        .backgroundColor($r(Colors.BG_CARD))
-        .borderRadius(Sizes.RADIUS_XL)
-        .alignItems(HorizontalAlign.Center)
+        Blank()
       }
       .width('100%')
-      .margin({ bottom: Spacing.XXL })
-
-      Button('返回题库')
-        .width('100%')
-        .height(Sizes.BUTTON_HEIGHT_LG)
-        .fontSize(FontSizes.BODY)
-        .fontWeight(FontWeights.BOLD)
-        .backgroundColor($r(Colors.RUST_PRIMARY))
-        .fontColor($r(Colors.TEXT_WHITE))
-                  .borderRadius(Sizes.RADIUS_XL)
-                  .onClick(() => {
-                    VibratorUtil.vibrateTap();
-                    this.closeQuiz();
-                  })
-
-      Blank()
+      .layoutWeight(1)
+      .constraintSize({ maxWidth: 800 })
     }
     .width('100%')
     .height('100%')
@@ -641,162 +652,185 @@ export struct QuizPage {
   QuizQuestionView() {
     if (this.activeQuiz && this.activeQuiz.questions && this.activeQuiz.questions.length > 0) {
       Column() {
-        // 顶部栏
-        Row() {
-          Image($r('app.media.icon_close'))
-            .width(24)
-            .height(24)
-            .padding(Spacing.ELEMENT_SPACING_SM)
-            .onClick(() => {
-              this.closeQuiz();
-            })
+        Column() {
+          // 顶部栏
+          Row() {
+            Image($r('app.media.icon_close'))
+              .width(24)
+              .height(24)
+              .padding(Spacing.ELEMENT_SPACING_SM)
+              .onClick(() => {
+                this.closeQuiz();
+              })
 
-          Text(`${this.quizQuestionIndex + 1} / ${this.activeQuiz?.questions?.length || 0}`)
-            .fontSize(FontSizes.BODY)
-            .fontWeight(FontWeights.BOLD)
-            .fontColor($r(Colors.TEXT_PRIMARY))
-            .layoutWeight(1)
-            .textAlign(TextAlign.Center)
-
-          // 占位符保持居中
-          Text('')
-            .width(Sizes.ICON_XL)
-        }
-        .width('100%')
-        .height(Spacing.TITLE_BAR_HEIGHT)
-        .padding({ left: Spacing.PAGE_PADDING, right: Spacing.PAGE_PADDING })
-        .backgroundColor($r(Colors.BG_CARD))
-
-        // 进度条
-        Row() {
-          ForEach(Array.from({ length: this.activeQuiz?.questions?.length || 0 }), (item: undefined, idx: number) => {
-            Column()
+            Text(`${this.quizQuestionIndex + 1} / ${this.activeQuiz?.questions?.length || 0}`)
+              .fontSize(FontSizes.BODY)
+              .fontWeight(FontWeights.BOLD)
+              .fontColor($r(Colors.TEXT_PRIMARY))
               .layoutWeight(1)
-              .height(4)
-              .backgroundColor(idx <= this.quizQuestionIndex ? $r(Colors.RUST_PRIMARY) : $r(Colors.BG_SECONDARY))
-              .borderRadius(2)
-              .margin({ right: idx < (this.activeQuiz?.questions?.length || 0) - 1 ? 2 : 0 })
-          }, (item: undefined, idx: number) => `progress-${idx}`)
-        }
-        .width('100%')
-        .padding({ left: Spacing.PAGE_PADDING, right: Spacing.PAGE_PADDING, top: Spacing.ELEMENT_SPACING_SM })
+              .textAlign(TextAlign.Center)
 
-        Scroll() {
-          Column() {
-            // 题目
-            if (this.getCurrentQuestion()) {
-              // 题目类型标签
-              Row() {
-                Text(this.getQuestionTypeLabel(this.getCurrentQuestion()!.type))
-                  .fontSize(FontSizes.TINY)
-                  .fontColor($r(Colors.TEXT_TERTIARY))
-                  .backgroundColor($r(Colors.BG_SECONDARY))
-                  .padding({
-                    left: Spacing.ELEMENT_SPACING_SM,
-                    right: Spacing.ELEMENT_SPACING_SM,
-                    top: Spacing.ELEMENT_SPACING_XS,
-                    bottom: Spacing.ELEMENT_SPACING_XS
-                  })
-                  .borderRadius(Sizes.RADIUS_SM)
-              }
-              .width('100%')
-              .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
-
-              Text(this.getCurrentQuestion()!.question)
-                .fontSize(FontSizes.LARGE)
-                .fontWeight(FontWeights.BOLD)
-                .fontColor($r(Colors.TEXT_PRIMARY))
-                .lineHeight(28)
-                .width('100%')
-                .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
-
-              // 选项
-              if (this.getCurrentQuestion()!.type === QuestionType.TRUE_FALSE) {
-                // 判断题：显示 True/False 按钮
-                Column() {
-                  this.TrueFalseButtons(this.getCurrentQuestion()!, this.hasAnswered())
-                }
-                .width('100%')
-                .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
-              } else {
-                // 单选题和多选题：显示选项列表
-                Column() {
-                  ForEach(this.getCurrentQuestion()!.options, (opt: string, idx: number) => {
-                    this.OptionButton(opt, idx, this.getCurrentQuestion()!, this.hasAnswered())
-                  }, (opt: string, idx: number) => `opt-${idx}`)
-                }
-                .width('100%')
-                .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
-              }
-
-              // 反馈
-              if (this.hasAnswered()) {
-                Column() {
-                  Row() {
-                    Image(this.isCurrentAnswerCorrect() ? $r('app.media.icon_check') : $r('app.media.icon_close'))
-                      .width(20)
-                      .height(20)
-                      .margin({ right: Spacing.ELEMENT_SPACING_SM })
-
-                    Text(this.isCurrentAnswerCorrect() ? '回答正确！' : '回答错误')
-                      .fontSize(FontSizes.BODY)
-                      .fontWeight(FontWeights.BOLD)
-                      .fontColor(this.isCurrentAnswerCorrect() ? $r(Colors.SUCCESS) : $r(Colors.ERROR))
-                  }
-                  .width('100%')
-                  .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
-
-                  Text(this.getCurrentQuestion()!.explanation)
-                    .fontSize(FontSizes.SMALL)
-                    .fontColor($r(Colors.TEXT_SECONDARY))
-                    .lineHeight(20)
-                }
-                .width('100%')
-                .padding(Spacing.CARD_PADDING)
-                .backgroundColor(this.isCurrentAnswerCorrect() ? $r(Colors.SUCCESS_BG) : $r(Colors.ERROR_BG))
-                .borderRadius(Sizes.RADIUS_XL)
-              }
-            }
+            // 占位符保持居中
+            Text('')
+              .width(Sizes.ICON_XL)
           }
           .width('100%')
-          .padding(Spacing.PAGE_PADDING)
-        }
-        .width('100%')
-        .layoutWeight(1)
+          .height(Spacing.TITLE_BAR_HEIGHT)
+          .padding({ left: Spacing.PAGE_PADDING, right: Spacing.PAGE_PADDING })
+          .backgroundColor($r(Colors.BG_CARD))
 
-        // 提交/下一题按钮
-        if (this.getCurrentQuestion()?.type === QuestionType.MULTIPLE_CHOICE) {
-          // 多选题：需要提交按钮
-          if (!this.hasAnswered() || this.selectedOptions.length > 0) {
+          // 进度条
+          Row() {
+            ForEach(Array.from({ length: this.activeQuiz?.questions?.length || 0 }), (item: undefined, idx: number) => {
+              Column()
+                .layoutWeight(1)
+                .height(4)
+                .backgroundColor(idx <= this.quizQuestionIndex ? $r(Colors.RUST_PRIMARY) : $r(Colors.BG_SECONDARY))
+                .borderRadius(2)
+                .margin({ right: idx < (this.activeQuiz?.questions?.length || 0) - 1 ? 2 : 0 })
+            }, (item: undefined, idx: number) => `progress-${idx}`)
+          }
+          .width('100%')
+          .padding({ left: Spacing.PAGE_PADDING, right: Spacing.PAGE_PADDING, top: Spacing.ELEMENT_SPACING_SM })
+
+          Scroll() {
             Column() {
-              if (!this.hasAnswered()) {
-                Button('提交答案')
-                  .width('100%')
-                  .height(Sizes.BUTTON_HEIGHT_LG)
-                  .fontSize(FontSizes.BODY)
+              // 题目
+              if (this.getCurrentQuestion()) {
+                // 题目类型标签
+                Row() {
+                  Text(this.getQuestionTypeLabel(this.getCurrentQuestion()!.type))
+                    .fontSize(FontSizes.TINY)
+                    .fontColor($r(Colors.TEXT_TERTIARY))
+                    .backgroundColor($r(Colors.BG_SECONDARY))
+                    .padding({
+                      left: Spacing.ELEMENT_SPACING_SM,
+                      right: Spacing.ELEMENT_SPACING_SM,
+                      top: Spacing.ELEMENT_SPACING_XS,
+                      bottom: Spacing.ELEMENT_SPACING_XS
+                    })
+                    .borderRadius(Sizes.RADIUS_SM)
+                }
+                .width('100%')
+                .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
+
+                Text(this.getCurrentQuestion()!.question)
+                  .fontSize(FontSizes.LARGE)
                   .fontWeight(FontWeights.BOLD)
-                  .backgroundColor(this.selectedOptions.length > 0 ? $r(Colors.HARMONY_DARK) : $r(Colors.BG_SECONDARY))
-                  .fontColor(this.selectedOptions.length > 0 ? $r(Colors.TEXT_WHITE) : $r(Colors.TEXT_TERTIARY))
-                  .borderRadius(Sizes.RADIUS_XL)
-                  .enabled(this.selectedOptions.length > 0)
-                  .onClick(() => {
-                    VibratorUtil.vibrateTap();
-                    this.handleMultipleChoiceSubmit();
-                  })
-              } else {
-                Button(this.quizQuestionIndex < (this.activeQuiz?.questions?.length || 0) - 1 ? '下一题' : '查看结果')
+                  .fontColor($r(Colors.TEXT_PRIMARY))
+                  .lineHeight(28)
                   .width('100%')
-                  .height(Sizes.BUTTON_HEIGHT_LG)
-                  .fontSize(FontSizes.BODY)
-                  .fontWeight(FontWeights.BOLD)
-                  .backgroundColor($r(Colors.HARMONY_DARK))
-                  .fontColor($r(Colors.TEXT_WHITE))
+                  .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
+
+                // 选项
+                if (this.getCurrentQuestion()!.type === QuestionType.TRUE_FALSE) {
+                  // 判断题：显示 True/False 按钮
+                  Column() {
+                    this.TrueFalseButtons(this.getCurrentQuestion()!, this.hasAnswered())
+                  }
+                  .width('100%')
+                  .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
+                } else {
+                  // 单选题和多选题：显示选项列表
+                  Column() {
+                    ForEach(this.getCurrentQuestion()!.options, (opt: string, idx: number) => {
+                      this.OptionButton(opt, idx, this.getCurrentQuestion()!, this.hasAnswered())
+                    }, (opt: string, idx: number) => `opt-${idx}`)
+                  }
+                  .width('100%')
+                  .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
+                }
+
+                // 反馈
+                if (this.hasAnswered()) {
+                  Column() {
+                    Row() {
+                      Image(this.isCurrentAnswerCorrect() ? $r('app.media.icon_check') : $r('app.media.icon_close'))
+                        .width(20)
+                        .height(20)
+                        .margin({ right: Spacing.ELEMENT_SPACING_SM })
+
+                      Text(this.isCurrentAnswerCorrect() ? '回答正确！' : '回答错误')
+                        .fontSize(FontSizes.BODY)
+                        .fontWeight(FontWeights.BOLD)
+                        .fontColor(this.isCurrentAnswerCorrect() ? $r(Colors.SUCCESS) : $r(Colors.ERROR))
+                    }
+                    .width('100%')
+                    .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
+
+                    Text(this.getCurrentQuestion()!.explanation)
+                      .fontSize(FontSizes.SMALL)
+                      .fontColor($r(Colors.TEXT_SECONDARY))
+                      .lineHeight(20)
+                  }
+                  .width('100%')
+                  .padding(Spacing.CARD_PADDING)
+                  .backgroundColor(this.isCurrentAnswerCorrect() ? $r(Colors.SUCCESS_BG) : $r(Colors.ERROR_BG))
                   .borderRadius(Sizes.RADIUS_XL)
-                  .onClick(() => {
-                    VibratorUtil.vibrateTap();
-                    this.nextQuestion();
-                  })
+                }
               }
+            }
+            .width('100%')
+            .padding(Spacing.PAGE_PADDING)
+          }
+          .width('100%')
+          .layoutWeight(1)
+
+          // 提交/下一题按钮
+          if (this.getCurrentQuestion()?.type === QuestionType.MULTIPLE_CHOICE) {
+            // 多选题：需要提交按钮
+            if (!this.hasAnswered() || this.selectedOptions.length > 0) {
+              Column() {
+                if (!this.hasAnswered()) {
+                  Button('提交答案')
+                    .width('100%')
+                    .height(Sizes.BUTTON_HEIGHT_LG)
+                    .fontSize(FontSizes.BODY)
+                    .fontWeight(FontWeights.BOLD)
+                    .backgroundColor(this.selectedOptions.length > 0 ? $r(Colors.HARMONY_DARK) : $r(Colors.BG_SECONDARY))
+                    .fontColor(this.selectedOptions.length > 0 ? $r(Colors.TEXT_WHITE) : $r(Colors.TEXT_TERTIARY))
+                    .borderRadius(Sizes.RADIUS_XL)
+                    .enabled(this.selectedOptions.length > 0)
+                    .onClick(() => {
+                      VibratorUtil.vibrateTap();
+                      this.handleMultipleChoiceSubmit();
+                    })
+                } else {
+                  Button(this.quizQuestionIndex < (this.activeQuiz?.questions?.length || 0) - 1 ? '下一题' : '查看结果')
+                    .width('100%')
+                    .height(Sizes.BUTTON_HEIGHT_LG)
+                    .fontSize(FontSizes.BODY)
+                    .fontWeight(FontWeights.BOLD)
+                    .backgroundColor($r(Colors.HARMONY_DARK))
+                    .fontColor($r(Colors.TEXT_WHITE))
+                    .borderRadius(Sizes.RADIUS_XL)
+                    .onClick(() => {
+                      VibratorUtil.vibrateTap();
+                      this.nextQuestion();
+                    })
+                }
+              }
+              .width('100%')
+              .padding({
+                left: Spacing.PAGE_PADDING,
+                right: Spacing.PAGE_PADDING,
+                bottom: Spacing.PAGE_PADDING
+              })
+            }
+          } else if (this.hasAnswered()) {
+            // 单选题和判断题：直接显示下一题按钮
+            Column() {
+              Button(this.quizQuestionIndex < (this.activeQuiz?.questions?.length || 0) - 1 ? '下一题' : '查看结果')
+                .width('100%')
+                .height(Sizes.BUTTON_HEIGHT_LG)
+                .fontSize(FontSizes.BODY)
+                .fontWeight(FontWeights.BOLD)
+                .backgroundColor($r(Colors.HARMONY_DARK))
+                .fontColor($r(Colors.TEXT_WHITE))
+                .borderRadius(Sizes.RADIUS_XL)
+                .onClick(() => {
+                  this.nextQuestion();
+                })
             }
             .width('100%')
             .padding({
@@ -805,31 +839,14 @@ export struct QuizPage {
               bottom: Spacing.PAGE_PADDING
             })
           }
-        } else if (this.hasAnswered()) {
-          // 单选题和判断题：直接显示下一题按钮
-          Column() {
-            Button(this.quizQuestionIndex < (this.activeQuiz?.questions?.length || 0) - 1 ? '下一题' : '查看结果')
-              .width('100%')
-              .height(Sizes.BUTTON_HEIGHT_LG)
-              .fontSize(FontSizes.BODY)
-              .fontWeight(FontWeights.BOLD)
-              .backgroundColor($r(Colors.HARMONY_DARK))
-              .fontColor($r(Colors.TEXT_WHITE))
-              .borderRadius(Sizes.RADIUS_XL)
-              .onClick(() => {
-                this.nextQuestion();
-              })
-          }
-          .width('100%')
-          .padding({
-            left: Spacing.PAGE_PADDING,
-            right: Spacing.PAGE_PADDING,
-            bottom: Spacing.PAGE_PADDING
-          })
         }
+        .width('100%')
+        .layoutWeight(1)
+        .constraintSize({ maxWidth: 800 })
       }
       .width('100%')
       .height('100%')
+      .alignItems(HorizontalAlign.Center)
       .backgroundColor($r(Colors.BG_PAGE))
     }
   }

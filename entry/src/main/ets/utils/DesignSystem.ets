@@ -178,6 +178,13 @@ export class Shadows {
     offsetY: 6
   };
 
+  static readonly FLOAT: ShadowOptions = {
+    radius: 24,
+    color: 'rgba(0, 0, 0, 0.2)',
+    offsetX: 0,
+    offsetY: 12
+  };
+
   // 兼容旧命名
   static readonly sm: ShadowOptions = {
     radius: 4,
@@ -243,6 +250,13 @@ export class Colors {
   static readonly GO_SECONDARY = 'app.color.go_secondary';
   static readonly GO_BG_LIGHT = 'app.color.go_bg_light';
   static readonly GO_TEXT = 'app.color.go_text';
+
+  // ArkTS 主题颜色
+  static readonly ARKTS_PRIMARY = 'app.color.arkts_primary';
+  static readonly ARKTS_PRIMARY_DARK = 'app.color.arkts_primary_dark';
+  static readonly ARKTS_SECONDARY = 'app.color.arkts_secondary';
+  static readonly ARKTS_BG_LIGHT = 'app.color.arkts_bg_light';
+  static readonly ARKTS_TEXT = 'app.color.arkts_text';
 
   // 功能颜色
   static readonly SUCCESS = 'app.color.success';

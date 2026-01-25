@@ -294,59 +294,64 @@ export struct LearnPage {
   @Builder
   ProgressCard() {
     Row() {
-      Column() {
-        Stack({ alignContent: Alignment.Center }) {
-          Progress({
-            value: this.getCourseProgress(),
-            total: 100,
-            type: ProgressType.Ring
-          })
-            .width(80)
-            .height(80)
+      Row() {
+        Column() {
+          Stack({ alignContent: Alignment.Center }) {
+            Progress({
+              value: this.getCourseProgress(),
+              total: 100,
+              type: ProgressType.Ring
+            })
+              .width(80)
+              .height(80)
 
-          Column() {
-            Text(`${this.getCourseProgress()}%`)
-              .fontSize(FontSizes.LARGE)
-              .fontWeight(FontWeights.BOLD)
-              .fontColor($r(Colors.RUST_PRIMARY))
-            Text('完成度')
-              .fontSize(FontSizes.TINY)
-              .fontColor($r(Colors.TEXT_TERTIARY))
+            Column() {
+              Text(`${this.getCourseProgress()}%`)
+                .fontSize(FontSizes.LARGE)
+                .fontWeight(FontWeights.BOLD)
+                .fontColor($r(Colors.RUST_PRIMARY))
+              Text('完成度')
+                .fontSize(FontSizes.TINY)
+                .fontColor($r(Colors.TEXT_TERTIARY))
+            }
+            .alignItems(HorizontalAlign.Center)
           }
-          .alignItems(HorizontalAlign.Center)
+          .width(80)
+          .height(80)
         }
-        .width(80)
-        .height(80)
+        .alignItems(HorizontalAlign.Center)
+        .justifyContent(FlexAlign.Center)
+
+        Column() {
+          Text('课程进度')
+            .fontSize(FontSizes.BODY)
+            .fontWeight(FontWeights.BOLD)
+            .fontColor($r(Colors.TEXT_PRIMARY))
+            .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
+
+          Text(`${(this.chaptersRead || []).length} / ${this.courseChaptersData.length}`)
+            .fontSize(FontSizes.TITLE)
+            .fontWeight(FontWeights.BOLD)
+            .fontColor($r(Colors.RUST_PRIMARY))
+            .margin({ bottom: Spacing.ELEMENT_SPACING_XS })
+
+          Text('已完成章节')
+            .fontSize(FontSizes.SMALL)
+            .fontColor($r(Colors.TEXT_TERTIARY))
+        }
+        .layoutWeight(1)
+        .alignItems(HorizontalAlign.Start)
+        .justifyContent(FlexAlign.Center)
+        .margin({ left: Spacing.ELEMENT_SPACING_LG })
       }
-      .alignItems(HorizontalAlign.Center)
-      .justifyContent(FlexAlign.Center)
-
-      Column() {
-        Text('课程进度')
-          .fontSize(FontSizes.BODY)
-          .fontWeight(FontWeights.BOLD)
-          .fontColor($r(Colors.TEXT_PRIMARY))
-          .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
-
-        Text(`${(this.chaptersRead || []).length} / ${this.courseChaptersData.length}`)
-          .fontSize(FontSizes.TITLE)
-          .fontWeight(FontWeights.BOLD)
-          .fontColor($r(Colors.RUST_PRIMARY))
-          .margin({ bottom: Spacing.ELEMENT_SPACING_XS })
-
-        Text('已完成章节')
-          .fontSize(FontSizes.SMALL)
-          .fontColor($r(Colors.TEXT_TERTIARY))
-      }
-      .layoutWeight(1)
-      .alignItems(HorizontalAlign.Start)
-      .justifyContent(FlexAlign.Center)
-      .margin({ left: Spacing.ELEMENT_SPACING_LG })
+      .width('100%')
+      .padding(Spacing.CARD_PADDING_LARGE)
+      .backgroundColor($r(Colors.BG_CARD))
+      .borderRadius(Sizes.RADIUS_XL)
+      .constraintSize({ maxWidth: 800 })
     }
     .width('100%')
-    .padding(Spacing.CARD_PADDING_LARGE)
-    .backgroundColor($r(Colors.BG_CARD))
-    .borderRadius(Sizes.RADIUS_XL)
+    .justifyContent(FlexAlign.Center)
     .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
   }
 
@@ -355,15 +360,31 @@ export struct LearnPage {
   @Builder
   ChapterList() {
     Column() {
-      this.SectionTitle('课程单元')
+      Row() {
+        this.SectionTitle('课程单元')
+      }
+      .width('100%')
+      .justifyContent(FlexAlign.Center)
+      .constraintSize({ maxWidth: 800 })
+      .alignSelf(ItemAlign.Center)
 
       Scroll(this.scroller) {
         Column() {
-          ForEach(this.courseUnitsData.slice().sort((a: CourseUnit, b: CourseUnit) => a.order - b.order), (unit: CourseUnit) => {
-            this.UnitCard(unit)
-          }, (unit: CourseUnit) => `${this.language}_${unit.id}`)
+          GridRow({
+            columns: 12,
+            gutter: { x: Spacing.ELEMENT_SPACING_MD, y: Spacing.LIST_ITEM_MARGIN }
+          }) {
+            ForEach(this.courseUnitsData.slice().sort((a: CourseUnit, b: CourseUnit) => a.order - b.order), (unit: CourseUnit) => {
+              GridCol({ span: { sm: 12, md: 6, lg: 6 } }) {
+                this.UnitCard(unit)
+              }
+            }, (unit: CourseUnit) => `${this.language}_${unit.id}`)
+          }
+          .width('100%')
+          .constraintSize({ maxWidth: 800 })
         }
         .width('100%')
+        .alignItems(HorizontalAlign.Center)
       }
       .width('100%')
       .layoutWeight(1)

@@ -16,6 +16,7 @@ export struct SyntaxPage {
   @State showCopyTip: boolean = false;
   @State preventToggle: boolean = false;
   @State referenceDataState: ReferenceCategory[] = []; // 语法参考数据
+  @State collapsedCategories: boolean[] = [];
   private prefs: preferences.Preferences | null = null;
   private context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
 
@@ -35,6 +36,10 @@ export struct SyntaxPage {
     this.referenceDataState = [];
     // Assign directly - the array from LanguageDataManager is already a new reference
     this.referenceDataState = data;
+    
+    // Initialize collapsed state (all expanded by default)
+    this.collapsedCategories = new Array(data.length).fill(false);
+    
     console.info(`[SyntaxPage] State updated - referenceDataState.length: ${this.referenceDataState.length}`);
   }
 
@@ -102,13 +107,26 @@ export struct SyntaxPage {
   }
 
   @Builder
-  SectionTitle(title: string) {
-    Text(title)
-      .fontSize(FontSizes.BODY)
-      .fontWeight(FontWeights.BOLD)
-      .fontColor($r(Colors.TEXT_PRIMARY))
-      .width('100%')
-      .margin({ bottom: Spacing.ELEMENT_SPACING_MD })
+  SectionTitle(title: string, index: number) {
+    Row() {
+      Text(title)
+        .fontSize(FontSizes.BODY)
+        .fontWeight(FontWeights.BOLD)
+        .fontColor($r(Colors.TEXT_PRIMARY))
+        .layoutWeight(1)
+
+      Image($r('app.media.icon_arrow_right'))
+        .width(16)
+        .height(16)
+        .rotate({ angle: this.collapsedCategories[index] ? 0 : 90 })
+        .animation({ duration: 200 })
+    }
+    .width('100%')
+    .alignItems(VerticalAlign.Center)
+    .margin({ bottom: Spacing.ELEMENT_SPACING_MD })
+    .onClick(() => {
+      this.collapsedCategories[index] = !this.collapsedCategories[index];
+    })
   }
 
   @Builder
@@ -256,30 +274,46 @@ export struct SyntaxPage {
 
   build() {
     Column() {
-      this.SearchBar()
+      Column() {
+        this.SearchBar()
 
-      List() {
-        ForEach(this.referenceDataState, (category: ReferenceCategory, catIdx: number) => {
-          ListItem() {
-            Column() {
-              this.SectionTitle(category.title)
+        List() {
+          ForEach(this.referenceDataState, (category: ReferenceCategory, catIdx: number) => {
+            ListItem() {
+              Column() {
+                this.SectionTitle(category.title, catIdx)
 
-              ForEach((category.items || []), (item: ReferenceItem, itemIdx: number) => {
-                if (this.isItemVisible(item)) {
-                  this.ReferenceItemCard(item)
+                if (!this.collapsedCategories[catIdx]) {
+                  GridRow({
+                    columns: 12,
+                    gutter: { x: Spacing.ELEMENT_SPACING_MD, y: Spacing.LIST_ITEM_MARGIN }
+                  }) {
+                    ForEach((category.items || []), (item: ReferenceItem, itemIdx: number) => {
+                      if (this.isItemVisible(item)) {
+                        GridCol({ span: { sm: 12, md: 6, lg: 6 } }) {
+                          this.ReferenceItemCard(item)
+                        }
+                      }
+                    }, (item: ReferenceItem, itemIdx: number) => `${this.language}_${catIdx}-${itemIdx}`)
+                  }
                 }
-              }, (item: ReferenceItem, itemIdx: number) => `${this.language}_${catIdx}-${itemIdx}`)
+              }
+              .width('100%')
+              .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
             }
-            .width('100%')
-            .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
-          }
-        }, (category: ReferenceCategory, catIdx: number) => `${this.language}_cat-${catIdx}`)
+          }, (category: ReferenceCategory, catIdx: number) => `${this.language}_cat-${catIdx}`)
+        }
+        .width('100%')
+        .layoutWeight(1)
+        .scrollBar(BarState.Off)
       }
       .width('100%')
       .layoutWeight(1)
+      .constraintSize({ maxWidth: 800 })
     }
     .width('100%')
     .height('100%')
+    .alignItems(HorizontalAlign.Center)
     .padding({
       top: Spacing.PAGE_PADDING,
       left: Spacing.PAGE_PADDING,

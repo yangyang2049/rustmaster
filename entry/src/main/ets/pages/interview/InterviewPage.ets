@@ -313,48 +313,52 @@ export struct InterviewPage {
   FilterChips() {
     Row() {
       Text('全部')
-        .fontSize(FontSizes.TINY)
+        .fontSize(FontSizes.SMALL)
         .fontWeight(FontWeights.MEDIUM)
         .fontColor(this.filterDifficulty === null ? $r(Colors.TEXT_WHITE) : $r(Colors.TEXT_SECONDARY))
         .backgroundColor(this.filterDifficulty === null ? $r(Colors.RUST_PRIMARY) : $r(Colors.BG_SECONDARY))
-        .padding({ left: 12, right: 12, top: 6, bottom: 6 })
-        .borderRadius(Sizes.RADIUS_LG)
+        .padding({ left: 16, right: 16 })
+        .height(Sizes.CHIP_HEIGHT)
+        .borderRadius(Sizes.RADIUS_XL)
         .onClick(() => {
           this.filterDifficulty = null;
         })
 
       Text('简单')
-        .fontSize(FontSizes.TINY)
+        .fontSize(FontSizes.SMALL)
         .fontWeight(FontWeights.MEDIUM)
         .fontColor(this.filterDifficulty === '简单' ? $r(Colors.TEXT_WHITE) : $r(Colors.TEXT_SECONDARY))
         .backgroundColor(this.filterDifficulty === '简单' ? $r(Colors.SUCCESS) : $r(Colors.BG_SECONDARY))
-        .padding({ left: 12, right: 12, top: 6, bottom: 6 })
-        .borderRadius(Sizes.RADIUS_LG)
-        .margin({ left: 8 })
+        .padding({ left: 16, right: 16 })
+        .height(Sizes.CHIP_HEIGHT)
+        .borderRadius(Sizes.RADIUS_XL)
+        .margin({ left: 12 })
         .onClick(() => {
           this.filterDifficulty = '简单';
         })
 
       Text('中等')
-        .fontSize(FontSizes.TINY)
+        .fontSize(FontSizes.SMALL)
         .fontWeight(FontWeights.MEDIUM)
         .fontColor(this.filterDifficulty === '中等' ? $r(Colors.TEXT_WHITE) : $r(Colors.TEXT_SECONDARY))
         .backgroundColor(this.filterDifficulty === '中等' ? $r(Colors.WARNING) : $r(Colors.BG_SECONDARY))
-        .padding({ left: 12, right: 12, top: 6, bottom: 6 })
-        .borderRadius(Sizes.RADIUS_LG)
-        .margin({ left: 8 })
+        .padding({ left: 16, right: 16 })
+        .height(Sizes.CHIP_HEIGHT)
+        .borderRadius(Sizes.RADIUS_XL)
+        .margin({ left: 12 })
         .onClick(() => {
           this.filterDifficulty = '中等';
         })
 
       Text('困难')
-        .fontSize(FontSizes.TINY)
+        .fontSize(FontSizes.SMALL)
         .fontWeight(FontWeights.MEDIUM)
         .fontColor(this.filterDifficulty === '困难' ? $r(Colors.TEXT_WHITE) : $r(Colors.TEXT_SECONDARY))
         .backgroundColor(this.filterDifficulty === '困难' ? $r(Colors.ERROR) : $r(Colors.BG_SECONDARY))
-        .padding({ left: 12, right: 12, top: 6, bottom: 6 })
-        .borderRadius(Sizes.RADIUS_LG)
-        .margin({ left: 8 })
+        .padding({ left: 16, right: 16 })
+        .height(Sizes.CHIP_HEIGHT)
+        .borderRadius(Sizes.RADIUS_XL)
+        .margin({ left: 12 })
         .onClick(() => {
           this.filterDifficulty = '困难';
         })
@@ -535,13 +539,18 @@ export struct InterviewPage {
         .justifyContent(FlexAlign.Center)
         .alignItems(HorizontalAlign.Center)
       } else {
-        List() {
-          ForEach(this.getFilteredQuestions(), (item: InterviewItem) => {
-            ListItem() {
-              this.InterviewItemCard(item)
-            }
-            .margin({ bottom: Spacing.LIST_ITEM_MARGIN })
-          }, (item: InterviewItem) => item.id)
+        Scroll() {
+          GridRow({
+            columns: 12,
+            gutter: { x: Spacing.ELEMENT_SPACING_MD, y: Spacing.LIST_ITEM_MARGIN }
+          }) {
+            ForEach(this.getFilteredQuestions(), (item: InterviewItem) => {
+              GridCol({ span: { sm: 12, md: 6 } }) {
+                this.InterviewItemCard(item)
+              }
+            }, (item: InterviewItem) => item.id)
+          }
+          .width('100%')
         }
         .width('100%')
         .layoutWeight(1)
@@ -954,18 +963,24 @@ export struct InterviewPage {
   @Builder
   MockInterviewTab() {
     Column() {
-      if (this.mockState === MockState.SETUP) {
-        this.MockSetupScreen()
-      } else if (this.mockState === MockState.RUNNING) {
-        this.MockRunningScreen()
-      } else if (this.mockState === MockState.TIMEOUT) {
-        this.MockTimeoutScreen()
-      } else if (this.mockState === MockState.REVIEW) {
-        this.MockReviewScreen()
+      Column() {
+        if (this.mockState === MockState.SETUP) {
+          this.MockSetupScreen()
+        } else if (this.mockState === MockState.RUNNING) {
+          this.MockRunningScreen()
+        } else if (this.mockState === MockState.TIMEOUT) {
+          this.MockTimeoutScreen()
+        } else if (this.mockState === MockState.REVIEW) {
+          this.MockReviewScreen()
+        }
       }
+      .width('100%')
+      .layoutWeight(1)
+      .constraintSize({ maxWidth: 800 })
     }
     .width('100%')
     .layoutWeight(1)
+    .alignItems(HorizontalAlign.Center)
   }
 
   @Builder
@@ -1094,16 +1109,22 @@ export struct InterviewPage {
   build() {
     Stack() {
       Column() {
-        this.TabBar()
+        Column() {
+          this.TabBar()
 
-        if (this.activeTab === 0) {
-          this.QuestionBankTab()
-        } else {
-          this.MockInterviewTab()
+          if (this.activeTab === 0) {
+            this.QuestionBankTab()
+          } else {
+            this.MockInterviewTab()
+          }
         }
+        .width('100%')
+        .layoutWeight(1)
+        .constraintSize({ maxWidth: 800 })
       }
       .width('100%')
       .height('100%')
+      .alignItems(HorizontalAlign.Center)
       .padding({
         top: Spacing.PAGE_PADDING,
         left: Spacing.PAGE_PADDING,

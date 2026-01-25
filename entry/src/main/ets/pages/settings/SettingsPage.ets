@@ -3,6 +3,7 @@ import { Language } from '../../data/RustTypes';
 import { Spacing, Sizes, FontSizes, FontWeights, Colors } from '../../utils/DesignSystem';
 import { PreferencesManager } from '../../utils/PreferencesManager';
 import { LanguageDataManager } from '../../utils/LanguageDataManager';
+import { LanguageManager } from '../../utils/LanguageManager';
 import { preferences } from '@kit.ArkData';
 import { ConfigurationConstant } from '@kit.AbilityKit';
 import promptAction from '@ohos.promptAction';
@@ -46,6 +47,14 @@ export struct SettingsPage {
           aboutMessage: '轻松上 Go v1.0.0\n\n专注于 Go 编程语言的教学演示与知识巩固，帮助学习者从入门到精通。\n\n本应用不提供任何职业资格认证或考试服务。'
         };
         return goInfo;
+      case Language.ARKTS:
+        const arkTsInfo: AppInfo = {
+          name: '精通 ArkTS',
+          description: 'ArkTS 编程学习应用',
+          bundleName: 'com.douhua.arkts',
+          aboutMessage: '精通 ArkTS v1.0.0\n\n专注于 ArkTS 编程语言的教学演示与知识巩固，帮助学习者从入门到精通。\n\n本应用不提供任何职业资格认证或考试服务。'
+        };
+        return arkTsInfo;
       case Language.RUST:
       default:
         const rustInfo: AppInfo = {
@@ -64,6 +73,8 @@ export struct SettingsPage {
         return '#3776AB';
       case Language.GO:
         return '#00ADD8';
+      case Language.ARKTS:
+        return '#0A59F7';
       case Language.RUST:
       default:
         return '#FB923C';
@@ -140,7 +151,7 @@ export struct SettingsPage {
         title: '关于应用',
         message: appInfo.aboutMessage,
         buttons: [
-          { text: '确定', color: this.getPrimaryHexColor() }
+          { text: '确定', color: '#FB923C' }
         ]
       }).then(() => {
       }).catch((err: Error) => {
@@ -157,7 +168,7 @@ export struct SettingsPage {
         title: '意见反馈',
         message: '如有建议或问题，可通过应用商店评论，或者发邮件到 ssz2048@163.com 反馈。感谢您的支持。',
         buttons: [
-          { text: '好的', color: this.getPrimaryHexColor() }
+          { text: '好的', color: '#FB923C' }
         ]
       }).then(() => {
       }).catch((err: Error) => {
@@ -430,6 +441,10 @@ export struct SettingsPage {
     .borderRadius(Sizes.RADIUS_LG)
     .backgroundColor(this.colorMode === value ? $r(Colors.RUST_BG_LIGHT) : $r(Colors.BG_SECONDARY))
     .margin({ bottom: Spacing.ELEMENT_SPACING_MD })
+    .border({
+      width: this.colorMode === value ? 1 : 0,
+      color: $r(Colors.RUST_PRIMARY)
+    })
     .onClick(() => {
       this.colorMode = value;
     })
@@ -439,74 +454,84 @@ export struct SettingsPage {
     Stack() {
       Scroll() {
         Column() {
-          // 顶部部分：我的收藏（无标题）
           Column() {
-            this.settingItem($r('app.media.icon_favorite'), '我的收藏', () => {
-              router.pushUrl({ url: 'pages/settings/FavoritesPage' })
-                .catch((err: Error) => {
-                  console.error(`Failed to navigate to FavoritesPage: ${err.message}`);
-                });
-            })
+            // 顶部部分：我的收藏（无标题）
+            Column() {
+              this.settingItem($r('app.media.icon_favorite'), '我的收藏', () => {
+                router.pushUrl({ url: 'pages/settings/FavoritesPage' })
+                  .catch((err: Error) => {
+                    console.error(`Failed to navigate to FavoritesPage: ${err.message}`);
+                  });
+              })
+            }
+            .width('100%')
+            .backgroundColor($r(Colors.BG_CARD))
+            .borderRadius(Sizes.RADIUS_XL)
+            .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
+
+            this.SectionTitle('设置')
+
+            // 设置项
+            Column() {
+              this.settingItemWithValue($r('app.media.icon_theme'), '深色模式', () => this.getThemeText(), () => {
+                this.showThemeSettings();
+              })
+              this.settingItem($r('app.media.icon_search'), '重置语言选择', async () => {
+                PreferencesManager.init(this.context);
+                await LanguageManager.resetHasShownLanguageDialog(this.context);
+                ToastUtil.showToast(this.context, '已重置，重启应用后生效', 2000);
+              })
+              this.settingItem($r('app.media.icon_star'), '评分', () => {
+                this.openAppInGallery(this.getAppInfo().bundleName);
+              })
+              Divider()
+                .strokeWidth(0.5)
+                .color($r(Colors.BG_SECONDARY))
+                .margin({ left: Spacing.CARD_PADDING, right: Spacing.CARD_PADDING })
+              this.settingItem($r('app.media.icon_feedback'), '意见反馈', () => {
+                this.showFeedback();
+              })
+              Divider()
+                .strokeWidth(0.5)
+                .color($r(Colors.BG_SECONDARY))
+                .margin({ left: Spacing.CARD_PADDING, right: Spacing.CARD_PADDING })
+              this.settingItem($r('app.media.icon_about'), '关于应用', () => {
+                this.showAboutApp();
+              })
+              Divider()
+                .strokeWidth(0.5)
+                .color($r(Colors.BG_SECONDARY))
+                .margin({ left: Spacing.CARD_PADDING, right: Spacing.CARD_PADDING })
+              this.settingItem($r('app.media.icon_share'), '分享应用', () => {
+                this.shareApp();
+              })
+            }
+            .width('100%')
+            .backgroundColor($r(Colors.BG_CARD))
+            .borderRadius(Sizes.RADIUS_XL)
+            .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
+
+            this.SectionTitle('其他应用')
+
+            // 其他应用
+            Column() {
+              this.OtherAppItem(
+                $r('app.media.icon_kaifazhushou'),
+                '独立开发助手',
+                '开发者工具箱',
+                'com.douhua.kaifazhushou'
+              )
+            }
+            .width('100%')
+            .backgroundColor($r(Colors.BG_CARD))
+            .borderRadius(Sizes.RADIUS_XL)
+            .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
           }
           .width('100%')
-          .backgroundColor($r(Colors.BG_CARD))
-          .borderRadius(Sizes.RADIUS_XL)
-          .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
-
-          this.SectionTitle('设置')
-
-          // 设置项
-          Column() {
-            this.settingItemWithValue($r('app.media.icon_theme'), '深色模式', () => this.getThemeText(), () => {
-              this.showThemeSettings();
-            })
-            this.settingItem($r('app.media.icon_star'), '评分', () => {
-              this.openAppInGallery(this.getAppInfo().bundleName);
-            })
-            Divider()
-              .strokeWidth(0.5)
-              .color($r(Colors.BG_SECONDARY))
-              .margin({ left: Spacing.CARD_PADDING, right: Spacing.CARD_PADDING })
-            this.settingItem($r('app.media.icon_feedback'), '意见反馈', () => {
-              this.showFeedback();
-            })
-            Divider()
-              .strokeWidth(0.5)
-              .color($r(Colors.BG_SECONDARY))
-              .margin({ left: Spacing.CARD_PADDING, right: Spacing.CARD_PADDING })
-            this.settingItem($r('app.media.icon_about'), '关于应用', () => {
-              this.showAboutApp();
-            })
-            Divider()
-              .strokeWidth(0.5)
-              .color($r(Colors.BG_SECONDARY))
-              .margin({ left: Spacing.CARD_PADDING, right: Spacing.CARD_PADDING })
-            this.settingItem($r('app.media.icon_share'), '分享应用', () => {
-              this.shareApp();
-            })
-          }
-          .width('100%')
-          .backgroundColor($r(Colors.BG_CARD))
-          .borderRadius(Sizes.RADIUS_XL)
-          .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
-
-          this.SectionTitle('其他应用')
-
-          // 其他应用
-          Column() {
-            this.OtherAppItem(
-              $r('app.media.icon_kaifazhushou'),
-              '独立开发助手',
-              '开发者工具箱',
-              'com.douhua.kaifazhushou'
-            )
-          }
-          .width('100%')
-          .backgroundColor($r(Colors.BG_CARD))
-          .borderRadius(Sizes.RADIUS_XL)
-          .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
+          .constraintSize({ maxWidth: 800 })
         }
         .width('100%')
+        .alignItems(HorizontalAlign.Center)
         .padding({
           top: Spacing.PAGE_PADDING,
           left: Spacing.PAGE_PADDING,

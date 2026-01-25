@@ -543,97 +543,104 @@ struct ChapterDetailPage {
       if (this.chapter) {
         Scroll(this.scroller) {
           Column() {
-            // 标题
-            Text(this.chapter.title)
-              .fontSize(FontSizes.TITLE - 2)
-              .fontWeight(FontWeights.BOLD)
-              .fontColor($r(Colors.TEXT_PRIMARY))
-              .width('100%')
-              .lineHeight(28)
-              .margin({ bottom: Spacing.ELEMENT_SPACING_MD })
-
-            // 难度标签和描述横幅
-            Row() {
-              Text(this.chapter.difficulty)
-                .fontSize(FontSizes.TINY - 2)
-                .fontColor($r(Colors.RUST_PRIMARY))
-                .padding({ left: Spacing.ELEMENT_SPACING_MD, right: Spacing.ELEMENT_SPACING_MD, top: 4, bottom: 4 })
-                .backgroundColor($r(Colors.RUST_BG_LIGHT))
-                .borderRadius(Sizes.RADIUS_MD)
-
-              Text(this.chapter.description)
-                .fontSize(FontSizes.LARGE - 2)
-                .fontColor($r(Colors.TEXT_SECONDARY))
-                .margin({ left: Spacing.ELEMENT_SPACING_LG })
-                .layoutWeight(1)
-                .lineHeight(20)
-            }
-            .width('100%')
-            .padding(Spacing.CARD_PADDING)
-            .backgroundColor($r(Colors.BG_CARD))
-            .borderRadius(Sizes.RADIUS_XL)
-            .margin({ top: Spacing.ELEMENT_SPACING_LG, bottom: 16 })
-
-            // 内容（Markdown 渲染）
             Column() {
-              MarkdownRenderer({ content: this.chapter.content })
-            }
-            .width('100%')
-            .margin({ bottom: 20 })
-
-            // 示例代码
-            if (this.chapter.exampleCode) {
-              ExampleCodeView({
-                code: this.chapter.exampleCode
-              })
-            }
-
-            // 知识点总结
-            Column() {
-              Text('知识点速记')
-                .fontSize(FontSizes.XLARGE - 2)
+              // 标题
+              Text(this.chapter.title)
+                .fontSize(FontSizes.TITLE - 2)
                 .fontWeight(FontWeights.BOLD)
-                .fontColor($r(Colors.RUST_TEXT))
+                .fontColor($r(Colors.TEXT_PRIMARY))
                 .width('100%')
-                .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
-              
-              // 背景 banner
-              Row()
-                .width('100%')
-                .height(4)
-                .backgroundColor($r(Colors.RUST_BG_LIGHT))
-                .borderRadius(Sizes.RADIUS_SM)
+                .lineHeight(28)
                 .margin({ bottom: Spacing.ELEMENT_SPACING_MD })
 
-              ForEach(this.chapter.summary, (point: string, idx: number) => {
-                Row() {
-                  Circle()
-                    .width(8)
-                    .height(8)
-                    .fill($r(Colors.RUST_SECONDARY))
-                    .margin({ right: Spacing.ELEMENT_SPACING_MD, top: 6 })
+              // 难度标签和描述横幅
+              Row() {
+                Text(this.chapter.difficulty)
+                  .fontSize(FontSizes.TINY - 2)
+                  .fontColor($r(Colors.RUST_PRIMARY))
+                  .padding({ left: Spacing.ELEMENT_SPACING_MD, right: Spacing.ELEMENT_SPACING_MD, top: 4, bottom: 4 })
+                  .backgroundColor($r(Colors.RUST_BG_LIGHT))
+                  .borderRadius(Sizes.RADIUS_MD)
 
-                  Text(point)
-                    .fontSize(FontSizes.LARGE - 2)
+                Text(this.chapter.description)
+                  .fontSize(FontSizes.LARGE - 2)
+                  .fontColor($r(Colors.TEXT_SECONDARY))
+                  .margin({ left: Spacing.ELEMENT_SPACING_LG })
+                  .layoutWeight(1)
+                  .lineHeight(20)
+              }
+              .width('100%')
+              .padding(Spacing.CARD_PADDING)
+              .backgroundColor($r(Colors.BG_CARD))
+              .borderRadius(Sizes.RADIUS_XL)
+              .margin({ top: Spacing.ELEMENT_SPACING_LG, bottom: 16 })
+
+              // 内容（Markdown 渲染）
+              Column() {
+                MarkdownRenderer({ content: this.chapter.content })
+              }
+              .width('100%')
+              .margin({ bottom: 20 })
+
+              // 示例代码
+              if (this.chapter.exampleCode) {
+                ExampleCodeView({
+                  code: this.chapter.exampleCode
+                })
+              }
+
+              // 知识点总结
+              if (this.chapter.summary && this.chapter.summary.length > 0) {
+                Column() {
+                  Text('知识点速记')
+                    .fontSize(FontSizes.XLARGE - 2)
+                    .fontWeight(FontWeights.BOLD)
                     .fontColor($r(Colors.RUST_TEXT))
-                    .lineHeight(20)
-                    .layoutWeight(1)
+                    .width('100%')
+                    .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
+                  
+                  // 背景 banner
+                  Row()
+                    .width('100%')
+                    .height(4)
+                    .backgroundColor($r(Colors.RUST_BG_LIGHT))
+                    .borderRadius(Sizes.RADIUS_SM)
+                    .margin({ bottom: Spacing.ELEMENT_SPACING_MD })
+
+                  ForEach(this.chapter.summary, (point: string, idx: number) => {
+                    Row() {
+                      Circle()
+                        .width(8)
+                        .height(8)
+                        .fill($r(Colors.RUST_SECONDARY))
+                        .margin({ right: Spacing.ELEMENT_SPACING_MD, top: 6 })
+
+                      Text(point)
+                        .fontSize(FontSizes.LARGE - 2)
+                        .fontColor($r(Colors.RUST_TEXT))
+                        .lineHeight(20)
+                        .layoutWeight(1)
+                    }
+                    .width('100%')
+                    .alignItems(VerticalAlign.Top)
+                    .margin({ bottom: Spacing.ELEMENT_SPACING_MD })
+                  }, (point: string, idx: number) => `point-${idx}`)
                 }
                 .width('100%')
-                .alignItems(VerticalAlign.Top)
-                .margin({ bottom: Spacing.ELEMENT_SPACING_MD })
-              }, (point: string, idx: number) => `point-${idx}`)
+                .padding({ left: Spacing.CARD_PADDING_LARGE, right: Spacing.CARD_PADDING_LARGE, top: 20, bottom: 20 })
+                .backgroundColor($r(Colors.RUST_BG_LIGHT))
+                .borderRadius(Sizes.RADIUS_XL)
+                .margin({ top: Spacing.CARD_MARGIN_BOTTOM, bottom: 24 })
+              }
+
+              // 章节导航按钮
+              this.ChapterNavigation()
             }
             .width('100%')
-            .padding({ left: Spacing.CARD_PADDING_LARGE, right: Spacing.CARD_PADDING_LARGE, top: 20, bottom: 20 })
-            .backgroundColor($r(Colors.RUST_BG_LIGHT))
-            .borderRadius(Sizes.RADIUS_XL)
-            .margin({ top: Spacing.CARD_MARGIN_BOTTOM, bottom: 24 })
-
-            // 章节导航按钮
-            this.ChapterNavigation()
+            .constraintSize({ maxWidth: 800 })
           }
           .width('100%')
+          .alignItems(HorizontalAlign.Center)
           .padding({ left: Spacing.PAGE_PADDING_LARGE, right: Spacing.PAGE_PADDING_LARGE, top: Spacing.PAGE_PADDING, bottom: Spacing.PAGE_PADDING_LARGE })
         }
         .width('100%')
@@ -665,6 +672,7 @@ struct ChapterDetailPage {
     }
     .title('')
     .titleMode(NavigationTitleMode.Mini)
+    .mode(NavigationMode.Stack)
     .hideBackButton(false)
     .backgroundColor($r(Colors.BG_PAGE))
     .menus(this.MenuBuilder)

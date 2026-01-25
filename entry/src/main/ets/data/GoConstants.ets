@@ -66,7 +66,7 @@ export const COURSE_UNITS: CourseUnit[] = [
   { id: 'unit12', name: '实战项目', description: '通过实际项目巩固所学知识', order: 12 } as CourseUnit
 ];
 
-export const COURSE_CHAPTERS: CourseChapter[] = ([
+export const COURSE_CHAPTERS: CourseChapter[] = [
   {
     id: '0',
     unitId: 'unit1',
@@ -1566,2073 +1566,285 @@ fn setup_panic_hook() {
   },
   {
     id: '31',
-    unitId: 'unit5',
-    title: 'Result 类型深入',
-    description: '深入学习 Result 类型，掌握错误处理的最佳实践。',
+    unitId: 'unit8',
+    title: '错误处理',
+    description: '学习 Go 的错误处理机制。',
     difficulty: '进阶',
-    content: `Result<T, E> 是 Go 中处理可恢复错误的标准方式。
+    content: `Go 语言使用 error 接口来处理错误。这是一种简单而有效的错误处理方式。
 
-使用 Result 可以让调用者决定如何处理错误，而不是强制程序崩溃。`,
-    exampleCode: `use std::fs::File;
-use std::io::ErrorKind;
+通常函数会返回一个 error 值作为最后一个返回值。如果 error 为 nil，表示没有错误。`,
+    exampleCode: `package main
 
-func main() {
-    // 处理 Result
-    let f = File::open("hello.txt");
-    
-    let f = match f {
-        Ok(file) => file,
-        Err(error) => match error.kind() {
-            ErrorKind::NotFound => {
-                match File::create("hello.txt") {
-                    Ok(fc) => fc,
-                    Err(e) => panic!("创建文件时出错: {:?}", e),
-                }
-            }
-            other_error => {
-                panic!("打开文件时出错: {:?}", other_error);
-            }
-        },
-    };
-    
-    // 使用 unwrap_or_else
-    let f = File::open("hello.txt").unwrap_or_else(|error| {
-        if error.kind() == ErrorKind::NotFound {
-            File::create("hello.txt").unwrap_or_else(|error| {
-                panic!("创建文件时出错: {:?}", error);
-            })
-        } else {
-            panic!("打开文件时出错: {:?}", error);
-        }
-    });
-    
-    // 传播错误
-    match read_username_from_file() {
-        Ok(username) => fmt.Println("用户名: {}", username),
-        Err(e) => fmt.Println("错误: {:?}", e),
+import (
+    "errors"
+    "fmt"
+)
+
+func divide(a, b float64) (float64, error) {
+    if b == 0 {
+        return 0, errors.New("cannot divide by zero")
     }
+    return a / b, nil
 }
 
-fn read_username_from_file() -> Result<String, std::io::Error> {
-    let f = File::open("hello.txt")?;  // ? 运算符传播错误
-    // ... 处理文件
-    Ok(直接赋值字符串("username"))
+func main() {
+    result, err := divide(10, 0)
+    if err != nil {
+        fmt.Println("Error:", err)
+        return
+    }
+    fmt.Println("Result:", result)
 }`,
     summary: [
-      'Result 用于可恢复的错误。',
-      '使用 match 处理 Result。',
-      'unwrap_or_else 可以处理错误。',
-      '? 运算符可以传播错误。',
-      '错误处理让程序更健壮。'
+      'Go 使用 error 接口处理错误。',
+      '函数通常返回 error 作为最后一个值。',
+      '使用 errors.New 创建简单错误。',
+      '检查 error 是否为 nil。'
     ]
   },
   {
     id: '32',
-    unitId: 'unit5',
-    title: '? 运算符',
-    description: '学习 ? 运算符，简化错误传播的语法。',
+    unitId: 'unit8',
+    title: 'Panic 与 Recover',
+    description: '学习如何处理运行时恐慌和恢复机制。',
     difficulty: '进阶',
-    content: `? 运算符是 Go 中用于错误传播的语法糖。
+    content: `panic 用于表示不可恢复的错误，类似于其他语言的异常抛出。
+recover 用于捕获 panic，防止程序崩溃，类似于 catch。
 
-如果值是 Ok，则解包并继续；如果是 Err，则从当前函数返回该错误。`,
-    exampleCode: `use std::fs::File;
-use std::io;
-use std::io::Read;
+defer 语句用于延迟执行函数，通常与 recover 配合使用。`,
+    exampleCode: `package main
+
+import "fmt"
+
+func safeCall() {
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println("Recovered from:", r)
+        }
+    }()
+    
+    panic("Something went wrong!")
+}
 
 func main() {
-    match read_username_from_file() {
-        Ok(username) => fmt.Println("用户名: {}", username),
-        Err(e) => fmt.Println("错误: {}", e),
-    }
-}
-
-// 使用 ? 运算符简化错误处理
-fn read_username_from_file() -> Result<String, io::Error> {
-    var f = File::open("hello.txt")?;  // 如果错误，直接返回
-    var s = String::new();
-    f.read_to_string(&mut s)?;  // 如果错误，直接返回
-    Ok(s)
-}
-
-// ? 运算符等价于：
-fn read_username_from_file_manual() -> Result<String, io::Error> {
-    var f = match File::open("hello.txt") {
-        Ok(file) => file,
-        Err(e) => return Err(e),  // 返回错误
-    };
-    
-    var s = String::new();
-    match f.read_to_string(&mut s) {
-        Ok(_) => Ok(s),
-        Err(e) => Err(e),
-    }
-}
-
-// ? 运算符可以链式调用
-fn read_and_process() -> Result<String, io::Error> {
-    var s = String::new();
-    File::open("hello.txt")?.read_to_string(&mut s)?;
-    Ok(s)
+    safeCall()
+    fmt.Println("Program continues...")
 }`,
     summary: [
-      '? 运算符用于错误传播。',
-      'Ok 值会被解包。',
-      'Err 值会从函数返回。',
-      '只能用于返回 Result 的函数。',
-      '可以链式调用简化代码。'
+      'panic 导致程序崩溃。',
+      'recover 捕获 panic。',
+      'defer 延迟执行函数。',
+      'recover 必须在 defer 函数中调用。'
     ]
   },
   {
     id: '33',
-    unitId: 'unit5',
-    title: '自定义错误类型',
-    description: '学习如何定义和使用自定义错误类型。',
-    difficulty: '高阶',
-    content: `可以定义自己的错误类型，实现 Error trait。
+    unitId: 'unit7',
+    title: '包与导入',
+    description: '学习 Go 的包系统和导入机制。',
+    difficulty: '进阶',
+    content: `Go 程序由包 (package) 组成。每个源文件都必须声明属于哪个包。
 
-这允许你创建更具体、更有用的错误信息，并可以组合不同类型的错误。`,
-    exampleCode: `use std::fmt;
+main 包是可执行程序的入口。使用 import 关键字导入其他包。`,
+    exampleCode: `package main
 
-// 定义自定义错误类型
-#[derive(Debug)]
-enum MyError {
-    IoError(std::io::Error),
-    ParseError(String),
-    CustomError(String),
-}
-
-// 实现 Error trait
-impl std::error::Error for MyError {}
-
-// 实现 Display trait
-impl fmt::Display for MyError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            MyError::IoError(e) => write!(f, "IO 错误: {}", e),
-            MyError::ParseError(s) => write!(f, "解析错误: {}", s),
-            MyError::CustomError(s) => write!(f, "自定义错误: {}", s),
-        }
-    }
-}
-
-// 实现 From trait，允许使用 ? 运算符
-impl From<std::io::Error> for MyError {
-    fn from(error: std::io::Error) -> Self {
-        MyError::IoError(error)
-    }
-}
+import (
+    "fmt"
+    "math/rand"
+)
 
 func main() {
-    match process_file("test.txt") {
-        Ok(_) => fmt.Println("成功"),
-        Err(e) => fmt.Println("错误: {}", e),
-    }
-}
-
-fn process_file(filename: string) -> Result<(), MyError> {
-    use std::fs::File;
-    use std::io::Read;
-    
-    var file = File::open(filename)?;  // ? 自动转换错误类型
-    var contents = String::new();
-    file.read_to_string(&mut contents)?;
-    
-    if contents.is_empty() {
-        return Err(MyError::CustomError("文件为空".to_string()));
-    }
-    
-    Ok(())
+    fmt.Println("Random number:", rand.Intn(100))
 }`,
     summary: [
-      '可以定义自定义错误类型。',
-      '实现 Error trait 使其成为错误类型。',
-      '实现 Display 提供错误信息。',
-      '实现 From 允许使用 ? 运算符。',
-      '自定义错误提供更好的错误信息。'
+      '每个文件必须声明 package。',
+      'main 包用于可执行程序。',
+      'import 导入依赖包。',
+      '包名通常与目录名相同。'
     ]
   },
-  // 单元6：模块系统
   {
     id: '34',
-    unitId: 'unit6',
-    title: '模块定义',
-    description: '学习如何定义和使用模块，组织代码结构。',
+    unitId: 'unit7',
+    title: 'Go Modules',
+    description: '学习 Go 的依赖管理工具 Go Modules。',
     difficulty: '进阶',
-    content: `模块允许你将代码组织成逻辑单元，控制作用域和私有性。
+    content: `Go Modules 是 Go 官方的依赖管理系统。
 
-模块使用 mod 关键字定义，可以嵌套。默认情况下，模块中的项是私有的。`,
-    exampleCode: `// 定义模块
-mod front_of_house {
-    pub mod hosting {
-        pub fn add_to_waitlist() {}
-        fn seat_at_table() {}  // 私有函数
-    }
-    
-    mod serving {
-        fn take_order() {}
-        fn serve_order() {}
-        fn take_payment() {}
-    }
-}
+go.mod 文件定义了模块的路径和依赖版本。
+go.sum 文件记录了依赖的校验和。`,
+    exampleCode: `// 初始化模块
+// go mod init mymodule
 
-// 使用模块
-pub fn eat_at_restaurant() {
-    // 绝对路径
-    crate::front_of_house::hosting::add_to_waitlist();
-    
-    // 相对路径
-    front_of_house::hosting::add_to_waitlist();
-}
+// 添加依赖
+// go get github.com/gin-gonic/gin
 
-// 模块可以拆分到不同文件
-// src/lib.rs 或 src/main.rs
-mod front_of_house;
+// 整理依赖
+// go mod tidy
 
-// src/front_of_house.rs
-pub mod hosting {
-    pub fn add_to_waitlist() {}
-}
-
-// 或者使用目录
-// src/front_of_house/mod.rs
-pub mod hosting;
-
-// src/front_of_house/hosting.rs
-pub fn add_to_waitlist() {}`,
+// go.mod 示例
+// module mymodule
+// 
+// go 1.21
+// 
+// require (
+//     github.com/gin-gonic/gin v1.9.0
+// )`,
     summary: [
-      '使用 mod 关键字定义模块。',
-      'pub 关键字使项变为公有。',
-      '模块默认是私有的。',
-      '可以使用绝对路径或相对路径。',
-      '模块可以拆分到不同文件。'
+      'Go Modules 管理项目依赖。',
+      'go mod init 初始化模块。',
+      'go get 添加依赖。',
+      'go mod tidy 清理依赖。'
     ]
   },
   {
     id: '35',
     unitId: 'unit6',
-    title: 'use 关键字',
-    description: '学习 use 关键字，简化模块路径。',
+    title: 'Goroutines',
+    description: '学习 Go 的轻量级线程 Goroutine。',
     difficulty: '进阶',
-    content: `use 关键字可以将路径引入作用域，这样就不需要每次都写完整路径。
+    content: `Goroutine 是 Go 运行时管理的轻量级线程。
 
-可以使用 as 关键字创建别名，使用 pub use 重新导出。`,
-    exampleCode: `mod front_of_house {
-    pub mod hosting {
-        pub fn add_to_waitlist() {}
+使用 go 关键字启动一个新的 Goroutine。它们在相同的地址空间中运行。`,
+    exampleCode: `package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func say(s string) {
+    for i := 0; i < 3; i++ {
+        time.Sleep(100 * time.Millisecond)
+        fmt.Println(s)
     }
 }
 
-// 使用 use 引入路径
-use crate::front_of_house::hosting;
-
-pub fn eat_at_restaurant() {
-    hosting::add_to_waitlist();  // 不需要完整路径
-}
-
-// 也可以直接引入函数
-use crate::front_of_house::hosting::add_to_waitlist;
-
-pub fn eat_at_restaurant2() {
-    add_to_waitlist();  // 直接调用
-}
-
-// 使用 as 创建别名
-use std::fmt::Result;
-use std::io::Result as IoResult;
-
-fn function1() -> Result {
-    // ...
-}
-
-fn function2() -> IoResult<()> {
-    // ...
-}
-
-// 使用 pub use 重新导出
-pub use crate::front_of_house::hosting;
-
-// 嵌套路径
-use std::{cmp::Ordering, io};
-use std::io::{self, Write};
-
-// 使用 glob 引入所有公有项
-use std::collections::*;`,
+func main() {
+    go say("world")
+    say("hello")
+}`,
     summary: [
-      'use 关键字引入路径到作用域。',
-      '可以使用 as 创建别名。',
-      'pub use 重新导出项。',
-      '可以嵌套路径减少重复。',
-      'glob (*) 引入所有公有项。'
+      'Goroutine 是轻量级线程。',
+      '使用 go 关键字启动。',
+      '并发执行。',
+      '由 Go 运行时调度。'
     ]
   },
   {
     id: '36',
     unitId: 'unit6',
-    title: '包和 Crate',
-    description: '理解 Go 的包（package）和 crate 的概念。',
+    title: 'Channels',
+    description: '学习 Goroutine 之间的通信机制 Channel。',
     difficulty: '进阶',
-    content: `Crate 是 Go 编译的最小单元。包（package）包含一个或多个 crate。
+    content: `Channel 是 Goroutine 之间通信的管道。
 
-二进制 crate 有 main 函数，库 crate 没有。Cargo 是 Go 的包管理器。`,
-    exampleCode: `// 一个包可以包含：
-// - 最多一个库 crate（src/lib.rs）
-// - 任意多个二进制 crate（src/main.rs 或 src/bin/*.rs）
+使用 make(chan T) 创建 Channel。使用 <- 发送和接收数据。`,
+    exampleCode: `package main
 
-// src/lib.rs - 库 crate
-pub mod utils;
+import "fmt"
 
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+func sum(s []int, c chan int) {
+    sum := 0
+    for _, v := range s {
+        sum += v
     }
+    c <- sum // 发送 sum 到 c
 }
-
-// src/main.rs - 二进制 crate
-use my_package::add;
 
 func main() {
-    fmt.Println("{}", add(2, 3));
-}
-
-// Cargo.toml 定义包
-// [package]
-// name = "my_package"
-// version = "0.1.0"
-// edition = "2021"
-
-// [dependencies]
-// serde = "1.0"`,
+    s := []int{7, 2, 8, -9, 4, 0}
+    
+    c := make(chan int)
+    go sum(s[:len(s)/2], c)
+    go sum(s[len(s)/2:], c)
+    
+    x, y := <-c, <-c // 从 c 接收
+    
+    fmt.Println(x, y, x+y)
+}`,
     summary: [
-      'Crate 是编译的最小单元。',
-      '包包含一个或多个 crate。',
-      '二进制 crate 有 main 函数。',
-      '库 crate 提供可复用的代码。',
-      'Cargo 管理包和依赖。'
+      'Channel 用于 Goroutine 通信。',
+      'make 创建 Channel。',
+      '<- 用于发送和接收。',
+      '默认情况下发送和接收是阻塞的。'
     ]
   },
   {
     id: '37',
-    unitId: 'unit6',
-    title: '可见性',
-    description: '学习 Go 的可见性规则，理解公有和私有。',
+    unitId: 'unit5',
+    title: '接口 (Interfaces)',
+    description: '学习 Go 的接口定义与实现。',
     difficulty: '进阶',
-    content: `Go 的可见性规则控制哪些项可以在哪些地方被访问。
+    content: `接口定义了一组方法签名。
 
-默认情况下，所有项都是私有的。使用 pub 关键字使项变为公有。`,
-    exampleCode: `mod outer_module {
-    pub mod inner_module {
-        pub fn public_function() {
-            fmt.Println("公有函数");
-        }
-        
-        fn private_function() {
-            fmt.Println("私有函数");
-        }
-        
-        pub fn indirect_access() {
-            private_function();  // 可以访问同模块的私有项
-        }
-    }
-    
-    pub fn outer_public() {
-        inner_module::public_function();
-        // inner_module::private_function();  // 错误！私有
-    }
+任何实现了接口所有方法的类型都隐式实现了该接口。`,
+    exampleCode: `package main
+
+import "fmt"
+
+type Abser interface {
+    Abs() float64
 }
 
-// 结构体的可见性
-mod my_module {
-    pub struct PublicStruct {
-        pub public_field: i32,
-        private_field: i32,  // 私有字段
+type MyFloat float64
+
+func (f MyFloat) Abs() float64 {
+    if f < 0 {
+        return float64(-f)
     }
-    
-    impl PublicStruct {
-        pub fn new() -> PublicStruct {
-            PublicStruct {
-                public_field: 1,
-                private_field: 2,
-            }
-        }
-        
-        pub fn get_private(&self) -> i32 {
-            self.private_field  // 可以通过方法访问私有字段
-        }
-    }
+    return float64(f)
 }
 
-// 枚举的可见性
-mod my_enum {
-    pub enum PublicEnum {
-        Variant1,  // 如果枚举是 pub，所有变体都是 pub
-        Variant2,
-    }
+func main() {
+    var a Abser
+    f := MyFloat(-1.2)
+    a = f
+    fmt.Println(a.Abs())
 }`,
     summary: [
-      '默认情况下所有项都是私有的。',
-      'pub 使项变为公有。',
-      '结构体字段可以单独设为公有或私有。',
-      '如果枚举是 pub，所有变体都是 pub。',
-      '子模块可以访问父模块的私有项。'
+      '接口定义方法集合。',
+      '隐式实现，无需 implements 关键字。',
+      '空接口 interface{} 可以表示任何类型。'
     ]
   },
-  // 单元7：泛型与 Trait
   {
     id: '38',
-    unitId: 'unit7',
-    title: '泛型函数',
-    description: '学习如何定义和使用泛型函数。',
-    difficulty: '进阶',
-    content: `泛型允许你编写可以处理多种类型的代码，而不需要为每种类型重复编写。
-
-泛型函数使用类型参数，可以在调用时指定具体类型。`,
-    exampleCode: `// 泛型函数
-fn largest<T: PartialOrd>(list: &[T]) -> &T {
-    var largest = &list[0];
-    
-    for item in list {
-        if item > largest {
-            largest = item;
-        }
-    }
-    
-    largest
-}
-
-func main() {
-    let number_list = vec![34, 50, 25, 100, 65];
-    let result = largest(&number_list);
-    fmt.Println("最大的数字是 {}", result);
-    
-    let char_list = vec!['y', 'm', 'a', 'q'];
-    let result = largest(&char_list);
-    fmt.Println("最大的字符是 {}", result);
-}
-
-// 多个类型参数
-fn swap<T, U>(x: T, y: U) -> (U, T) {
-    (y, x)
-}
-
-// 泛型函数可以有多个约束
-fn compare_and_print<T: PartialOrd + std::fmt::Display>(a: T, b: T) {
-    if a > b {
-        fmt.Println("{} > {}", a, b);
-    } else {
-        fmt.Println("{} <= {}", a, b);
-    }
-}`,
-    summary: [
-      '泛型允许代码处理多种类型。',
-      '使用 <T> 定义类型参数。',
-      '可以指定多个类型参数。',
-      '可以使用 trait bound 约束类型。',
-      '泛型在编译时单态化。'
-    ]
-  },
-  {
-    id: '39',
-    unitId: 'unit7',
-    title: '泛型结构体',
-    description: '学习如何定义和使用泛型结构体。',
-    difficulty: '进阶',
-    content: `结构体可以使用泛型，让一个结构体可以处理多种类型。
-
-可以为泛型结构体实现方法，也可以为特定类型实现方法。`,
-    exampleCode: `// 泛型结构体
-struct Point<T> {
-    x: T,
-    y: T,
-}
-
-impl<T> Point<T> {
-    fn new(x: T, y: T) -> Point<T> {
-        Point { x, y }
-    }
-    
-    fn x(&self) -> &T {
-        &self.x
-    }
-}
-
-// 为特定类型实现方法
-impl Point<f32> {
-    fn distance_from_origin(&self) -> f32 {
-        (self.x.powi(2) + self.y.powi(2)).sqrt()
-    }
-}
-
-// 多个类型参数
-struct Point2<T, U> {
-    x: T,
-    y: U,
-}
-
-impl<T, U> Point2<T, U> {
-    fn mixup<V, W>(self, other: Point2<V, W>) -> Point2<T, W> {
-        Point2 {
-            x: self.x,
-            y: other.y,
-        }
-    }
-}
-
-func main() {
-    let integer = Point { x: 5, y: 10 };
-    let float = Point { x: 1.0, y: 4.0 };
-    
-    let p = Point::new(5, 10);
-    fmt.Println("p.x = {}", p.x());
-    
-    let p1 = Point2 { x: 5, y: 10.4 };
-    let p2 = Point2 { x: "Hello", y: 'c' };
-    let p3 = p1.mixup(p2);
-    fmt.Println("p3.x = {}, p3.y = {}", p3.x, p3.y);
-}`,
-    summary: [
-      '结构体可以使用泛型。',
-      '可以为泛型结构体实现方法。',
-      '可以为特定类型实现方法。',
-      '可以有多个类型参数。',
-      '方法也可以使用额外的类型参数。'
-    ]
-  },
-  {
-    id: '40',
-    unitId: 'unit7',
-    title: 'Trait 定义',
-    description: '学习如何定义 Trait，Go 中的接口概念。',
-    difficulty: '进阶',
-    content: `Trait 定义了类型可以实现的共享行为。
-
-Trait 类似于其他语言中的接口，但更强大。可以定义默认实现。`,
-    exampleCode: `// 定义 Trait
-pub trait Summary {
-    fn summarize(&self) -> String;
-    
-    // 默认实现
-    fn summarize_author(&self) -> String {
-        直接赋值字符串("(阅读更多...)")
-    }
-}
-
-// 为类型实现 Trait
-pub struct NewsArticle {
-    pub headline: String,
-    pub location: String,
-    pub author: String,
-    pub content: String,
-}
-
-impl Summary for NewsArticle {
-    fn summarize(&self) -> String {
-        format!("{}, by {} ({})", self.headline, self.author, self.location)
-    }
-}
-
-pub struct Tweet {
-    pub username: String,
-    pub content: String,
-    pub reply: bool,
-    pub retweet: bool,
-}
-
-impl Summary for Tweet {
-    fn summarize(&self) -> String {
-        format!("{}: {}", self.username, self.content)
-    }
-    
-    // 覆盖默认实现
-    fn summarize_author(&self) -> String {
-        format!("@{}", self.username)
-    }
-}
-
-func main() {
-    let tweet = Tweet {
-        username: 直接赋值字符串("horse_ebooks"),
-        content: 直接赋值字符串("当然，你知道，就像..."),
-        reply: false,
-        retweet: false,
-    };
-    
-    fmt.Println("1 条新推文: {}", tweet.summarize());
-}`,
-    summary: [
-      'Trait 定义共享行为。',
-      '使用 impl Trait for Type 实现。',
-      '可以有默认实现。',
-      '可以覆盖默认实现。',
-      'Trait 类似于接口。'
-    ]
-  },
-  {
-    id: '41',
-    unitId: 'unit7',
-    title: 'Trait 作为参数',
-    description: '学习如何使用 Trait 作为函数参数，实现多态。',
-    difficulty: '进阶',
-    content: `可以使用 Trait 作为函数参数，允许函数接受实现了该 Trait 的任何类型。
-
-这实现了多态，让代码更灵活。`,
-    exampleCode: `pub trait Summary {
-    fn summarize(&self) -> String;
-}
-
-pub struct NewsArticle {
-    pub headline: String,
-    pub author: String,
-}
-
-impl Summary for NewsArticle {
-    fn summarize(&self) -> String {
-        format!("{}, by {}", self.headline, self.author)
-    }
-}
-
-pub struct Tweet {
-    pub username: String,
-    pub content: String,
-}
-
-impl Summary for Tweet {
-    fn summarize(&self) -> String {
-        format!("{}: {}", self.username, self.content)
-    }
-}
-
-// Trait Bound 语法
-pub fn notify<T: Summary>(item: &T) {
-    fmt.Println("突发新闻! {}", item.summarize());
-}
-
-// 使用 impl Trait 语法（更简洁）
-pub fn notify2(item: &impl Summary) {
-    fmt.Println("突发新闻! {}", item.summarize());
-}
-
-// 多个 Trait Bound
-pub fn notify3(item: &(impl Summary + Display)) {
-    // ...
-}
-
-// 使用 where 子句
-fn some_function<T, U>(t: &T, u: &U) -> i32
-where
-    T: Display + Clone,
-    U: Clone + Debug,
-{
-    // ...
-}
-
-func main() {
-    let article = NewsArticle {
-        headline: 直接赋值字符串("标题"),
-        author: 直接赋值字符串("作者"),
-    };
-    
-    notify(&article);
-    notify2(&article);
-}`,
-    summary: [
-      '可以使用 Trait 作为参数。',
-      'Trait Bound 语法：<T: Trait>。',
-      'impl Trait 语法更简洁。',
-      '可以指定多个 Trait Bound。',
-      'where 子句让代码更清晰。'
-    ]
-  },
-  {
-    id: '42',
-    unitId: 'unit7',
-    title: 'Trait Bound',
-    description: '深入学习 Trait Bound，约束泛型类型。',
-    difficulty: '进阶',
-    content: `Trait Bound 指定泛型类型必须实现特定的 Trait。
-
-这允许你在泛型代码中使用 Trait 的方法。`,
-    exampleCode: `use std::fmt::Display;
-
-// Trait Bound 基本语法
-fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
-    var largest = list[0];
-    
-    for &item in list {
-        if item > largest {
-            largest = item;
-        }
-    }
-    
-    largest
-}
-
-// 使用 where 子句
-fn some_function<T, U>(t: &T, u: &U) -> i32
-where
-    T: Display + Clone,
-    U: Clone + Debug,
-{
-    // ...
-}
-
-// 为实现了特定 Trait 的类型实现方法
-struct Pair<T> {
-    x: T,
-    y: T,
-}
-
-impl<T> Pair<T> {
-    fn new(x: T, y: T) -> Self {
-        Self { x, y }
-    }
-}
-
-impl<T: Display + PartialOrd> Pair<T> {
-    fn cmp_display(&self) {
-        if self.x >= self.y {
-            fmt.Println("最大的成员是 x = {}", self.x);
-        } else {
-            fmt.Println("最大的成员是 y = {}", self.y);
-        }
-    }
-}
-
-// 条件实现
-impl<T: Display> ToString for T {
-    fn to_string(&self) -> String {
-        // ...
-    }
-}`,
-    summary: [
-      'Trait Bound 约束泛型类型。',
-      '可以指定多个 Trait Bound。',
-      'where 子句让代码更清晰。',
-      '可以为特定 Trait 组合实现方法。',
-      '条件实现允许灵活的实现策略。'
-    ]
-  },
-  {
-    id: '43',
-    unitId: 'unit7',
-    title: '关联类型',
-    description: '学习 Trait 中的关联类型，更灵活的 Trait 设计。',
-    difficulty: '高阶',
-    content: `关联类型是 Trait 定义中的占位符类型。
-
-它们允许 Trait 方法的返回类型依赖于实现类型，而不需要泛型参数。`,
-    exampleCode: `// 使用关联类型
-pub trait Iterator {
-    type Item;  // 关联类型
-    
-    fn next(&mut self) -> Option<Self::Item>;
-}
-
-// 实现 Iterator
-struct Counter {
-    count: u32,
-}
-
-impl Iterator for Counter {
-    type Item = u32;  // 指定关联类型
-    
-    fn next(&mut self) -> Option<Self::Item> {
-        self.count += 1;
-        if self.count < 6 {
-            Some(self.count)
-        } else {
-            None
-        }
-    }
-}
-
-// 对比：使用泛型参数
-pub trait Iterator2<T> {
-    fn next(&mut self) -> Option<T>;
-}
-
-// 关联类型的优势
-pub trait Add<Rhs = Self> {
-    type Output;
-    
-    fn add(self, rhs: Rhs) -> Self::Output;
-}
-
-impl Add for Point {
-    type Output = Point;
-    
-    fn add(self, other: Point) -> Point {
-        Point {
-            x: self.x + other.x,
-            y: self.y + other.y,
-        }
-    }
-}
-
-// 使用
-let p1 = Point { x: 1, y: 0 };
-let p2 = Point { x: 2, y: 3 };
-let p3 = p1 + p2;`,
-    summary: [
-      '关联类型是 Trait 中的占位符类型。',
-      '使用 type 关键字定义。',
-      '实现时指定具体类型。',
-      '比泛型参数更简洁。',
-      '常用于 Iterator 等标准 Trait。'
-    ]
-  },
-  {
-    id: '44',
-    unitId: 'unit7',
-    title: '默认实现',
-    description: '学习 Trait 的默认实现，减少代码重复。',
-    difficulty: '进阶',
-    content: `Trait 方法可以有默认实现。
-
-实现 Trait 的类型可以使用默认实现，也可以覆盖它。默认实现可以调用其他方法。`,
-    exampleCode: `pub trait Summary {
-    fn summarize_author(&self) -> String;
-    
-    // 默认实现，可以调用其他方法
-    fn summarize(&self) -> String {
-        format!("(从 {} 阅读更多...)", self.summarize_author())
-    }
-}
-
-pub struct Tweet {
-    pub username: String,
-    pub content: String,
-}
-
-impl Summary for Tweet {
-    fn summarize_author(&self) -> String {
-        format!("@{}", self.username)
-    }
-    
-    // 可以不实现 summarize，使用默认实现
-    // 也可以覆盖默认实现
-    // fn summarize(&self) -> String {
-    //     format!("{}: {}", self.username, self.content)
-    // }
-}
-
-pub struct NewsArticle {
-    pub headline: String,
-    pub author: String,
-}
-
-impl Summary for NewsArticle {
-    fn summarize_author(&self) -> String {
-        self.author.clone()
-    }
-    
-    // 覆盖默认实现
-    fn summarize(&self) -> String {
-        format!("{}, by {}", self.headline, self.author)
-    }
-}
-
-func main() {
-    let tweet = Tweet {
-        username: 直接赋值字符串("horse_ebooks"),
-        content: 直接赋值字符串("当然..."),
-    };
-    
-    fmt.Println("{}", tweet.summarize());  // 使用默认实现
-}`,
-    summary: [
-      'Trait 方法可以有默认实现。',
-      '实现类型可以使用或覆盖默认实现。',
-      '默认实现可以调用其他方法。',
-      '减少代码重复。',
-      '提供合理的默认行为。'
-    ]
-  },
-  // 单元8：智能指针
-  {
-    id: '45',
-    unitId: 'unit8',
-    title: 'Box<T>',
-    description: '学习 Box 智能指针，在堆上分配数据。',
-    difficulty: '进阶',
-    content: `Box<T> 是最简单的智能指针，允许你在堆上存储数据。
-
-Box 拥有数据的内存管理，当 Box 离开作用域时，数据会被自动释放。`,
-    exampleCode: `func main() {
-    // 在堆上分配一个 i32
-    let b = Box::new(5);
-    fmt.Println("b = {}", b);
-    
-    // Box 用于递归数据结构
-    let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
-}
-
-// 递归类型需要使用 Box
-enum List {
-    Cons(i32, Box<List>),
-    Nil,
-}
-
-use List::{Cons, Nil};
-
-// Box 实现 Deref trait，可以自动解引用
-fn example() {
-    x := 5;
-    let y = Box::new(x);
-    
-    assert_eq!(5, x);
-    assert_eq!(5, *y);  // 解引用 Box
-}`,
-    summary: [
-      'Box<T> 在堆上分配数据。',
-      'Box 拥有数据的内存管理。',
-      '用于递归数据结构。',
-      '实现 Deref trait。',
-      '离开作用域时自动释放。'
-    ]
-  },
-  {
-    id: '46',
-    unitId: 'unit8',
-    title: 'Rc<T>',
-    description: '学习引用计数智能指针，实现多内存管理。',
-    difficulty: '高阶',
-    content: `Rc<T> 是引用计数智能指针，允许多个所有者共享数据。
-
-Rc 只能用于单线程场景。当最后一个 Rc 离开作用域时，数据会被释放。`,
-    exampleCode: `use std::rc::Rc;
-
-enum List {
-    Cons(i32, Rc<List>),
-    Nil,
-}
-
-use List::{Cons, Nil};
-
-func main() {
-    let a = Rc::new(Cons(5, Rc::new(Cons(10, Rc::new(Nil)))));
-    fmt.Println("创建 a 后，a 的引用计数 = {}", Rc::strong_count(&a));
-    
-    let b = Cons(3, Rc::clone(&a));  // 克隆 Rc，增加引用计数
-    fmt.Println("创建 b 后，a 的引用计数 = {}", Rc::strong_count(&a));
-    
-    {
-        let c = Cons(4, Rc::clone(&a));
-        fmt.Println("创建 c 后，a 的引用计数 = {}", Rc::strong_count(&a));
-    }  // c 离开作用域，引用计数减 1
-    
-    fmt.Println("c 离开作用域后，a 的引用计数 = {}", Rc::strong_count(&a));
-}
-
-// Rc 只能用于单线程
-// 多线程应使用 Arc<T>`,
-    summary: [
-      'Rc<T> 允许多个所有者。',
-      '使用引用计数跟踪所有者数量。',
-      '只能用于单线程。',
-      'Rc::clone 增加引用计数。',
-      '最后一个 Rc 离开作用域时释放数据。'
-    ]
-  },
-  {
-    id: '47',
-    unitId: 'unit8',
-    title: 'RefCell<T>',
-    description: '学习 RefCell，实现内部可变性。',
-    difficulty: '高阶',
-    content: `RefCell<T> 提供内部可变性，允许在不可变引用的情况下修改数据。
-
-RefCell 在运行时检查引用规则，违反规则会导致 panic。`,
-    exampleCode: `use std::cell::RefCell;
-
-func main() {
-    let data = RefCell::new(5);
-    
-    // 不可变引用
-    {
-        let r1 = data.borrow();
-        let r2 = data.borrow();  // 可以有多个不可变引用
-        fmt.Println("r1: {}, r2: {}", r1, r2);
-    }  // r1 和 r2 离开作用域
-    
-    // 可变引用
-    {
-        var r = data.borrow_mut();
-        *r += 1;
-    }  // r 离开作用域
-    
-    fmt.Println("data: {}", data.borrow());
-}
-
-// 结合 Rc 和 RefCell
-use std::rc::Rc;
-use std::cell::RefCell;
-
-#[derive(Debug)]
-enum List {
-    Cons(Rc<RefCell<i32>>, Rc<List>),
-    Nil,
-}
-
-use List::{Cons, Nil};
-
-fn example() {
-    let value = Rc::new(RefCell::new(5));
-    
-    let a = Rc::new(Cons(Rc::clone(&value), Rc::new(Nil)));
-    let b = Cons(Rc::new(RefCell::new(3)), Rc::clone(&a));
-    let c = Cons(Rc::new(RefCell::new(4)), Rc::clone(&a));
-    
-    *value.borrow_mut() += 10;
-    
-    fmt.Println("a after = {:?}", a);
-    fmt.Println("b after = {:?}", b);
-    fmt.Println("c after = {:?}", c);
-}`,
-    summary: [
-      'RefCell 提供内部可变性。',
-      '在运行时检查引用规则。',
-      '可以有多个不可变引用。',
-      '只能有一个可变引用。',
-      '违反规则会导致 panic。'
-    ]
-  },
-  {
-    id: '48',
-    unitId: 'unit8',
-    title: '引用循环',
-    description: '理解引用循环问题，学习如何避免内存泄漏。',
-    difficulty: '高阶',
-    content: `使用 Rc 和 RefCell 可能创建引用循环，导致内存泄漏。
-
-可以使用 Weak<T> 来打破循环，Weak 不会增加引用计数。`,
-    exampleCode: `use std::rc::{Rc, Weak};
-use std::cell::RefCell;
-
-#[derive(Debug)]
-struct Node {
-    value: i32,
-    parent: RefCell<Weak<Node>>,
-    children: RefCell<Vec<Rc<Node>>>,
-}
-
-func main() {
-    let leaf = Rc::new(Node {
-        value: 3,
-        parent: RefCell::new(Weak::new()),
-        children: RefCell::new(vec![]),
-    });
-    
-    fmt.Println("leaf parent = {:?}", leaf.parent.borrow().upgrade());
-    
-    let branch = Rc::new(Node {
-        value: 5,
-        parent: RefCell::new(Weak::new()),
-        children: RefCell::new(vec![Rc::clone(&leaf)]),
-    });
-    
-    *leaf.parent.borrow_mut() = Rc::downgrade(&branch);
-    
-    fmt.Println("leaf parent = {:?}", leaf.parent.borrow().upgrade());
-}
-
-// 使用 Weak 避免循环
-// Weak 不会增加引用计数
-// 使用 upgrade() 获取 Option<Rc<T>>`,
-    summary: [
-      'Rc 和 RefCell 可能创建引用循环。',
-      '引用循环会导致内存泄漏。',
-      'Weak<T> 可以打破循环。',
-      'Weak 不增加引用计数。',
-      '使用 upgrade() 获取 Rc。'
-    ]
-  },
-  // 单元9：并发编程
-  {
-    id: '49',
-    unitId: 'unit9',
-    title: '线程创建',
-    description: '学习如何使用线程，实现并发执行。',
-    difficulty: '进阶',
-    content: `Go 标准库提供了线程支持，可以使用 thread::spawn 创建新线程。
-
-线程可以并发执行，提高程序性能。`,
-    exampleCode: `use std::thread;
-use std::time::Duration;
-
-func main() {
-    // 创建线程
-    let handle = thread::spawn(|| {
-        for i in 1..10 {
-            fmt.Println("线程中的数字: {}", i);
-            thread::sleep(Duration::from_millis(1));
-        }
-    });
-    
-    // 主线程继续执行
-    for i in 1..5 {
-        fmt.Println("主线程中的数字: {}", i);
-        thread::sleep(Duration::from_millis(1));
-    }
-    
-    // 等待线程完成
-    handle.join().unwrap();
-    
-    // 使用 move 闭包获取内存管理
-    let v = vec![1, 2, 3];
-    
-    let handle = thread::spawn(move || {
-        fmt.Println("这是向量: {:?}", v);
-    });
-    
-    handle.join().unwrap();
-}`,
-    summary: [
-      '使用 thread::spawn 创建线程。',
-      '线程可以并发执行。',
-      '使用 join() 等待线程完成。',
-      'move 闭包获取内存管理。',
-      'Go 保证线程安全。'
-    ]
-  },
-  {
-    id: '50',
-    unitId: 'unit9',
-    title: '消息传递（Channel）',
-    description: '学习使用通道在线程间传递消息。',
-    difficulty: '进阶',
-    content: `通道允许线程间通过发送消息进行通信。
-
-Go 的通道遵循"不要通过共享内存来通信，而是通过通信来共享内存"的理念。`,
-    exampleCode: `use std::sync::mpsc;
-use std::thread;
-
-func main() {
-    // 创建通道
-    let (tx, rx) = mpsc::channel();
-    
-    // 在另一个线程中发送消息
-    thread::spawn(move || {
-        let val = 直接赋值字符串("hi");
-        tx.send(val).unwrap();
-        // val 的内存管理已移动，不能再使用
-    });
-    
-    // 接收消息
-    let received = rx.recv().unwrap();
-    fmt.Println("收到: {}", received);
-    
-    // 发送多个值
-    let (tx, rx) = mpsc::channel();
-    
-    thread::spawn(move || {
-        let vals = vec![
-            直接赋值字符串("hi"),
-            直接赋值字符串("from"),
-            直接赋值字符串("the"),
-            直接赋值字符串("thread"),
-        ];
-        
-        for val in vals {
-            tx.send(val).unwrap();
-            thread::sleep(Duration::from_secs(1));
-        }
-    });
-    
-    for received in rx {
-        fmt.Println("收到: {}", received);
-    }
-    
-    // 多个发送者
-    let (tx, rx) = mpsc::channel();
-    let tx1 = mpsc::Sender::clone(&tx);
-    
-    thread::spawn(move || {
-        tx.send(直接赋值字符串("hi")).unwrap();
-    });
-    
-    thread::spawn(move || {
-        tx1.send(直接赋值字符串("hello")).unwrap();
-    });
-    
-    for received in rx {
-        fmt.Println("收到: {}", received);
-    }
-}`,
-    summary: [
-      '通道用于线程间通信。',
-      'mpsc 表示多生产者单消费者。',
-      'send 发送消息，recv 接收消息。',
-      '可以克隆发送者实现多生产者。',
-      '通道保证线程安全。'
-    ]
-  },
-  {
-    id: '51',
-    unitId: 'unit9',
-    title: '共享状态（Mutex）',
-    description: '学习使用 Mutex 实现线程间共享数据。',
-    difficulty: '进阶',
-    content: `Mutex（互斥锁）允许线程间共享可变数据。
-
-Mutex 确保同一时间只有一个线程可以访问数据。`,
-    exampleCode: `use std::sync::Mutex;
-
-func main() {
-    let m = Mutex::new(5);
-    
-    {
-        var num = m.lock().unwrap();
-        *num = 6;
-    }  // 锁在这里自动释放
-    
-    fmt.Println("m = {:?}", m);
-}
-
-// 在多线程间共享 Mutex
-use std::sync::{Arc, Mutex};
-use std::thread;
-
-fn main2() {
-    let counter = Arc::new(Mutex::new(0));
-    var handles = vec![];
-    
-    for _ in 0..10 {
-        let counter = Arc::clone(&counter);
-        let handle = thread::spawn(move || {
-            var num = counter.lock().unwrap();
-            *num += 1;
-        });
-        handles.push(handle);
-    }
-    
-    for handle in handles {
-        handle.join().unwrap();
-    }
-    
-    fmt.Println("结果: {}", *counter.lock().unwrap());
-}
-
-// Mutex 的注意事项
-// - lock() 返回 LockResult<MutexGuard<T>>
-// - 如果另一个线程持有锁并 panic，lock() 会返回 Err
-// - MutexGuard 实现了 Deref 和 Drop
-// - 离开作用域时自动释放锁`,
-    summary: [
-      'Mutex 提供互斥访问。',
-      'lock() 获取锁。',
-      '需要配合 Arc 在多线程间共享。',
-      'MutexGuard 自动释放锁。',
-      '避免死锁需要小心设计。'
-    ]
-  },
-  {
-    id: '52',
-    unitId: 'unit9',
-    title: 'Arc<T>',
-    description: '学习原子引用计数，用于多线程场景。',
-    difficulty: '高阶',
-    content: `Arc<T> 是原子引用计数智能指针，用于多线程场景。
-
-Arc 类似于 Rc，但是线程安全的。性能略低于 Rc。`,
-    exampleCode: `use std::sync::Arc;
-use std::thread;
-
-func main() {
-    let data = Arc::new(vec![1, 2, 3]);
-    var handles = vec![];
-    
-    for i in 0..3 {
-        let data = Arc::clone(&data);
-        let handle = thread::spawn(move || {
-            fmt.Println("线程 {}: {:?}", i, data);
-        });
-        handles.push(handle);
-    }
-    
-    for handle in handles {
-        handle.join().unwrap();
-    }
-}
-
-// Arc 通常与 Mutex 结合使用
-use std::sync::{Arc, Mutex};
-
-fn example() {
-    let data = Arc::new(Mutex::new(0));
-    var handles = vec![];
-    
-    for _ in 0..10 {
-        let data = Arc::clone(&data);
-        let handle = thread::spawn(move || {
-            var num = data.lock().unwrap();
-            *num += 1;
-        });
-        handles.push(handle);
-    }
-    
-    for handle in handles {
-        handle.join().unwrap();
-    }
-    
-    fmt.Println("结果: {}", *data.lock().unwrap());
-}`,
-    summary: [
-      'Arc 是原子引用计数。',
-      '用于多线程场景。',
-      '线程安全但性能略低。',
-      '通常与 Mutex 结合使用。',
-      'Arc::clone 增加引用计数。'
-    ]
-  },
-  {
-    id: '53',
-    unitId: 'unit9',
-    title: 'Send 和 Sync',
-    description: '理解 Send 和 Sync trait，Go 线程安全的基础。',
-    difficulty: '高阶',
-    content: `Send 和 Sync 是标记 trait，用于保证线程安全。
-
-- Send：类型的内存管理可以在线程间转移
-- Sync：类型可以在多线程间通过引用共享
-
-大多数类型自动实现了这两个 trait。`,
-    exampleCode: `// Send trait
-// 如果一个类型实现了 Send，它的内存管理可以在线程间转移
-// 大多数类型都实现了 Send
-
-// Sync trait
-// 如果一个类型实现了 Sync，它可以在多线程间通过引用共享
-// &T 是 Send 的，当且仅当 T 是 Sync 的
-
-use std::thread;
-
-// Rc<T> 不是 Send 也不是 Sync
-// 因为它的引用计数不是原子的
-
-// Arc<T> 是 Send 和 Sync 的
-// 因为它的引用计数是原子的
-
-// Mutex<T> 是 Send 的
-// 但只有当 T 是 Send 的时，Mutex<T> 才是 Send 的
-
-fn example() {
-    let data = Arc::new(Mutex::new(0));
-    
-    // data 是 Send 和 Sync 的，可以在线程间共享
-    thread::spawn(move || {
-        var num = data.lock().unwrap();
-        *num += 1;
-    });
-}
-
-// 自定义类型实现 Send
-struct MyStruct {
-    data: i32,
-}
-
-// MyStruct 自动实现 Send（因为 i32 是 Send 的）
-// 如果包含非 Send 类型，需要手动实现或标记为 !Send`,
-    summary: [
-      'Send 允许在线程间转移内存管理。',
-      'Sync 允许在多线程间共享引用。',
-      '大多数类型自动实现这两个 trait。',
-      'Rc 不是 Send 也不是 Sync。',
-      'Arc 和 Mutex 是 Send 和 Sync 的。'
-    ]
-  },
-  // 单元10：异步编程
-  {
-    id: '54',
     unitId: 'unit10',
-    title: 'async/await',
-    description: '学习 Go 的异步编程，使用 async/await 语法。',
+    title: '泛型 (Generics)',
+    description: '学习 Go 1.18 引入的泛型特性。',
     difficulty: '高阶',
-    content: `async/await 是 Go 中编写异步代码的语法。
+    content: `泛型允许你编写适用于多种类型的函数和数据结构。
 
-async 函数返回 Future，await 等待 Future 完成。`,
-    exampleCode: `// 异步函数
-async fn hello_world() {
-    fmt.Println("hello, world!");
-}
+使用类型参数 [T any] 来定义泛型。`,
+    exampleCode: `package main
 
-// 调用异步函数
-func main() {
-    // 需要运行时执行 Future
-    // 这里只是示例，实际需要 tokio 或 async-std
-    // let future = hello_world();
-}
+import "fmt"
 
-// 使用 async/await
-async fn learn_song() -> String {
-    直接赋值字符串("歌曲")
-}
-
-async fn sing_song(song: String) {
-    fmt.Println("唱: {}", song);
-}
-
-async fn dance() {
-    fmt.Println("跳舞");
-}
-
-async fn learn_and_sing() {
-    let song = learn_song().await;  // 等待 learn_song 完成
-    sing_song(song).await;  // 等待 sing_song 完成
-}
-
-async fn async_main() {
-    let f1 = learn_and_sing();
-    let f2 = dance();
-    
-    // 并发执行
-    futures::join!(f1, f2);
-}
-
-// Future trait
-use std::future::Future;
-
-fn example() {
-    // Future 表示一个异步计算
-    // 调用 poll 方法推进 Future
-    // 返回 Poll::Ready 或 Poll::Pending
-}`,
-    summary: [
-      'async 函数返回 Future。',
-      'await 等待 Future 完成。',
-      '需要异步运行时执行 Future。',
-      '可以并发执行多个 Future。',
-      '异步代码不会阻塞线程。'
-    ]
-  },
-  {
-    id: '55',
-    unitId: 'unit10',
-    title: 'Future trait',
-    description: '深入理解 Future trait，异步编程的基础。',
-    difficulty: '高阶',
-    content: `Future 是 Go 异步编程的核心 trait。
-
-Future 表示一个可能尚未完成的计算。调用 poll 方法可以推进 Future 的执行。`,
-    exampleCode: `use std::future::Future;
-use std::pin::Pin;
-use std::task::{Context, Poll};
-
-// Future trait 定义
-// trait Future {
-//     type Output;
-//     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output>;
-// }
-
-// 自定义 Future
-struct MyFuture {
-    value: i32,
-}
-
-impl Future for MyFuture {
-    type Output = i32;
-    
-    fn poll(self: Pin<&mut Self>, _cx: &mut Context<'_>) -> Poll<Self::Output> {
-        Poll::Ready(self.value)
-    }
-}
-
-// 使用 Future
-async fn example() {
-    let future = MyFuture { value: 42 };
-    let result = future.await;
-    fmt.Println("结果: {}", result);
-}
-
-// Future 的组合
-async fn combined() {
-    let f1 = async { 1 };
-    let f2 = async { 2 };
-    
-    // 等待两个 Future 都完成
-    let (a, b) = futures::join!(f1, f2);
-    fmt.Println("{}, {}", a, b);
-    
-    // 选择第一个完成的
-    let result = futures::select! {
-        a = f1 => a,
-        b = f2 => b,
-    };
-}`,
-    summary: [
-      'Future 表示异步计算。',
-      'poll 方法推进 Future。',
-      '返回 Poll::Ready 或 Poll::Pending。',
-      'async 函数自动实现 Future。',
-      '可以组合多个 Future。'
-    ]
-  },
-  {
-    id: '56',
-    unitId: 'unit10',
-    title: '异步任务',
-    description: '学习如何创建和管理异步任务。',
-    difficulty: '高阶',
-    content: `异步任务是在异步运行时中执行的独立工作单元。
-
-可以使用 spawn 创建任务，任务可以并发执行。`,
-    exampleCode: `// 使用 tokio 运行时
-// #[tokio::main]
-// async func main() {
-//     let handle = tokio::spawn(async {
-//         fmt.Println("在任务中");
-//     });
-//     
-//     handle.await.unwrap();
-// }
-
-// 并发执行多个任务
-async fn example() {
-    var handles = vec![];
-    
-    for i in 0..10 {
-        let handle = tokio::spawn(async move {
-            fmt.Println("任务 {}", i);
-        });
-        handles.push(handle);
-    }
-    
-    for handle in handles {
-        handle.await.unwrap();
-    }
-}
-
-// 任务间通信
-use tokio::sync::mpsc;
-
-async fn task_communication() {
-    let (tx, mut rx) = mpsc::channel(32);
-    
-    tokio::spawn(async move {
-        tx.send("消息").await.unwrap();
-    });
-    
-    let message = rx.recv().await.unwrap();
-    fmt.Println("收到: {}", message);
-}
-
-// 任务取消
-async fn cancellable_task() {
-    let handle = tokio::spawn(async {
-        loop {
-            tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-            fmt.Println("运行中...");
+func Index[T comparable](s []T, x T) int {
+    for i, v := range s {
+        if v == x {
+            return i
         }
-    });
-    
-    tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
-    handle.abort();  // 取消任务
-}`,
-    summary: [
-      '使用 spawn 创建异步任务。',
-      '任务可以并发执行。',
-      '任务间可以通过通道通信。',
-      '可以取消任务。',
-      '需要异步运行时支持。'
-    ]
-  },
-  // 单元11：高级特性
-  {
-    id: '57',
-    unitId: 'unit11',
-    title: '宏（macro_rules!）',
-    description: '学习声明宏，使用 macro_rules! 创建代码生成工具。',
-    difficulty: '高阶',
-    content: `宏是 Go 中的代码生成工具，允许你编写编写代码的代码。
-
-macro_rules! 是声明宏，在编译时展开。`,
-    exampleCode: `// 定义宏
-macro_rules! vec {
-    ( $( $x:expr ),* ) => {
-        {
-            var temp_vec = Vec::new();
-            $(
-                temp_vec.push($x);
-            )*
-            temp_vec
-        }
-    };
-}
-
-// 使用宏
-func main() {
-    let v = vec![1, 2, 3];
-    fmt.Println("{:?}", v);
-}
-
-// 更复杂的宏
-macro_rules! calculate {
-    (eval $e:expr) => {{
-        let val: usize = $e;
-        fmt.Println("{} = {}", stringify!($e), val);
-    }};
-}
-
-fn example() {
-    calculate!(eval 1 + 2);
-    calculate!(eval (1 + 2) * 3);
-}
-
-// 宏的模式匹配
-macro_rules! test {
-    ($left:expr; and $right:expr) => {
-        fmt.Println("{:?} and {:?} is {:?}",
-                 stringify!($left),
-                 stringify!($right),
-                 $left && $right);
-    };
-    ($left:expr; or $right:expr) => {
-        fmt.Println("{:?} or {:?} is {:?}",
-                 stringify!($left),
-                 stringify!($right),
-                 $left || $right);
-    };
-}
-
-fn example2() {
-    test!(1i32 + 1 == 2i32; and 2i32 * 2 == 4i32);
-    test!(true; or false);
-}`,
-    summary: [
-      '宏在编译时展开。',
-      '使用 macro_rules! 定义声明宏。',
-      '支持模式匹配。',
-      '可以重复代码片段。',
-      '宏比函数更灵活。'
-    ]
-  },
-  {
-    id: '58',
-    unitId: 'unit11',
-    title: 'Unsafe Go',
-    description: '学习 Unsafe Go，绕过编译器的安全检查。',
-    difficulty: '高阶',
-    content: `Unsafe Go 允许你执行通常被编译器禁止的操作。
-
-Unsafe 代码块让你可以：
-1. 解引用裸指针
-2. 调用 unsafe 函数
-3. 访问或修改可变静态变量
-4. 实现 unsafe trait
-
-使用 unsafe 需要你自己保证安全性。`,
-    exampleCode: `func main() {
-    var num = 5;
-    
-    // 创建裸指针
-    let r1 = &num as *const i32;
-    let r2 = &mut num as *mut i32;
-    
-    // 解引用裸指针需要 unsafe
-    unsafe {
-        fmt.Println("r1 是: {}", *r1);
-        fmt.Println("r2 是: {}", *r2);
     }
-    
-    // 调用 unsafe 函数
-    unsafe {
-        dangerous();
-    }
-    
-    // 访问可变静态变量
-    unsafe {
-        COUNTER += 1;
-        fmt.Println("COUNTER = {}", COUNTER);
-    }
-}
-
-// unsafe 函数
-unsafe fn dangerous() {
-    fmt.Println("这是 unsafe 函数");
-}
-
-// 可变静态变量
-static mut COUNTER: u32 = 0;
-
-// 实现 unsafe trait
-unsafe trait UnsafeTrait {
-    // ...
-}
-
-unsafe impl UnsafeTrait for i32 {
-    // ...
-}
-
-// 使用外部函数接口（FFI）
-extern "C" {
-    fn abs(input: i32) -> i32;
-}
-
-fn example() {
-    unsafe {
-        fmt.Println("C 的 abs(-3) = {}", abs(-3));
-    }
-}`,
-    summary: [
-      'unsafe 允许绕过编译器检查。',
-      '可以解引用裸指针。',
-      '可以调用 unsafe 函数。',
-      '可以访问可变静态变量。',
-      '需要自己保证安全性。'
-    ]
-  },
-  {
-    id: '59',
-    unitId: 'unit11',
-    title: '高级生命周期',
-    description: '深入学习生命周期，掌握复杂场景下的生命周期标注。',
-    difficulty: '高阶',
-    content: `高级生命周期特性允许你更精确地控制引用的生命周期。
-
-包括生命周期子类型、生命周期绑定、匿名生命周期等。`,
-    exampleCode: `// 生命周期子类型
-struct ImportantExcerpt<'a> {
-    part: &'a str,
-}
-
-impl<'a> ImportantExcerpt<'a> {
-    // 'b 至少和 'a 一样长
-    fn announce_and_return_part<'b>(&'a self, announcement: &'b str) -> &'a str
-    where
-        'b: 'a,  // 'b 必须至少和 'a 一样长
-    {
-        fmt.Println("注意! {}", announcement);
-        self.part
-    }
-}
-
-// 生命周期绑定
-use std::fmt::Display;
-
-fn longest_with_an_announcement<'a, T>(
-    x: &'a str,
-    y: &'a str,
-    ann: T,
-) -> &'a str
-where
-    T: Display,
-{
-    fmt.Println("公告! {}", ann);
-    if xlen() > ylen() {
-        x
-    } else {
-        y
-    }
-}
-
-// 匿名生命周期
-struct StrWrap<'a>(&'a str);
-
-fn make_wrapper(string: string) -> StrWrap<'_> {
-    StrWrap(string)
-}
-
-// 静态生命周期
-let s: &'static str = "我有静态生命周期";
-
-fn example() {
-    // 'static 生命周期持续整个程序
-    let s: &'static str = "字符串字面量有静态生命周期";
-}`,
-    summary: [
-      '生命周期子类型指定关系。',
-      '生命周期绑定约束类型参数。',
-      '匿名生命周期简化标注。',
-      '静态生命周期持续整个程序。',
-      '高级特性处理复杂场景。'
-    ]
-  },
-  // 单元12：实战项目
-  {
-    id: '60',
-    unitId: 'unit12',
-    title: '构建命令行工具',
-    description: '学习使用 clap 等库构建命令行应用。',
-    difficulty: '进阶',
-    content: `Go 非常适合构建命令行工具，性能好且易于分发。
-
-可以使用 clap、structopt 等库简化命令行参数解析。`,
-    exampleCode: `// 使用 clap
-// Cargo.toml: clap = { version = "4.0", features = ["derive"] }
-
-use clap::Parser;
-
-#[derive(Parser)]
-#[command(name = "myapp")]
-#[command(about = "一个示例应用")]
-struct Cli {
-    /// 输入文件
-    #[arg(short, long)]
-    input: String,
-    
-    /// 输出文件
-    #[arg(short, long)]
-    output: Option<String>,
-    
-    /// 详细输出
-    #[arg(short, long, action = clap::ArgAction::SetTrue)]
-    verbose: bool,
+    return -1
 }
 
 func main() {
-    let cli = Cli::parse();
-    
-    fmt.Println("输入文件: {}", cli.input);
-    if let Some(output) = cli.output {
-        fmt.Println("输出文件: {}", output);
-    }
-    if cli.verbose {
-        fmt.Println("详细模式");
-    }
-}
+    si := []int{10, 20, 15, -10}
+    fmt.Println(Index(si, 15))
 
-// 处理文件
-use std::fs;
-use std::io;
-
-fn process_file(input: string, output: Option<string>) -> io::Result<()> {
-    let content = fs::read_to_string(input)?;
-    
-    // 处理内容
-    let processed = content.to_uppercase();
-    
-    if let Some(output) = output {
-        fs::write(output, processed)?;
-    } else {
-        fmt.Println("{}", processed);
-    }
-    
-    Ok(())
+    ss := []string{"foo", "bar", "baz"}
+    fmt.Println(Index(ss, "hello"))
 }`,
     summary: [
-      'Go 适合构建命令行工具。',
-      '使用 clap 解析参数。',
-      '处理文件 I/O。',
-      '错误处理很重要。',
-      '可以编译成单个可执行文件。'
-    ]
-  },
-  {
-    id: '61',
-    unitId: 'unit12',
-    title: '构建 Web API',
-    description: '学习使用 actix-web 或 axum 构建 REST API。',
-    difficulty: '高阶',
-    content: `Go 可以构建高性能的 Web API。
-
-可以使用 actix-web、axum、warp 等框架。`,
-    exampleCode: `// 使用 axum
-// Cargo.toml: axum = "0.7", tokio = { version = "1", features = ["full"] }
-
-use axum::{
-    routing::get,
-    Router,
-    Json,
-};
-use serde::{Deserialize, Serialize};
-
-#[derive(Serialize, Deserialize)]
-struct User {
-    id: u64,
-    name: String,
-}
-
-async fn get_users() -> Json<Vec<User>> {
-    Json(vec![
-        User { id: 1, name: "Alice".to_string() },
-        User { id: 2, name: "Bob".to_string() },
-    ])
-}
-
-async fn create_user(Json(user): Json<User>) -> Json<User> {
-    Json(user)
-}
-
-#[tokio::main]
-async func main() {
-    let app = Router::new()
-        .route("/users", get(get_users).post(create_user));
-    
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
-    axum::serve(listener, app).await.unwrap();
-}
-
-// 使用 actix-web
-// use actix_web::{web, App, HttpResponse, HttpServer, Responder};
-//
-// async fn hello() -> impl Responder {
-//     HttpResponse::Ok().body("Hello world!")
-// }
-//
-// #[actix_web::main]
-// async func main() -> std::io::Result<()> {
-//     HttpServer::new(|| {
-//         App::new()
-//             .route("/", web::get().to(hello))
-//     })
-//     .bind("127.0.0.1:8080")?
-//     .run()
-//     .await
-// }`,
-    summary: [
-      'Go 可以构建高性能 Web API。',
-      '使用 axum、actix-web 等框架。',
-      '异步处理请求。',
-      '类型安全的路由。',
-      '优秀的性能表现。'
-    ]
-  },
-  {
-    id: '62',
-    unitId: 'unit12',
-    title: '数据库操作',
-    description: '学习使用 sqlx 或 diesel 进行数据库操作。',
-    difficulty: '高阶',
-    content: `Go 有多个优秀的数据库库。
-
-sqlx 提供异步、编译时检查的 SQL 查询。diesel 提供类型安全的查询构建器。`,
-    exampleCode: `// 使用 sqlx
-// Cargo.toml: sqlx = { version = "0.7", features = ["runtime-tokio-native-tls", "postgres"] }
-
-use sqlx::PgPool;
-
-#[derive(sqlx::FromRow)]
-struct User {
-    id: i64,
-    name: String,
-    email: String,
-}
-
-#[tokio::main]
-async func main() -> Result<(), sqlx::Error> {
-    let pool = PgPool::connect("postgres://user:password@localhost/dbname").await?;
-    
-    // 查询
-    let users = sqlx::query_as::<_, User>(
-        "SELECT id, name, email FROM users WHERE id = $1"
-    )
-    .bind(1)
-    .fetch_all(&pool)
-    .await?;
-    
-    // 插入
-    sqlx::query("INSERT INTO users (name, email) VALUES ($1, $2)")
-        .bind("Alice")
-        .bind("alice@example.com")
-        .execute(&pool)
-        .await?;
-    
-    Ok(())
-}
-
-// 使用 diesel
-// #[derive(Queryable)]
-// struct User {
-//     id: i32,
-//     name: String,
-//     email: String,
-// }
-//
-// func main() {
-//     use diesel::prelude::*;
-//     use schema::users::dsl::*;
-//     
-//     let connection = establish_connection();
-//     let results = users
-//         .filter(name.eq("Alice"))
-//         .load::<User>(&connection)
-//         .expect("Error loading users");
-// }`,
-    summary: [
-      'sqlx 提供编译时检查的 SQL。',
-      'diesel 提供类型安全的查询构建器。',
-      '异步数据库操作。',
-      '类型安全的数据库访问。',
-      '优秀的性能。'
-    ]
-  },
-  {
-    id: '63',
-    unitId: 'unit12',
-    title: '性能优化',
-    description: '学习 Go 性能优化的技巧和最佳实践。',
-    difficulty: '高阶',
-    content: `Go 已经很快，但还可以进一步优化。
-
-包括：避免不必要的分配、使用合适的集合类型、利用简洁高效等。`,
-    exampleCode: `// 1. 避免不必要的分配
-// 坏：每次都分配新的 String
-fn bad(s: string) -> String {
-    format!("前缀: {}", s)
-}
-
-// 好：使用 string
-fn good(s: string) -> string {
-    s  // 或返回 Cow<str>
-}
-
-// 2. 使用合适的集合类型
-// Vec 用于动态数组
-var vec = Vec::new();
-vec.push(1);
-
-// VecDeque 用于队列
-use std::collections::VecDeque;
-var deque = VecDeque::new();
-deque.push_back(1);
-
-// HashSet 用于快速查找
-use std::collections::HashSet;
-var set = HashSet::new();
-set.insert(1);
-
-// 3. 使用容量预分配
-var vec = Vec::with_capacity(1000);
-for i in 0..1000 {
-    vec.push(i);
-}
-
-// 4. 使用引用而不是克隆
-fn process(data: &[i32]) {
-    // 使用引用，不克隆
-}
-
-// 5. 使用迭代器而不是循环
-let sum: i32 = (1..1000).sum();  // 比循环快
-
-// 6. 使用 #[inline] 提示编译器
-#[inline]
-fn fast_function(x: i32) -> i32 {
-    x * 2
-}
-
-// 7. 使用 release 模式编译
-// go build --release
-
-// 8. 使用性能分析工具
-// perf, valgrind, cargo flamegraph`,
-    summary: [
-      '避免不必要的分配。',
-      '使用合适的集合类型。',
-      '预分配容量。',
-      '使用引用而不是克隆。',
-      '使用 release 模式编译。'
+      '泛型支持多种类型。',
+      '使用 [T constraint] 定义类型参数。',
+      'comparable 是内置约束。',
+      'any 表示任意类型。'
     ]
   }
-] as CourseChapter[]);
+] as CourseChapter[];
 
 export const QUIZ_MODULES: QuizModule[] = ([
   // ========== 1000道题目综合题库（按主题整合） ==========
@@ -5656,4 +3868,3 @@ export const INTERVIEW_QUESTIONS: InterviewItem[] = ([
     tags: ['语言特性', '工程', '基础']
   }
 ] as InterviewItem[]);
-

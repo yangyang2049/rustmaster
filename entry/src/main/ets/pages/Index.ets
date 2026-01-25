@@ -3,6 +3,8 @@ import { Spacing, Sizes, FontSizes, FontWeights, Shadows, Colors } from '../util
 import { NavBar } from '../components/NavBar';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { LanguageManager } from '../utils/LanguageManager';
+import { PreferencesManager } from '../utils/PreferencesManager';
+import common from '@ohos.app.ability.common';
 // Unified pages (supporting multiple languages)
 import { LearnPage } from './learn/LearnPage';
 import { SyntaxPage } from './syntax/SyntaxPage';
@@ -19,17 +21,62 @@ struct Index {
   @State currentLanguage: Language = Language.RUST; // 当前选择的编程语言
   @State isLoadingLanguage: boolean = false; // 语言切换时的loading状态
   @State pageKey: number = 0; // 用于强制重新构建所有页面
+  @State showLanguageDialog: boolean = false; // 是否显示首次启动语言选择对话框
+  private context = getContext(this) as common.UIAbilityContext;
 
   async aboutToAppear() {
     // 加载当前选择的语言
-    this.currentLanguage = await LanguageManager.getCurrentLanguage();
+    this.currentLanguage = await LanguageManager.getCurrentLanguage(this.context);
     console.info(`[Index] aboutToAppear, currentLanguage: ${this.currentLanguage}`);
+
+    // 检查是否是首次启动（是否显示过语言选择对话框）
+    await this.checkFirstLaunch();
+  }
+
+  private async checkFirstLaunch(): Promise<void> {
+    try {
+      // 确保 PreferencesManager 已初始化
+      PreferencesManager.init(this.context);
+      const prefs = await PreferencesManager.getPreferences('app_settings');
+      const hasShown = await prefs.get('has_shown_language_dialog', false) as boolean;
+      
+      if (!hasShown) {
+        // 如果没有显示过，则显示对话框
+        this.showLanguageDialog = true;
+      }
+    } catch (err) {
+      console.error(`[Index] Failed to check first launch: ${JSON.stringify(err)}`);
+    }
+  }
+
+  private async onLanguageSelected(language: Language): Promise<void> {
+    try {
+      // 保存选择的语言
+      await LanguageManager.setCurrentLanguage(language, this.context);
+      this.currentLanguage = language;
+      
+      // 标记为已显示对话框
+      const prefs = await PreferencesManager.getPreferences('app_settings');
+      await prefs.put('has_shown_language_dialog', true);
+      await prefs.flush();
+      
+      // 隐藏对话框
+      this.showLanguageDialog = false;
+      
+      // 强制刷新页面
+      this.pageKey++;
+      this.learnPageRefreshTrigger++;
+      
+      console.info(`[Index] Language selected: ${language}, dialog closed`);
+    } catch (err) {
+      console.error(`[Index] Failed to save language selection: ${JSON.stringify(err)}`);
+    }
   }
 
   // 当页面显示时（从其他页面返回时），触发刷新
   async onPageShow() {
     // 重新加载语言设置（可能被 LanguageSwitcher 更改）
-    this.currentLanguage = await LanguageManager.getCurrentLanguage();
+    this.currentLanguage = await LanguageManager.getCurrentLanguage(this.context);
     
     // 如果当前是 LEARN 标签页，触发刷新以更新章节进度
     if (this.currentTab === Tab.LEARN) {
@@ -155,6 +202,73 @@ struct Index {
   }
 
   @Builder
+  LanguageSelectionDialog() {
+    if (this.showLanguageDialog) {
+      Stack({ alignContent: Alignment.Center }) {
+        // 半透明背景
+        Column()
+          .width('100%')
+          .height('100%')
+          .backgroundColor('rgba(0, 0, 0, 0.6)')
+          .onClick(() => {
+            // 禁止点击背景关闭，强制选择
+          })
+        
+        // 对话框内容
+        Column() {
+          Text('欢迎使用')
+            .fontSize(FontSizes.TITLE)
+            .fontWeight(FontWeights.BOLD)
+            .fontColor($r(Colors.TEXT_PRIMARY))
+            .margin({ bottom: Spacing.ELEMENT_SPACING_XS })
+          
+          Text('请选择您想学习的语言')
+            .fontSize(FontSizes.BODY)
+            .fontColor($r(Colors.TEXT_SECONDARY))
+            .margin({ bottom: Spacing.ELEMENT_SPACING_LG })
+          
+          GridRow({
+            columns: 2,
+            gutter: { x: Spacing.ELEMENT_SPACING_MD, y: Spacing.ELEMENT_SPACING_MD }
+          }) {
+            ForEach(LanguageManager.getSupportedLanguages(), (lang: Language) => {
+              GridCol() {
+                Button() {
+                  Column() {
+                    Text(LanguageManager.getLanguageDisplayName(lang))
+                      .fontSize(FontSizes.LARGE)
+                      .fontWeight(FontWeights.BOLD)
+                      .fontColor(this.currentLanguage === lang ? $r(Colors.TEXT_WHITE) : $r(Colors.TEXT_PRIMARY))
+                  }
+                  .width('100%')
+                  .padding({ top: 20, bottom: 20 })
+                }
+                .width('100%')
+                .type(ButtonType.Normal)
+                .backgroundColor(this.currentLanguage === lang ? $r(Colors.RUST_PRIMARY) : $r(Colors.BG_SECONDARY))
+                .borderRadius(Sizes.RADIUS_LG)
+                .onClick(() => {
+                  this.onLanguageSelected(lang);
+                })
+              }
+            })
+          }
+          .width('100%')
+        }
+        .width('85%')
+        .constraintSize({ maxWidth: 400 })
+        .padding(Spacing.CARD_PADDING_LARGE)
+        .backgroundColor($r(Colors.BG_CARD))
+        .borderRadius(Sizes.RADIUS_XL)
+        .shadow(Shadows.FLOAT)
+      }
+      .width('100%')
+      .height('100%')
+      .zIndex(1000) // 确保在最上层
+    }
+  }
+
+  @Builder
   LoadingOverlay() {
     if (this.isLoadingLanguage) {
       Stack({ alignContent: Alignment.Center }) {
@@ -194,6 +308,9 @@ struct Index {
           
           // 全屏loading覆盖层
           this.LoadingOverlay()
+
+          // 首次启动语言选择对话框
+          this.LanguageSelectionDialog()
         }
         .width('100%')
         .layoutWeight(1)
@@ -206,6 +323,7 @@ struct Index {
       .backgroundColor($r(Colors.BG_PAGE))
     }
     .titleMode(NavigationTitleMode.Mini)
+    .mode(NavigationMode.Stack)
     .title(this.getTitleText())
     .menus(this.MenuBuilder)
     .hideBackButton(true)

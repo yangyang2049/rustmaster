@@ -712,38 +712,43 @@ struct QuizDetailPage {
     Navigation() {
       Scroll() {
         Column() {
-          if (this.quiz && this.getCurrentQuestion()) {
-            // 进度卡片
-            this.ProgressCard()
+          Column() {
+            if (this.quiz && this.getCurrentQuestion()) {
+              // 进度卡片
+              this.ProgressCard()
 
-            // 题目卡片
-            Column() {
-              this.QuestionCard()
-            }
-            .margin({ top: 16 })
-
-            // 选项卡片
-            Column() {
-              this.OptionsCard()
-            }
-            .margin({ top: 16 })
-
-            // 解析卡片（答题后显示）
-            if (this.showResult) {
+              // 题目卡片
               Column() {
-                this.ExplanationCard()
+                this.QuestionCard()
               }
               .margin({ top: 16 })
-            }
 
-            // 操作按钮
-            Column() {
-              this.ActionButtons()
+              // 选项卡片
+              Column() {
+                this.OptionsCard()
+              }
+              .margin({ top: 16 })
+
+              // 解析卡片（答题后显示）
+              if (this.showResult) {
+                Column() {
+                  this.ExplanationCard()
+                }
+                .margin({ top: 16 })
+              }
+
+              // 操作按钮
+              Column() {
+                this.ActionButtons()
+              }
+              .margin({ top: 16, bottom: 32 })
             }
-            .margin({ top: 16, bottom: 32 })
           }
+          .width('100%')
+          .constraintSize({ maxWidth: 800 })
         }
         .width('100%')
+        .alignItems(HorizontalAlign.Center)
         .padding({ left: 16, right: 16, top: 16 })
       }
       .scrollBar(BarState.Off)
@@ -751,6 +756,7 @@ struct QuizDetailPage {
     }
     .title(this.quiz?.title || '题库详情')
     .titleMode(NavigationTitleMode.Mini)
+    .mode(NavigationMode.Stack)
     .hideBackButton(false)
     .backgroundColor($r(Colors.BG_PAGE))
     .menus(this.MenuBuilder)

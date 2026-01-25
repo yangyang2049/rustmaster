@@ -87,88 +87,97 @@ struct FavoritesPage {
 
   build() {
     Navigation() {
-      if (this.isLoading) {
-        Column() {
-          LoadingProgress()
-            .width(48)
-            .height(48)
-            .color($r(Colors.RUST_PRIMARY))
-        }
-        .width('100%')
-        .layoutWeight(1)
-        .justifyContent(FlexAlign.Center)
-      } else if (this.favorites.length === 0) {
-        Column() {
-          Image($r('app.media.icon_favorite'))
-            .width(64)
-            .height(64)
-            .opacity(0.3)
-            .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
+      Column() {
+        if (this.isLoading) {
+          Column() {
+            LoadingProgress()
+              .width(48)
+              .height(48)
+              .color($r(Colors.RUST_PRIMARY))
+          }
+          .width('100%')
+          .layoutWeight(1)
+          .justifyContent(FlexAlign.Center)
+        } else if (this.favorites.length === 0) {
+          Column() {
+            Image($r('app.media.icon_favorite'))
+              .width(64)
+              .height(64)
+              .opacity(0.3)
+              .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
 
-          Text('暂无收藏')
-            .fontSize(FontSizes.BODY)
-            .fontColor($r(Colors.TEXT_TERTIARY))
+            Text('暂无收藏')
+              .fontSize(FontSizes.BODY)
+              .fontColor($r(Colors.TEXT_PRIMARY))
 
-          Text('在章节详情页点击收藏按钮添加')
-            .fontSize(FontSizes.SMALL)
-            .fontColor($r(Colors.TEXT_TERTIARY))
-            .margin({ top: Spacing.ELEMENT_SPACING_SM })
-        }
-        .width('100%')
-        .layoutWeight(1)
-        .justifyContent(FlexAlign.Center)
-      } else {
-        List() {
-          ForEach(this.favorites, (item: FavoriteItem, index: number) => {
-            ListItem() {
-              Row() {
-                Image($r('app.media.icon_favorite_selected'))
-                  .width(20)
-                  .height(20)
-                  .margin({ right: Spacing.ELEMENT_SPACING_MD })
+            Text('在章节详情页点击收藏按钮添加')
+              .fontSize(FontSizes.SMALL)
+              .fontColor($r(Colors.TEXT_TERTIARY))
+              .margin({ top: Spacing.ELEMENT_SPACING_SM })
+          }
+          .width('100%')
+          .layoutWeight(1)
+          .justifyContent(FlexAlign.Center)
+        } else {
+          List() {
+            ForEach(this.favorites, (item: FavoriteItem, index: number) => {
+              ListItem() {
+                Row() {
+                  Image($r('app.media.icon_favorite_selected'))
+                    .width(20)
+                    .height(20)
+                    .margin({ right: Spacing.ELEMENT_SPACING_MD })
 
-                Text(item.name)
-                  .fontSize(FontSizes.BODY)
-                  .fontColor($r(Colors.TEXT_PRIMARY))
-                  .layoutWeight(1)
+                  Text(item.name)
+                    .fontSize(FontSizes.BODY)
+                    .fontColor($r(Colors.TEXT_PRIMARY))
+                    .layoutWeight(1)
 
-                if (this.isEditMode) {
-                  Text('删除')
-                    .fontSize(FontSizes.SMALL)
-                    .fontColor($r(Colors.ERROR))
-                    .padding({ left: Spacing.ELEMENT_SPACING_MD, right: Spacing.ELEMENT_SPACING_MD })
-                    .onClick(() => {
-                      this.deleteFavorite(item);
-                    })
-                } else {
-                  Image($r('app.media.icon_arrow_right'))
-                    .width(16)
-                    .height(16)
-                    .opacity(0.3)
+                  if (this.isEditMode) {
+                    Text('删除')
+                      .fontSize(FontSizes.SMALL)
+                      .fontColor($r(Colors.ERROR))
+                      .padding({ left: Spacing.ELEMENT_SPACING_MD, right: Spacing.ELEMENT_SPACING_MD })
+                      .onClick(() => {
+                        this.deleteFavorite(item);
+                      })
+                  } else {
+                    Image($r('app.media.icon_arrow_right'))
+                      .width(16)
+                      .height(16)
+                      .opacity(0.3)
+                  }
                 }
+                .width('100%')
+                .height(56)
+                .padding({ left: Spacing.PAGE_PADDING, right: Spacing.PAGE_PADDING })
+                .backgroundColor($r(Colors.BG_CARD))
+                .onClick(() => {
+                  if (this.isEditMode) {
+                    this.deleteFavorite(item);
+                  } else {
+                    this.navigateToChapter(item.pageUrl);
+                  }
+                })
               }
-              .width('100%')
-              .height(56)
-              .padding({ left: Spacing.PAGE_PADDING, right: Spacing.PAGE_PADDING })
-              .backgroundColor($r(Colors.BG_CARD))
-              .onClick(() => {
-                if (this.isEditMode) {
-                  this.deleteFavorite(item);
-                } else {
-                  this.navigateToChapter(item.pageUrl);
-                }
-              })
-            }
-          }, (item: FavoriteItem, index: number) => `${item.pageUrl}_${index}`)
+            }, (item: FavoriteItem, index: number) => `${item.pageUrl}_${index}`)
+          }
+          .width('100%')
+          .layoutWeight(1)
+          .divider({ strokeWidth: 0.5, color: $r(Colors.DIVIDER), startMargin: 16, endMargin: 16 })
+          .margin({ top: Spacing.PAGE_PADDING })
         }
-        .width('100%')
-        .layoutWeight(1)
-        .divider({ strokeWidth: 0.5, color: $r(Colors.DIVIDER), startMargin: 16, endMargin: 16 })
-        .margin({ top: Spacing.PAGE_PADDING })
       }
+      .width('100%')
+      .height('100%')
+      .alignItems(HorizontalAlign.Center)
+      .constraintSize({ maxWidth: 800 })
     }
+    .width('100%')
+    .height('100%')
     .title('我的收藏')
     .titleMode(NavigationTitleMode.Mini)
+    .mode(NavigationMode.Stack)
     .hideBackButton(false)
     .backgroundColor($r(Colors.BG_PAGE))
     .menus(this.MenuBuilder)

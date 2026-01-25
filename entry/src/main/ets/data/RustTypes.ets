@@ -26,7 +26,7 @@ export interface CourseChapter {
   description: string;
   content: string;
   exampleCode: string;
-  summary: string[];
+  summary?: string[];
   difficulty: Difficulty;
 }
 

@@ -2,6 +2,8 @@ import { PreferencesManager } from './PreferencesManager';
 import { preferences } from '@kit.ArkData';
 import { Language } from '../data/RustTypes';
 
+import common from '@ohos.app.ability.common';
+
 /**
  * 语言管理器
  * 负责管理应用的编程语言选择
@@ -12,9 +14,13 @@ export class LanguageManager {
 
   /**
    * 初始化语言管理器
+   * @param context UIAbilityContext (可选，用于初始化 PreferencesManager)
    */
-  static async init(): Promise<void> {
+  static async init(context?: common.UIAbilityContext): Promise<void> {
     try {
+      if (context) {
+        PreferencesManager.init(context);
+      }
       LanguageManager.prefs = await PreferencesManager.getPreferences('app_settings');
     } catch (err) {
       console.error(`Failed to initialize LanguageManager: ${JSON.stringify(err)}`);
@@ -23,13 +29,14 @@ export class LanguageManager {
 
   /**
    * 获取当前选择的语言
+   * @param context UIAbilityContext (可选)
    * @returns 当前选择的语言，默认返回 RUST
    */
-  static async getCurrentLanguage(): Promise<Language> {
+  static async getCurrentLanguage(context?: common.UIAbilityContext): Promise<Language> {
     try {
       if (!LanguageManager.prefs) {
         console.info(`[LanguageManager] prefs not initialized, calling init()`);
-        await LanguageManager.init();
+        await LanguageManager.init(context);
       }
       if (LanguageManager.prefs) {
         const saved: number = await LanguageManager.prefs.get(LanguageManager.LANGUAGE_KEY, Language.RUST) as number;
@@ -46,12 +53,13 @@ export class LanguageManager {
   /**
    * 设置当前选择的语言
    * @param language 要设置的语言
+   * @param context UIAbilityContext (可选)
    */
-  static async setCurrentLanguage(language: Language): Promise<void> {
+  static async setCurrentLanguage(language: Language, context?: common.UIAbilityContext): Promise<void> {
     try {
       console.info(`[LanguageManager] setCurrentLanguage called with: ${language}`);
       if (!LanguageManager.prefs) {
-        await LanguageManager.init();
+        await LanguageManager.init(context);
       }
       if (LanguageManager.prefs) {
         await LanguageManager.prefs.put(LanguageManager.LANGUAGE_KEY, language);
@@ -80,6 +88,26 @@ export class LanguageManager {
         return 'ArkTS';
       default:
         return 'Rust';
+    }
+  }
+
+  /**
+   * 重置首次启动语言选择对话框的标志
+   * 用于测试或用户手动重置
+   * @param context UIAbilityContext (可选)
+   */
+  static async resetHasShownLanguageDialog(context?: common.UIAbilityContext): Promise<void> {
+    try {
+      if (!LanguageManager.prefs) {
+        await LanguageManager.init(context);
+      }
+      if (LanguageManager.prefs) {
+        await LanguageManager.prefs.delete('has_shown_language_dialog');
+        await LanguageManager.prefs.flush();
+        console.info(`[LanguageManager] has_shown_language_dialog reset successfully`);
+      }
+    } catch (err) {
+      console.error(`Failed to reset has_shown_language_dialog: ${JSON.stringify(err)}`);
     }
   }
 

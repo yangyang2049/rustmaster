@@ -10,7 +10,8 @@ export struct LanguageSwitcher {
   private languages: SelectOption[] = [
     { value: 'Rust' },
     { value: 'Python' },
-    { value: 'Go' }
+    { value: 'Go' },
+    { value: 'ArkTS' }
   ];
 
   async aboutToAppear() {
@@ -21,12 +22,14 @@ export struct LanguageSwitcher {
   private languageToIndex(language: Language): number {
     if (language === Language.PYTHON) return 1;
     if (language === Language.GO) return 2;
+    if (language === Language.ARKTS) return 3;
     return 0; // RUST
   }
 
   private indexToLanguage(index: number): Language {
     if (index === 1) return Language.PYTHON;
     if (index === 2) return Language.GO;
+    if (index === 3) return Language.ARKTS;
     return Language.RUST;
   }
 

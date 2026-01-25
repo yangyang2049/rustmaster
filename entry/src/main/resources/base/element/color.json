@@ -269,6 +269,34 @@
       "value": "#7DD3F0"
     },
     {
+      "name": "arkts_primary",
+      "value": "#0A59F7"
+    },
+    {
+      "name": "arkts_primary_dark",
+      "value": "#0042B5"
+    },
+    {
+      "name": "arkts_secondary",
+      "value": "#669DF6"
+    },
+    {
+      "name": "arkts_bg_light",
+      "value": "#E6F0FF"
+    },
+    {
+      "name": "arkts_text",
+      "value": "#002870"
+    },
+    {
+      "name": "arkts_bg_card",
+      "value": "#D1E3FE"
+    },
+    {
+      "name": "arkts_border",
+      "value": "#99C2FB"
+    },
+    {
       "name": "success",
       "value": "#10B981"
     },

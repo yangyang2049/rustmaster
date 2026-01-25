@@ -5,11 +5,14 @@ import { COURSE_CHAPTERS as RustCourseChapters, COURSE_UNITS as RustCourseUnits,
 import { COURSE_CHAPTERS as PythonCourseChapters, COURSE_UNITS as PythonCourseUnits, QUIZ_MODULES as PythonQuizModules, REFERENCE_DATA as PythonReferenceData, INTERVIEW_QUESTIONS as PythonInterviewQuestions } from '../data/PythonConstants';
 // Go data
 import { COURSE_CHAPTERS as GoCourseChapters, COURSE_UNITS as GoCourseUnits, QUIZ_MODULES as GoQuizModules, REFERENCE_DATA as GoReferenceData, INTERVIEW_QUESTIONS as GoInterviewQuestions } from '../data/GoConstants';
+// ArkTS data
+import { COURSE_CHAPTERS as ArkTSCourseChapters, COURSE_UNITS as ArkTSCourseUnits, QUIZ_MODULES as ArkTSQuizModules, REFERENCE_DATA as ArkTSReferenceData, INTERVIEW_QUESTIONS as ArkTSInterviewQuestions } from '../data/ArkTSConstants';
 
 // Debug: Log imported data at module load time
 console.info(`[LDM Module Load] RustCourseChapters: ${RustCourseChapters?.length || 0}, first: ${RustCourseChapters?.[0]?.title || 'none'}`);
 console.info(`[LDM Module Load] PythonCourseChapters: ${PythonCourseChapters?.length || 0}, first: ${PythonCourseChapters?.[0]?.title || 'none'}`);
 console.info(`[LDM Module Load] GoCourseChapters: ${GoCourseChapters?.length || 0}, first: ${GoCourseChapters?.[0]?.title || 'none'}`);
+console.info(`[LDM Module Load] ArkTSCourseChapters: ${ArkTSCourseChapters?.length || 0}, first: ${ArkTSCourseChapters?.[0]?.title || 'none'}`);
 
 /**
  * Language Data Manager
@@ -24,10 +27,9 @@ export class LanguageDataManager {
     const langNum: number = Number(language);
     const pythonNum: number = Number(Language.PYTHON);
     const goNum: number = Number(Language.GO);
+    const arkTSNum: number = Number(Language.ARKTS);
     
-    console.info(`[LDM] getCourseChapters - language: ${language}, langNum: ${langNum}, pythonNum: ${pythonNum}, goNum: ${goNum}`);
-    console.info(`[LDM] Comparison: langNum === pythonNum: ${langNum === pythonNum}, langNum === goNum: ${langNum === goNum}`);
-    console.info(`[LDM] Data lengths - Rust: ${RustCourseChapters?.length || 0}, Python: ${PythonCourseChapters?.length || 0}, Go: ${GoCourseChapters?.length || 0}`);
+    console.info(`[LDM] getCourseChapters - language: ${language}, langNum: ${langNum}, pythonNum: ${pythonNum}, goNum: ${goNum}, arkTSNum: ${arkTSNum}`);
     
     let result: CourseChapter[] = [];
     let selectedBranch: string = '';
@@ -39,6 +41,9 @@ export class LanguageDataManager {
     } else if (langNum === goNum && GoCourseChapters && GoCourseChapters.length > 0) {
       result = GoCourseChapters;
       selectedBranch = 'GO';
+    } else if (langNum === arkTSNum && ArkTSCourseChapters && ArkTSCourseChapters.length > 0) {
+      result = ArkTSCourseChapters;
+      selectedBranch = 'ARKTS';
     } else if (RustCourseChapters && RustCourseChapters.length > 0) {
       result = RustCourseChapters;
       selectedBranch = 'RUST (default)';
@@ -58,8 +63,9 @@ export class LanguageDataManager {
     const langNum: number = Number(language);
     const pythonNum: number = Number(Language.PYTHON);
     const goNum: number = Number(Language.GO);
+    const arkTSNum: number = Number(Language.ARKTS);
     
-    console.info(`[LDM] getCourseUnits - langNum: ${langNum}, pythonNum: ${pythonNum}, goNum: ${goNum}`);
+    console.info(`[LDM] getCourseUnits - langNum: ${langNum}, pythonNum: ${pythonNum}, goNum: ${goNum}, arkTSNum: ${arkTSNum}`);
     
     let result: CourseUnit[] = [];
     if (langNum === pythonNum && PythonCourseUnits && PythonCourseUnits.length > 0) {
@@ -68,6 +74,9 @@ export class LanguageDataManager {
     } else if (langNum === goNum && GoCourseUnits && GoCourseUnits.length > 0) {
       result = GoCourseUnits;
       console.info(`[LDM] Using Go units, first: ${result[0]?.name || 'none'}`);
+    } else if (langNum === arkTSNum && ArkTSCourseUnits && ArkTSCourseUnits.length > 0) {
+      result = ArkTSCourseUnits;
+      console.info(`[LDM] Using ArkTS units, first: ${result[0]?.name || 'none'}`);
     } else if (RustCourseUnits && RustCourseUnits.length > 0) {
       result = RustCourseUnits;
       console.info(`[LDM] Using Rust units (default), first: ${result[0]?.name || 'none'}`);
@@ -84,8 +93,9 @@ export class LanguageDataManager {
     const langNum: number = Number(language);
     const pythonNum: number = Number(Language.PYTHON);
     const goNum: number = Number(Language.GO);
+    const arkTSNum: number = Number(Language.ARKTS);
     
-    console.info(`[LDM] getQuizModules - langNum: ${langNum}, pythonNum: ${pythonNum}, goNum: ${goNum}`);
+    console.info(`[LDM] getQuizModules - langNum: ${langNum}, pythonNum: ${pythonNum}, goNum: ${goNum}, arkTSNum: ${arkTSNum}`);
     
     if (langNum === pythonNum && PythonQuizModules && PythonQuizModules.length > 0) {
       console.info(`[LDM] Using Python quiz modules: ${PythonQuizModules.length}`);
@@ -94,6 +104,10 @@ export class LanguageDataManager {
     if (langNum === goNum && GoQuizModules && GoQuizModules.length > 0) {
       console.info(`[LDM] Using Go quiz modules: ${GoQuizModules.length}`);
       return GoQuizModules;
+    }
+    if (langNum === arkTSNum && ArkTSQuizModules && ArkTSQuizModules.length > 0) {
+      console.info(`[LDM] Using ArkTS quiz modules: ${ArkTSQuizModules.length}`);
+      return ArkTSQuizModules;
     }
     console.info(`[LDM] Using Rust quiz modules (default): ${RustQuizModules?.length || 0}`);
     return RustQuizModules || [];
@@ -106,12 +120,16 @@ export class LanguageDataManager {
     const langNum: number = Number(language);
     const pythonNum: number = Number(Language.PYTHON);
     const goNum: number = Number(Language.GO);
+    const arkTSNum: number = Number(Language.ARKTS);
     
     if (langNum === pythonNum && PythonReferenceData && PythonReferenceData.length > 0) {
       return PythonReferenceData;
     }
     if (langNum === goNum && GoReferenceData && GoReferenceData.length > 0) {
       return GoReferenceData;
+    }
+    if (langNum === arkTSNum && ArkTSReferenceData && ArkTSReferenceData.length > 0) {
+      return ArkTSReferenceData;
     }
     return RustReferenceData || [];
   }
@@ -123,12 +141,16 @@ export class LanguageDataManager {
     const langNum: number = Number(language);
     const pythonNum: number = Number(Language.PYTHON);
     const goNum: number = Number(Language.GO);
+    const arkTSNum: number = Number(Language.ARKTS);
     
     if (langNum === pythonNum && PythonInterviewQuestions && PythonInterviewQuestions.length > 0) {
       return PythonInterviewQuestions;
     }
     if (langNum === goNum && GoInterviewQuestions && GoInterviewQuestions.length > 0) {
       return GoInterviewQuestions;
+    }
+    if (langNum === arkTSNum && ArkTSInterviewQuestions && ArkTSInterviewQuestions.length > 0) {
+      return ArkTSInterviewQuestions;
     }
     return RustInterviewQuestions || [];
   }
@@ -142,6 +164,9 @@ export class LanguageDataManager {
     }
     if (language === Language.GO) {
       return 'go_learn';
+    }
+    if (language === Language.ARKTS) {
+      return 'arkts_learn';
     }
     return 'rust_learn';
   }
