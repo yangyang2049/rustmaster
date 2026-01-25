@@ -626,7 +626,7 @@ export struct QuizPage {
           .borderRadius(Sizes.RADIUS_XL)
           .onClick(() => {
             VibratorUtil.vibrateTap();
-            this.closeQuiz();
+            router.back();
           })
 
         Blank()

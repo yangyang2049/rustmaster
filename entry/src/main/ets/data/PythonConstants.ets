@@ -1,4 +1,4 @@
-import { CourseChapter, CourseUnit, QuizModule, ReferenceCategory, InterviewItem, InterviewDifficulty, QuestionType, Difficulty } from './PythonTypes';
+import { CourseChapter, CourseUnit, QuizModule, ReferenceCategory, InterviewItem, InterviewDifficulty, QuestionType, Difficulty } from './RustTypes';
 
 export const DAILY_TIPS: string[] = [
   "在 Python 中，如果你不需要使用某个变量，可以在变量名前加下划线（如 _x）来忽略未使用的警告。",

@@ -1,4 +1,4 @@
-import { CourseChapter, CourseUnit, QuizModule, ReferenceCategory, InterviewItem, QuestionType } from './GoTypes';
+import { CourseChapter, CourseUnit, QuizModule, ReferenceCategory, InterviewItem, QuestionType } from './RustTypes';
 
 export const DAILY_TIPS: string[] = [
   "在 Go 中，如果你不需要使用某个变量，可以使用 `_` 来忽略（如 `_, err := doSomething()`）。",

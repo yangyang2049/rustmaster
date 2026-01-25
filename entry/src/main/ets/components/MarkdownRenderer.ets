@@ -11,6 +11,7 @@ interface MarkdownNode {
   content?: string;
   level?: number;  // for headings
   items?: MarkdownNode[];  // for lists
+  ordered?: boolean;
   url?: string;  // for links
   children?: MarkdownNode[];
 }
@@ -72,11 +73,21 @@ export struct MarkdownRenderer {
         }
       }
 
-      // 列表项
-      if (line.match(/^[-*+]\s+/)) {
+      // 列表项（无序/有序）
+      const unorderedMatch = line.match(/^[-*+]\s+/);
+      const orderedMatch = line.match(/^\d+\.\s+/);
+      if (unorderedMatch || orderedMatch) {
         const items: MarkdownNode[] = [];
-        while (i < lines.length && lines[i].trim().match(/^[-*+]\s+/)) {
-          const itemText = lines[i].trim().substring(2);
+        const isOrdered = !!orderedMatch;
+        while (i < lines.length) {
+          const current = lines[i].trim();
+          const currentUnordered = current.match(/^[-*+]\s+/);
+          const currentOrdered = current.match(/^\d+\.\s+/);
+          if (!currentUnordered && !currentOrdered) {
+            break;
+          }
+          const markerLength = currentUnordered ? 2 : (current.indexOf('.') + 2);
+          const itemText = current.substring(markerLength);
           items.push({
             type: 'listItem',
             content: itemText
@@ -85,20 +96,30 @@ export struct MarkdownRenderer {
         }
         nodes.push({
           type: 'list',
-          items: items
+          items: items,
+          ordered: isOrdered
         });
         continue;
       }
 
-      // 普通段落
-      const paragraphText = line;
-      if (paragraphText) {
-        nodes.push({
-          type: 'paragraph',
-          content: paragraphText
-        });
-      }
+      // 普通段落（合并连续文本行）
+      const paragraphLines: string[] = [line];
       i++;
+      while (i < lines.length) {
+        const nextLine = lines[i].trim();
+        if (nextLine === '' || nextLine.startsWith('```') || nextLine.startsWith('#')) {
+          break;
+        }
+        if (nextLine.match(/^[-*+]\s+/) || nextLine.match(/^\d+\.\s+/)) {
+          break;
+        }
+        paragraphLines.push(nextLine);
+        i++;
+      }
+      nodes.push({
+        type: 'paragraph',
+        content: paragraphLines.join(' ')
+      });
     }
 
     return nodes;
@@ -110,6 +131,12 @@ export struct MarkdownRenderer {
     let currentText = '';
 
     while (i < text.length) {
+      // 转义字符
+      if (text[i] === '\\' && i + 1 < text.length) {
+        currentText += text[i + 1];
+        i += 2;
+        continue;
+      }
       // 行内代码
       if (text[i] === '`' && (i === 0 || text[i - 1] !== '\\')) {
         if (currentText) {
@@ -363,11 +390,18 @@ export struct MarkdownRenderer {
       Column() {
         ForEach(node.items || [], (item: MarkdownNode, index: number) => {
           Row() {
-            Circle()
-              .width(6)
-              .height(6)
-              .fill($r(Colors.TEXT_SECONDARY))
-              .margin({ right: Spacing.ELEMENT_SPACING_MD, top: 11 })
+            if (node.ordered) {
+              Text(`${index + 1}.`)
+                .fontSize(FontSizes.BODY)
+                .fontColor($r(Colors.TEXT_SECONDARY))
+                .margin({ right: Spacing.ELEMENT_SPACING_MD, top: 6 })
+            } else {
+              Circle()
+                .width(6)
+                .height(6)
+                .fill($r(Colors.TEXT_SECONDARY))
+                .margin({ right: Spacing.ELEMENT_SPACING_MD, top: 11 })
+            }
             
             Flex({ wrap: FlexWrap.Wrap, alignItems: ItemAlign.Start }) {
               ForEach(this.parseInlineMarkdown(item.content || ''), (inlineNode: MarkdownNode, idx: number) => {
@@ -396,4 +430,3 @@ export struct MarkdownRenderer {
     .alignItems(HorizontalAlign.Start)
   }
 }
-

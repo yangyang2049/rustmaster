@@ -674,8 +674,8 @@ struct QuizDetailPage {
               .height(Sizes.BUTTON_HEIGHT_XL)
               .borderRadius(Sizes.RADIUS_MD)
               .onClick(() => {
-                // Navigation 组件会自动处理返回，通过 hideBackButton(false) 设置的返回按钮
-                // 如果需要程序化返回，可以使用 router.pushUrl 返回到上一页
+                VibratorUtil.vibrateTap();
+                router.back();
               })
           }
           .width('100%')

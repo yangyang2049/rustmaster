@@ -538,6 +538,7 @@ struct ChapterDetailPage {
     this.scroller.scrollTo({ xOffset: 0, yOffset: 0, animation: { duration: 300 } });
   }
 
+
   build() {
     Navigation() {
       if (this.chapter) {

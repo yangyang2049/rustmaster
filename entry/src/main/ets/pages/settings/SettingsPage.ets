@@ -30,41 +30,13 @@ export struct SettingsPage {
   private context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
 
   private getAppInfo(): AppInfo {
-    switch (this.language) {
-      case Language.PYTHON:
-        const pythonInfo: AppInfo = {
-          name: '拿下 Python',
-          description: 'Python 编程学习应用',
-          bundleName: 'com.douhua.python',
-          aboutMessage: '拿下 Python v1.0.0\n\n专注于 Python 编程语言的教学演示与知识巩固，帮助学习者从入门到精通。\n\n本应用不提供任何职业资格认证或考试服务。'
-        };
-        return pythonInfo;
-      case Language.GO:
-        const goInfo: AppInfo = {
-          name: '轻松上 Go',
-          description: 'Go 编程学习应用',
-          bundleName: 'com.douhua.go',
-          aboutMessage: '轻松上 Go v1.0.0\n\n专注于 Go 编程语言的教学演示与知识巩固，帮助学习者从入门到精通。\n\n本应用不提供任何职业资格认证或考试服务。'
-        };
-        return goInfo;
-      case Language.ARKTS:
-        const arkTsInfo: AppInfo = {
-          name: '精通 ArkTS',
-          description: 'ArkTS 编程学习应用',
-          bundleName: 'com.douhua.arkts',
-          aboutMessage: '精通 ArkTS v1.0.0\n\n专注于 ArkTS 编程语言的教学演示与知识巩固，帮助学习者从入门到精通。\n\n本应用不提供任何职业资格认证或考试服务。'
-        };
-        return arkTsInfo;
-      case Language.RUST:
-      default:
-        const rustInfo: AppInfo = {
-          name: 'Rust 从入门到放弃',
-          description: 'Rust 编程学习应用',
-          bundleName: 'com.douhua.rustmaster',
-          aboutMessage: 'Rust 从入门到放弃 v1.0.0\n\n专注于 Rust 编程语言的教学演示与知识巩固，帮助学习者从入门到精通。\n\n本应用不提供任何职业资格认证或考试服务。'
-        };
-        return rustInfo;
-    }
+    const appInfo: AppInfo = {
+      name: '码上学',
+      description: '一款全面的编程学习应用，包含多语言语法参考、题库和互动练习',
+      bundleName: 'com.douhua.rustmaster',
+      aboutMessage: '码上学 v2.0.0\n\n一款全面的编程学习应用，包含多语言语法参考、题库和互动练习。支持 Rust、Python、Go、ArkTS 等多种编程语言的学习。\n\n本应用不提供任何职业资格认证或考试服务。'
+    };
+    return appInfo;
   }
 
   private getPrimaryHexColor(): string {
@@ -184,7 +156,7 @@ export struct SettingsPage {
       const appInfo = this.getAppInfo();
       const bundleName = appInfo.bundleName;
       const appGalleryUrl = `https://appgallery.huawei.com/app/detail?id=${bundleName}&channelId=SHARE&source=appshare`;
-      const shareText = `${appInfo.name} - 专注于 ${LanguageDataManager.getLanguageDisplayName(this.language)} 编程语言的教学演示与知识巩固，帮助学习者从入门到精通。\n\n下载链接：${appGalleryUrl}`;
+      const shareText = `${appInfo.name} - 一款全面的编程学习应用，包含多语言语法参考、题库和互动练习。支持 Rust、Python、Go、ArkTS 等多种编程语言的学习。\n\n下载链接：${appGalleryUrl}`;
 
       const shareData: systemShare.SharedData = new systemShare.SharedData({
         utd: uniformTypeDescriptor.UniformDataType.TEXT,
@@ -226,7 +198,7 @@ export struct SettingsPage {
   SectionTitle(title: string) {
     Text(title)
       .fontSize(FontSizes.BODY)
-      .fontWeight(FontWeights.BOLD)
+      .fontWeight(FontWeights.MEDIUM)
       .fontColor($r(Colors.TEXT_PRIMARY))
       .width('100%')
       .margin({ bottom: Spacing.ELEMENT_SPACING_MD })
@@ -374,12 +346,6 @@ export struct SettingsPage {
         .padding(Spacing.CARD_PADDING_LARGE)
         .backgroundColor($r(Colors.BG_CARD))
         .borderRadius(Sizes.RADIUS_XL)
-        .shadow({
-          radius: 20,
-          color: $r(Colors.BG_SECONDARY),
-          offsetX: 0,
-          offsetY: 4
-        })
     }
     .width('100%')
     .height('100%')
@@ -457,7 +423,7 @@ export struct SettingsPage {
           Column() {
             // 顶部部分：我的收藏（无标题）
             Column() {
-              this.settingItem($r('app.media.icon_favorite'), '我的收藏', () => {
+              this.settingItem($r('app.media.icon_star'), '我的收藏', () => {
                 router.pushUrl({ url: 'pages/settings/FavoritesPage' })
                   .catch((err: Error) => {
                     console.error(`Failed to navigate to FavoritesPage: ${err.message}`);
@@ -475,11 +441,6 @@ export struct SettingsPage {
             Column() {
               this.settingItemWithValue($r('app.media.icon_theme'), '深色模式', () => this.getThemeText(), () => {
                 this.showThemeSettings();
-              })
-              this.settingItem($r('app.media.icon_search'), '重置语言选择', async () => {
-                PreferencesManager.init(this.context);
-                await LanguageManager.resetHasShownLanguageDialog(this.context);
-                ToastUtil.showToast(this.context, '已重置，重启应用后生效', 2000);
               })
               this.settingItem($r('app.media.icon_star'), '评分', () => {
                 this.openAppInGallery(this.getAppInfo().bundleName);

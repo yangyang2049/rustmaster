@@ -5,6 +5,7 @@ import { FontSizes, FontWeights, Colors } from '../utils/DesignSystem';
 @Component
 export struct LanguageSwitcher {
   @State currentIndex: number = 0;
+  @Prop @Watch('onCurrentLanguageChanged') currentLanguage?: Language; // 接收外部传入的当前语言，用于同步
   onLanguageChanged: (language: Language) => void = () => {};
 
   private languages: SelectOption[] = [
@@ -15,8 +16,27 @@ export struct LanguageSwitcher {
   ];
 
   async aboutToAppear() {
-    const saved = await LanguageManager.getCurrentLanguage();
-    this.currentIndex = this.languageToIndex(saved);
+    await this.updateCurrentIndex();
+  }
+
+  async onPageShow() {
+    // 当页面显示时，重新同步语言选择
+    await this.updateCurrentIndex();
+  }
+
+  private onCurrentLanguageChanged(): void {
+    // 当 currentLanguage prop 变化时，同步更新 currentIndex
+    if (this.currentLanguage !== undefined) {
+      this.currentIndex = this.languageToIndex(this.currentLanguage);
+    }
+  }
+
+  private async updateCurrentIndex(): Promise<void> {
+    // 优先使用传入的 currentLanguage，否则从 LanguageManager 获取
+    const language = this.currentLanguage !== undefined 
+      ? this.currentLanguage 
+      : await LanguageManager.getCurrentLanguage();
+    this.currentIndex = this.languageToIndex(language);
   }
 
   private languageToIndex(language: Language): number {

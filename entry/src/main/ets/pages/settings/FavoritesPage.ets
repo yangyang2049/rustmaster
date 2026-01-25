@@ -100,9 +100,10 @@ struct FavoritesPage {
           .justifyContent(FlexAlign.Center)
         } else if (this.favorites.length === 0) {
           Column() {
-            Image($r('app.media.icon_favorite'))
+            Image($r('app.media.icon_star'))
               .width(64)
               .height(64)
+              .fillColor($r(Colors.TEXT_TERTIARY))
               .opacity(0.3)
               .margin({ bottom: Spacing.CARD_MARGIN_BOTTOM })
 
@@ -123,9 +124,10 @@ struct FavoritesPage {
             ForEach(this.favorites, (item: FavoriteItem, index: number) => {
               ListItem() {
                 Row() {
-                  Image($r('app.media.icon_favorite_selected'))
+                  Image($r('app.media.icon_star_filled'))
                     .width(20)
                     .height(20)
+                    .fillColor($r(Colors.RUST_PRIMARY))
                     .margin({ right: Spacing.ELEMENT_SPACING_MD })
 
                   Text(item.name)

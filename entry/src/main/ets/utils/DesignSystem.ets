@@ -257,6 +257,7 @@ export class Colors {
   static readonly ARKTS_SECONDARY = 'app.color.arkts_secondary';
   static readonly ARKTS_BG_LIGHT = 'app.color.arkts_bg_light';
   static readonly ARKTS_TEXT = 'app.color.arkts_text';
+  static readonly ARKTS_TEXT_PRIMARY = 'app.color.arkts_primary';
 
   // 功能颜色
   static readonly SUCCESS = 'app.color.success';

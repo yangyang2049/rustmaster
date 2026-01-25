@@ -22,12 +22,13 @@ struct Index {
   @State isLoadingLanguage: boolean = false; // 语言切换时的loading状态
   @State pageKey: number = 0; // 用于强制重新构建所有页面
   @State showLanguageDialog: boolean = false; // 是否显示首次启动语言选择对话框
+  @State dialogSelectedLanguage: Language = Language.RUST; // 对话框中当前选中的语言
   private context = getContext(this) as common.UIAbilityContext;
 
   async aboutToAppear() {
     // 加载当前选择的语言
     this.currentLanguage = await LanguageManager.getCurrentLanguage(this.context);
-    console.info(`[Index] aboutToAppear, currentLanguage: ${this.currentLanguage}`);
+    console.info(`[Index] aboutToAppear, loaded currentLanguage: ${this.currentLanguage}`);
 
     // 检查是否是首次启动（是否显示过语言选择对话框）
     await this.checkFirstLaunch();
@@ -41,7 +42,17 @@ struct Index {
       const hasShown = await prefs.get('has_shown_language_dialog', false) as boolean;
       
       if (!hasShown) {
-        // 如果没有显示过，则显示对话框
+        // 重新从 LanguageManager 获取当前语言，确保获取最新值
+        const savedLanguage = await LanguageManager.getCurrentLanguage(this.context);
+        console.info(`[Index] First launch, savedLanguage from LanguageManager: ${savedLanguage}`);
+        
+        // 设置对话框选中语言为当前保存的语言
+        this.dialogSelectedLanguage = savedLanguage;
+        this.currentLanguage = savedLanguage;
+        
+        console.info(`[Index] Dialog will show with dialogSelectedLanguage: ${this.dialogSelectedLanguage}, currentLanguage: ${this.currentLanguage}`);
+        
+        // 显示对话框
         this.showLanguageDialog = true;
       }
     } catch (err) {
@@ -51,6 +62,9 @@ struct Index {
 
   private async onLanguageSelected(language: Language): Promise<void> {
     try {
+      // 更新对话框中的选中状态（立即反馈）
+      this.dialogSelectedLanguage = language;
+      
       // 保存选择的语言
       await LanguageManager.setCurrentLanguage(language, this.context);
       this.currentLanguage = language;
@@ -129,6 +143,7 @@ struct Index {
   @Builder
   LanguageSwitcherBuilder() {
     LanguageSwitcher({
+      currentLanguage: this.currentLanguage, // 传递当前语言，确保同步
       onLanguageChanged: async (language: Language) => {
         console.info(`[Index] onLanguageChanged callback, new language: ${language}`);
         
@@ -152,6 +167,7 @@ struct Index {
         }, 500);
       }
     })
+      .key(`lang_switcher_${this.currentLanguage}`) // 添加 key，确保语言变化时重新渲染
   }
 
   @Builder
@@ -201,6 +217,11 @@ struct Index {
     }
   }
 
+  // 使用显式数值比较，避免枚举比较问题
+  private isLanguageSelected(lang: Language): boolean {
+    return Number(this.dialogSelectedLanguage) === Number(lang);
+  }
+
   @Builder
   LanguageSelectionDialog() {
     if (this.showLanguageDialog) {
@@ -216,7 +237,7 @@ struct Index {
         
         // 对话框内容
         Column() {
-          Text('欢迎使用')
+          Text('欢迎👏')
             .fontSize(FontSizes.TITLE)
             .fontWeight(FontWeights.BOLD)
             .fontColor($r(Colors.TEXT_PRIMARY))
@@ -238,14 +259,14 @@ struct Index {
                     Text(LanguageManager.getLanguageDisplayName(lang))
                       .fontSize(FontSizes.LARGE)
                       .fontWeight(FontWeights.BOLD)
-                      .fontColor(this.currentLanguage === lang ? $r(Colors.TEXT_WHITE) : $r(Colors.TEXT_PRIMARY))
+                      .fontColor(this.isLanguageSelected(lang) ? $r(Colors.TEXT_WHITE) : $r(Colors.TEXT_PRIMARY))
                   }
                   .width('100%')
                   .padding({ top: 20, bottom: 20 })
                 }
                 .width('100%')
                 .type(ButtonType.Normal)
-                .backgroundColor(this.currentLanguage === lang ? $r(Colors.RUST_PRIMARY) : $r(Colors.BG_SECONDARY))
+                .backgroundColor(this.isLanguageSelected(lang) ? $r(Colors.RUST_PRIMARY) : $r(Colors.BG_SECONDARY))
                 .borderRadius(Sizes.RADIUS_LG)
                 .onClick(() => {
                   this.onLanguageSelected(lang);
@@ -260,7 +281,6 @@ struct Index {
         .padding(Spacing.CARD_PADDING_LARGE)
         .backgroundColor($r(Colors.BG_CARD))
         .borderRadius(Sizes.RADIUS_XL)
-        .shadow(Shadows.FLOAT)
       }
       .width('100%')
       .height('100%')

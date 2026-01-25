@@ -1,4 +1,5 @@
 import { CourseChapter, CourseUnit, InterviewItem, Language, QuizModule, ReferenceCategory } from '../data/RustTypes';
+import { Colors } from './DesignSystem';
 // Rust data
 import { COURSE_CHAPTERS as RustCourseChapters, COURSE_UNITS as RustCourseUnits, QUIZ_MODULES as RustQuizModules, REFERENCE_DATA as RustReferenceData, INTERVIEW_QUESTIONS as RustInterviewQuestions } from '../data/RustConstants';
 // Python data
@@ -192,15 +193,15 @@ export class LanguageDataManager {
    */
   static getLanguagePrimaryColor(language: Language): string {
     if (language === Language.PYTHON) {
-      return 'app.color.python_primary';
+      return Colors.PYTHON_PRIMARY;
     }
     if (language === Language.GO) {
-      return 'app.color.go_primary';
+      return Colors.GO_PRIMARY;
     }
     if (language === Language.ARKTS) {
-      return 'app.color.arkts_primary';
+      return Colors.ARKTS_PRIMARY;
     }
-    return 'app.color.rust_primary';
+    return Colors.RUST_PRIMARY;
   }
 
   /**
@@ -208,14 +209,14 @@ export class LanguageDataManager {
    */
   static getLanguageBgLightColor(language: Language): string {
     if (language === Language.PYTHON) {
-      return 'app.color.python_bg_light';
+      return Colors.PYTHON_BG_LIGHT;
     }
     if (language === Language.GO) {
-      return 'app.color.go_bg_light';
+      return Colors.GO_BG_LIGHT;
     }
     if (language === Language.ARKTS) {
-      return 'app.color.arkts_bg_light';
+      return Colors.ARKTS_BG_LIGHT;
     }
-    return 'app.color.rust_bg_light';
+    return Colors.RUST_BG_LIGHT;
   }
 }

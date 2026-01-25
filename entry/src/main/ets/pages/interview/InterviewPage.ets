@@ -367,15 +367,6 @@ export struct InterviewPage {
     .margin({ bottom: Spacing.ELEMENT_SPACING_MD })
   }
 
-  private extractStars(question: string): number {
-    const match = question.match(/^(⭐+)/);
-    return match ? match[1].length : 0;
-  }
-
-  private removeStarsFromQuestion(question: string): string {
-    return question.replace(/^⭐+\s*/, '').trim();
-  }
-
   @Builder
   DifficultyBadge(difficulty: string) {
     Text(difficulty)
@@ -393,16 +384,6 @@ export struct InterviewPage {
   }
 
   @Builder
-  StarBadge(starCount: number) {
-    if (starCount > 0) {
-      Text('⭐'.repeat(starCount))
-        .fontSize(10)
-        .fontColor($r(Colors.TEXT_SECONDARY))
-        .margin({ left: 8 })
-    }
-  }
-
-  @Builder
   InterviewItemCard(item: InterviewItem) {
     Column() {
       Row() {
@@ -410,7 +391,6 @@ export struct InterviewPage {
           Row() {
             Row() {
               this.DifficultyBadge(item.difficulty)
-              this.StarBadge(this.extractStars(item.question))
             }
             Blank()
             if (item.id.startsWith('custom_')) {
@@ -436,7 +416,7 @@ export struct InterviewPage {
           .width('100%')
           .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
 
-          Text(this.removeStarsFromQuestion(item.question))
+          Text(item.question)
             .fontSize(FontSizes.BODY)
             .fontWeight(FontWeights.MEDIUM)
             .fontColor(this.expandedInterview === item.id ? $r(Colors.RUST_PRIMARY) : $r(Colors.TEXT_PRIMARY))
@@ -505,9 +485,6 @@ export struct InterviewPage {
         .fontSize(FontSizes.TINY)
         .fontColor($r(Colors.TEXT_TERTIARY))
       Blank()
-      Text('⭐ = 面试频率')
-        .fontSize(FontSizes.TINY)
-        .fontColor($r(Colors.TEXT_TERTIARY))
     }
     .width('100%')
     .margin({ bottom: Spacing.ELEMENT_SPACING_SM })
@@ -672,10 +649,9 @@ export struct InterviewPage {
           Column() {
             Row() {
               this.DifficultyBadge(this.getCurrentMockQuestion()!.difficulty)
-              this.StarBadge(this.extractStars(this.getCurrentMockQuestion()!.question))
             }
 
-            Text(this.removeStarsFromQuestion(this.getCurrentMockQuestion()!.question))
+            Text(this.getCurrentMockQuestion()!.question)
               .fontSize(FontSizes.LARGE)
               .fontWeight(FontWeights.MEDIUM)
               .fontColor($r(Colors.TEXT_PRIMARY))
@@ -750,10 +726,9 @@ export struct InterviewPage {
           Column() {
             Row() {
               this.DifficultyBadge(this.getCurrentMockQuestion()!.difficulty)
-              this.StarBadge(this.extractStars(this.getCurrentMockQuestion()!.question))
             }
 
-            Text(this.removeStarsFromQuestion(this.getCurrentMockQuestion()!.question))
+            Text(this.getCurrentMockQuestion()!.question)
               .fontSize(FontSizes.LARGE)
               .fontWeight(FontWeights.MEDIUM)
               .fontColor($r(Colors.TEXT_PRIMARY))
@@ -883,7 +858,7 @@ export struct InterviewPage {
               .margin({ bottom: 12 })
 
             if (this.getCurrentMockQuestion()) {
-              Text(this.removeStarsFromQuestion(this.getCurrentMockQuestion()!.question))
+              Text(this.getCurrentMockQuestion()!.question)
                 .fontSize(FontSizes.BODY)
                 .fontWeight(FontWeights.MEDIUM)
                 .fontColor($r(Colors.TEXT_PRIMARY))
