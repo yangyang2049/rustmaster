@@ -18,6 +18,7 @@ import common from '@ohos.app.ability.common';
 interface RouterParams {
   chapterId: string;
   language?: number;
+  fromFavorites?: boolean;
 }
 
 @Entry
@@ -27,6 +28,7 @@ struct ChapterDetailPage {
   @State chapter: CourseChapter | null = null;
   @State isLoading: boolean = true;
   @State isFavorite: boolean = false;
+  @State fromFavorites: boolean = false;
   private prefs: preferences.Preferences | null = null;
   private context = getContext(this) as common.UIAbilityContext;
   private scroller: Scroller = new Scroller();
@@ -110,6 +112,11 @@ struct ChapterDetailPage {
       
       if (params && typeof params === 'object') {
         const chapterIdValue: string | undefined = params.chapterId;
+        
+        // 读取 fromFavorites 参数
+        if (params.fromFavorites !== undefined) {
+          this.fromFavorites = Boolean(params.fromFavorites);
+        }
 
         if (chapterIdValue && (typeof chapterIdValue === 'string' || typeof chapterIdValue === 'number')) {
           const chapterId: string = String(chapterIdValue).trim();
@@ -265,7 +272,8 @@ struct ChapterDetailPage {
   @Builder
   MenuBuilder() {
     Row({ space: 20 }) {
-      Image(this.isFavorite ? $r('app.media.icon_favorite_selected') : $r('app.media.icon_favorite'))
+      // 使用星形图标：收藏时显示橙色边框，未收藏时显示默认颜色边框（都无填充）
+      Image(this.isFavorite ? $r('app.media.icon_star_favorited') : $r('app.media.icon_star_favorite'))
         .width(24)
         .height(24)
         .onClick(() => {
@@ -634,8 +642,10 @@ struct ChapterDetailPage {
                 .margin({ top: Spacing.CARD_MARGIN_BOTTOM, bottom: 24 })
               }
 
-              // 章节导航按钮
-              this.ChapterNavigation()
+              // 章节导航按钮（从收藏页进入时不显示）
+              if (!this.fromFavorites) {
+                this.ChapterNavigation()
+              }
             }
             .width('100%')
             .constraintSize({ maxWidth: 800 })

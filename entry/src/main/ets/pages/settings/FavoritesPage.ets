@@ -50,7 +50,7 @@ struct FavoritesPage {
       }
       router.pushUrl({
         url: 'pages/learn/ChapterDetailPage',
-        params: { chapterId: chapterId, language: language }
+        params: { chapterId: chapterId, language: language, fromFavorites: true }
       }, router.RouterMode.Standard).catch((err: Error) => {
         console.error(`Failed to push url: ${err.message}`);
         ToastUtil.showToast(this.context, '导航失败', 2000);
@@ -124,12 +124,6 @@ struct FavoritesPage {
             ForEach(this.favorites, (item: FavoriteItem, index: number) => {
               ListItem() {
                 Row() {
-                  Image($r('app.media.icon_star_filled'))
-                    .width(20)
-                    .height(20)
-                    .fillColor($r(Colors.RUST_PRIMARY))
-                    .margin({ right: Spacing.ELEMENT_SPACING_MD })
-
                   Text(item.name)
                     .fontSize(FontSizes.BODY)
                     .fontColor($r(Colors.TEXT_PRIMARY))

@@ -306,11 +306,11 @@ export struct SettingsPage {
   @Builder
   ThemeDialog() {
     Stack({ alignContent: Alignment.Center }) {
-      // 遮罩层
+      // 遮罩层 - 使用与系统对话框类似的遮罩样式（与 promptAction.showDialog 一致）
       Column()
         .width('100%')
         .height('100%')
-        .backgroundColor('rgba(0, 0, 0, 0.5)')
+        .backgroundColor('rgba(0, 0, 0, 0.6)')
         .onClick(() => {
           this.showThemeDialog = false;
         })
@@ -342,13 +342,17 @@ export struct SettingsPage {
           })
       }
       .width('80%')
-        .constraintSize({ maxWidth: 320 })
-        .padding(Spacing.CARD_PADDING_LARGE)
-        .backgroundColor($r(Colors.BG_CARD))
-        .borderRadius(Sizes.RADIUS_XL)
+      .constraintSize({ maxWidth: 320 })
+      .padding(Spacing.CARD_PADDING_LARGE)
+      .backgroundColor($r(Colors.BG_CARD))
+      .borderRadius(Sizes.RADIUS_XL)
+      .onClick(() => {
+        // 拦截点击事件，避免点击对话框内容时关闭遮罩层
+      })
     }
     .width('100%')
     .height('100%')
+    .zIndex(1000) // 确保在最上层
   }
 
   @Builder
