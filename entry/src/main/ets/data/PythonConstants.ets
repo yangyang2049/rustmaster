@@ -9092,700 +9092,700 @@ export const REFERENCE_DATA: ReferenceCategory[] = [
 export const INTERVIEW_QUESTIONS: InterviewItem[] = [
   {
     id: 'i1',
-    question: '⭐⭐⭐ Python 的垃圾回收机制是如何工作的？',
+    question: 'Python 的垃圾回收机制是如何工作的？',
     answer: '【核心要点】\n• Python 使用引用计数和循环垃圾收集器\n• 引用计数自动管理内存，对象引用计数为0时立即释放\n• 循环垃圾收集器处理循环引用\n• 分代垃圾收集，提高效率\n\n【常见错误回答】\n❌ "Python 只有引用计数"\n❌ "垃圾回收会立即释放内存"\n\n【代码推理】\nimport gc\ngc.collect()  # 手动触发垃圾回收\n\n【追问】引用计数和循环垃圾收集的区别？何时需要手动 gc.collect()？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['内存管理', '核心概念', '必问']
   },
   {
     id: 'i2',
-    question: '⭐⭐⭐ GIL（全局解释器锁）是什么？有什么影响？',
+    question: 'GIL（全局解释器锁）是什么？有什么影响？',
     answer: '【核心要点】\n• GIL 确保同一时刻只有一个线程执行 Python 字节码\n• 保护 Python 对象，防止竞争条件\n• 多线程在 CPU 密集型任务中性能受限\n• 多进程可以绕过 GIL 限制\n\n【常见错误回答】\n❌ "GIL 让 Python 无法多线程"\n❌ "移除 GIL 会让 Python 更快"\n\n【追问】为什么需要 GIL？如何绕过 GIL 的限制？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['并发', '性能', '核心概念']
   },
   {
     id: 'i3',
-    question: '⭐⭐⭐ 列表和元组的区别是什么？',
+    question: '列表和元组的区别是什么？',
     answer: '【核心要点】\n• 列表是可变的（mutable），元组是不可变的（immutable）\n• 列表使用方括号 []，元组使用圆括号 ()\n• 元组可以作为字典的键，列表不能\n• 元组性能略好，但差异通常可忽略\n\n【常见错误回答】\n❌ "元组比列表快很多"\n❌ "列表和元组可以互换使用"\n\n【代码推理】\nmy_list = [1, 2, 3]\nmy_list[0] = 10  # 可以修改\nmy_tuple = (1, 2, 3)\n# my_tuple[0] = 10  # 错误！元组不可变',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['数据结构', '基础', '必问']
   },
   {
     id: 'i4',
-    question: '⭐⭐⭐ Python 中可变对象和不可变对象的区别？',
+    question: 'Python 中可变对象和不可变对象的区别？',
     answer: '【核心要点】\n• 不可变对象：int, float, str, tuple, frozenset\n• 可变对象：list, dict, set\n• 不可变对象创建后不能修改\n• 可变对象可以修改，需要注意引用问题\n\n【常见错误回答】\n❌ "所有基本类型都是不可变的"\n❌ "字符串可以修改"\n\n【追问】为什么字符串是不可变的？这有什么好处？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['对象模型', '基础', '必问']
   },
   {
     id: 'i5',
-    question: '⭐⭐⭐ Python 的装饰器是如何工作的？',
+    question: 'Python 的装饰器是如何工作的？',
     answer: '【核心要点】\n• 装饰器是修改函数或类的函数\n• 使用 @ 语法糖简化装饰器应用\n• 装饰器本质上是高阶函数\n• 可以带参数，也可以嵌套使用\n\n【常见错误回答】\n❌ "装饰器只能用于函数"\n❌ "装饰器会改变原函数"\n\n【代码推理】\ndef decorator(func):\n    def wrapper(*args, **kwargs):\n        return func(*args, **kwargs)\n    return wrapper\n\n【追问】如何写一个带参数的装饰器？装饰器的执行顺序？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['高级特性', '函数式编程', '核心概念']
   },
   {
     id: 'i6',
-    question: '⭐⭐ 生成器和迭代器的区别？',
+    question: '生成器和迭代器的区别？',
     answer: '【核心要点】\n• 生成器是特殊的迭代器，使用 yield 关键字\n• 生成器是惰性求值，节省内存\n• 迭代器实现了 __iter__ 和 __next__ 方法\n• 生成器表达式比列表推导式更节省内存\n\n【常见错误回答】\n❌ "生成器和迭代器是一样的"\n❌ "生成器总是比列表快"\n\n【追问】什么时候用生成器？生成器表达式和列表推导式的区别？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['迭代器', '内存优化', '高级']
   },
   {
     id: 'i7',
-    question: '⭐⭐ Python 的类型提示有什么实际价值？',
+    question: 'Python 的类型提示有什么实际价值？',
     answer: '【核心要点】\n• 提高可读性与可维护性\n• 支持静态检查（mypy/pyright）\n• 改善 IDE 自动补全与重构\n• 对运行时几乎无影响\n\n【常见错误回答】\n❌ \"类型提示会影响运行时性能\"\n❌ \"加了类型提示就不会有错误\"\n\n【追问】什么时候必须写类型提示？什么时候可以省略？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['类型提示', '工程实践', '基础']
   },
   {
     id: 'i8',
-    question: '⭐⭐ Python 性能优化的常见手段？',
+    question: 'Python 性能优化的常见手段？',
     answer: '【核心要点】\n• 使用内置库和数据结构（list/dict/set）\n• 选择合适算法与数据结构\n• 避免频繁创建临时对象\n• I/O 场景使用缓存与批量处理\n\n【常见错误回答】\n❌ \"只要用多线程就能变快\"\n❌ \"全部用 C 扩展就行\"\n\n【追问】GIL 对 CPU 密集型任务有什么影响？如何绕开？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['性能', '优化', '实践']
   },
   {
     id: 'i11',
-    question: '⭐⭐ async/await 和线程有什么区别？',
+    question: 'async/await 和线程有什么区别？',
     answer: '【核心要点】\n• async：协作式多任务，单线程可运行多个协程\n• 线程：抢占式，有上下文切换开销\n• async 适合 I/O 密集型任务\n• 线程适合 CPU 密集型任务\n\n【常见错误回答】\n❌ "async 比线程快"\n❌ "async 是多线程的语法糖"\n\n【代码推理】\nasync def fetch_data():\n    await asyncio.sleep(1)\n    return "data"\n\n【追问】协程是如何被调度的？什么是事件循环？',
     difficulty: '困难' as InterviewDifficulty,
     tags: ['异步', '并发', '高级']
   },
   {
     id: 'i9',
-    question: '⭐⭐⭐ 深拷贝和浅拷贝的区别？',
+    question: '深拷贝和浅拷贝的区别？',
     answer: '【核心要点】\n• 浅拷贝（copy）：只复制对象本身，不复制嵌套对象\n• 深拷贝（deepcopy）：递归复制所有嵌套对象\n• 浅拷贝中嵌套对象是共享的\n• 深拷贝创建完全独立的副本\n\n【常见错误回答】\n❌ "浅拷贝和深拷贝没有区别"\n❌ "列表的切片就是深拷贝"\n\n【代码推理】\nimport copy\nlist1 = [[1, 2], [3, 4]]\nlist2 = copy.copy(list1)  # 浅拷贝\nlist3 = copy.deepcopy(list1)  # 深拷贝\nlist2[0][0] = 99  # 会影响 list1\nlist3[0][0] = 88  # 不影响 list1\n\n【追问】什么时候用浅拷贝？什么时候用深拷贝？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['对象复制', '内存管理', '基础']
   },
   {
     id: 'i10',
-    question: '⭐⭐⭐ Python 的作用域和命名空间？',
+    question: 'Python 的作用域和命名空间？',
     answer: '【核心要点】\n• LEGB 规则：Local → Enclosing → Global → Built-in\n• 局部作用域：函数内部\n• 全局作用域：模块级别\n• 使用 global 和 nonlocal 修改外部变量\n\n【常见错误回答】\n❌ "函数内可以直接修改全局变量"\n❌ "所有变量都是全局的"\n\n【代码推理】\nx = 10  # 全局变量\ndef func():\n    global x\n    x = 20  # 修改全局变量\n\n【追问】nonlocal 和 global 的区别？闭包是如何工作的？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['作用域', '命名空间', '基础']
   },
   {
     id: 'i12',
-    question: '⭐⭐⭐ 字典和集合的区别？',
+    question: '字典和集合的区别？',
     answer: '【核心要点】\n• 字典（dict）：键值对映射，键必须不可变\n• 集合（set）：无序、不重复的元素集合\n• 字典用于存储关联数据\n• 集合用于去重和集合运算\n\n【常见错误回答】\n❌ "字典和集合可以互换使用"\n❌ "集合可以存储可变对象"\n\n【代码推理】\nmy_dict = {"name": "Python", "version": 3.11}\nmy_set = {1, 2, 3, 3}  # {1, 2, 3}\n\n【追问】为什么字典的键必须是不可变的？frozenset 的作用？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['数据结构', '基础', '必问']
   },
   {
     id: 'i13',
-    question: '⭐⭐⭐ 列表推导式和生成器表达式的区别？',
+    question: '列表推导式和生成器表达式的区别？',
     answer: '【核心要点】\n• 列表推导式：立即计算，返回列表，占用内存\n• 生成器表达式：惰性计算，返回生成器，节省内存\n• 列表推导式用 []，生成器表达式用 ()\n• 生成器表达式适合大数据集\n\n【常见错误回答】\n❌ "生成器表达式总是更快"\n❌ "列表推导式和生成器表达式没有区别"\n\n【代码推理】\n# 列表推导式\nsquares = [x**2 for x in range(10)]  # 立即计算\n# 生成器表达式\nsquares_gen = (x**2 for x in range(10))  # 惰性计算\n\n【追问】什么时候用列表推导式？什么时候用生成器表达式？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['推导式', '内存优化', '高级']
   },
   {
     id: 'i14',
-    question: '⭐⭐ *args 和 **kwargs 的作用？',
+    question: '*args 和 **kwargs 的作用？',
     answer: '【核心要点】\n• *args：接收任意数量的位置参数，打包成元组\n• **kwargs：接收任意数量的关键字参数，打包成字典\n• 可以同时使用，但顺序必须是 *args 在前\n• 用于编写灵活的函数接口\n\n【常见错误回答】\n❌ "*args 和 **kwargs 是固定名称"\n❌ "只能使用 args 和 kwargs 这两个名字"\n\n【代码推理】\ndef func(*args, **kwargs):\n    print(f"位置参数: {args}")\n    print(f"关键字参数: {kwargs}")\nfunc(1, 2, 3, a=4, b=5)\n\n【追问】如何解包 *args 和 **kwargs？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['函数参数', '高级特性', '基础']
   },
   {
     id: 'i15',
-    question: '⭐⭐ Python 的上下文管理器（with 语句）？',
+    question: 'Python 的上下文管理器（with 语句）？',
     answer: '【核心要点】\n• with 语句自动管理资源，确保资源正确释放\n• 实现 __enter__ 和 __exit__ 方法\n• 即使发生异常也会调用 __exit__\n• 使用 contextlib 可以简化实现\n\n【常见错误回答】\n❌ "with 语句只能用于文件操作"\n❌ "with 语句不会处理异常"\n\n【代码推理】\nwith open("file.txt", "r") as f:\n    content = f.read()\n# 文件自动关闭\n\n【追问】如何自定义上下文管理器？contextlib.contextmanager 的作用？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['资源管理', '异常处理', '高级']
   },
   {
     id: 'i16',
-    question: '⭐⭐ Python 的类方法和静态方法？',
+    question: 'Python 的类方法和静态方法？',
     answer: '【核心要点】\n• @classmethod：第一个参数是类本身（cls）\n• @staticmethod：不需要 self 或 cls 参数\n• 类方法可以访问类属性，静态方法不能\n• 类方法常用于替代构造函数\n\n【常见错误回答】\n❌ "类方法和静态方法没有区别"\n❌ "静态方法可以访问实例属性"\n\n【代码推理】\nclass MyClass:\n    @classmethod\n    def class_method(cls):\n        return cls\n    @staticmethod\n    def static_method():\n        return "static"\n\n【追问】什么时候用类方法？什么时候用静态方法？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['面向对象', '方法类型', '基础']
   },
   {
     id: 'i17',
-    question: '⭐⭐ Python 的魔术方法（特殊方法）？',
+    question: 'Python 的魔术方法（特殊方法）？',
     answer: '【核心要点】\n• __init__：构造函数，初始化对象\n• __str__：用户友好的字符串表示\n• __repr__：开发者友好的字符串表示\n• __len__、__getitem__ 等：自定义容器行为\n\n【常见错误回答】\n❌ "__str__ 和 __repr__ 没有区别"\n❌ "魔术方法可以随意命名"\n\n【代码推理】\nclass Point:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n    def __str__(self):\n        return f"Point({self.x}, {self.y})"\n\n【追问】__str__ 和 __repr__ 的区别？什么时候需要实现 __eq__？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['面向对象', '特殊方法', '高级']
   },
   {
     id: 'i18',
-    question: '⭐⭐ Python 的异常处理机制？',
+    question: 'Python 的异常处理机制？',
     answer: '【核心要点】\n• try/except：捕获和处理异常\n• else：没有异常时执行\n• finally：无论是否异常都会执行\n• raise：主动抛出异常\n\n【常见错误回答】\n❌ "except 可以捕获所有错误"\n❌ "finally 中的代码不会执行"\n\n【代码推理】\ntry:\n    result = 10 / 0\nexcept ZeroDivisionError:\n    print("除零错误")\nelse:\n    print("没有异常")\nfinally:\n    print("总是执行")\n\n【追问】如何自定义异常？异常链是什么？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['异常处理', '基础', '必问']
   },
   {
     id: 'i19',
-    question: '⭐⭐ Python 的模块和包？',
+    question: 'Python 的模块和包？',
     answer: '【核心要点】\n• 模块：单个 .py 文件\n• 包：包含 __init__.py 的目录\n• import 导入模块，from...import 导入特定内容\n• __name__ == "__main__" 用于模块测试\n\n【常见错误回答】\n❌ "包必须有 __init__.py"\n❌ "import 会执行模块中的所有代码"\n\n【代码推理】\n# 模块 mymodule.py\n# 包 mypackage/\n#   __init__.py\n#   module1.py\nimport mypackage.module1\nfrom mypackage import module1\n\n【追问】相对导入和绝对导入的区别？__all__ 的作用？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['模块系统', '包管理', '基础']
   },
   {
     id: 'i20',
-    question: '⭐⭐ Python 的闭包是什么？',
+    question: 'Python 的闭包是什么？',
     answer: '【核心要点】\n• 闭包：内部函数可以访问外部函数的变量\n• 即使外部函数执行完毕，闭包仍可访问外部变量\n• 闭包常用于装饰器和函数工厂\n• 注意闭包中的变量绑定问题\n\n【常见错误回答】\n❌ "闭包只能访问全局变量"\n❌ "闭包中的变量总是最新的值"\n\n【代码推理】\ndef outer(x):\n    def inner(y):\n        return x + y\n    return inner\nfunc = outer(10)\nprint(func(5))  # 15\n\n【追问】闭包中的变量绑定问题？如何避免？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['闭包', '函数式编程', '高级']
   },
   {
     id: 'i21',
-    question: '⭐⭐⭐ Python 的 lambda 函数？',
+    question: 'Python 的 lambda 函数？',
     answer: '【核心要点】\n• lambda 是匿名函数，用于简单的一行函数\n• 语法：lambda 参数: 表达式\n• 只能包含表达式，不能包含语句\n• 常用于 map、filter、sorted 等函数\n\n【常见错误回答】\n❌ "lambda 可以替代所有函数"\n❌ "lambda 比普通函数快"\n\n【代码推理】\nadd = lambda x, y: x + y\nnumbers = [1, 2, 3, 4]\nsquared = list(map(lambda x: x**2, numbers))\n\n【追问】什么时候用 lambda？什么时候用普通函数？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['lambda', '函数式编程', '基础']
   },
   {
     id: 'i22',
-    question: '⭐⭐ Python 的切片操作？',
+    question: 'Python 的切片操作？',
     answer: '【核心要点】\n• 语法：sequence[start:stop:step]\n• start：起始索引（包含）\n• stop：结束索引（不包含）\n• step：步长，可以为负数\n• 切片返回新对象，不修改原对象\n\n【常见错误回答】\n❌ "切片会修改原对象"\n❌ "负数索引不能用于切片"\n\n【代码推理】\nmy_list = [0, 1, 2, 3, 4, 5]\nprint(my_list[1:4])  # [1, 2, 3]\nprint(my_list[::-1])  # 反转\nprint(my_list[::2])  # 步长为2\n\n【追问】切片和索引的区别？如何实现自定义切片的类？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['切片', '序列操作', '基础']
   },
   {
     id: 'i23',
-    question: '⭐⭐ Python 的字符串格式化？',
+    question: 'Python 的字符串格式化？',
     answer: '【核心要点】\n• % 格式化：旧式格式化方法\n• str.format()：Python 2.7+ 的方法\n• f-string：Python 3.6+ 的现代方法，推荐使用\n• f-string 性能最好，可读性最强\n\n【常见错误回答】\n❌ "所有格式化方法性能相同"\n❌ "f-string 不安全"\n\n【代码推理】\nname = "Python"\nversion = 3.11\n# f-string（推荐）\nf"语言: {name}, 版本: {version}"\n# format\n"语言: {}, 版本: {}".format(name, version)\n\n【追问】f-string 和 format 的区别？什么时候用 % 格式化？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['字符串', '格式化', '基础']
   },
   {
     id: 'i24',
-    question: '⭐⭐ Python 的 property 装饰器？',
+    question: 'Python 的 property 装饰器？',
     answer: '【核心要点】\n• @property：将方法转换为属性访问\n• 可以定义 getter、setter、deleter\n• 提供更优雅的接口，隐藏实现细节\n• 支持属性验证和计算属性\n\n【常见错误回答】\n❌ "property 只能用于只读属性"\n❌ "property 会改变方法的性能"\n\n【代码推理】\nclass Circle:\n    def __init__(self, radius):\n        self._radius = radius\n    @property\n    def radius(self):\n        return self._radius\n    @radius.setter\n    def radius(self, value):\n        if value < 0:\n            raise ValueError("半径不能为负")\n        self._radius = value\n\n【追问】property 和直接访问属性的区别？何时使用？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['装饰器', '面向对象', '高级']
   },
   {
     id: 'i25',
-    question: '⭐⭐ Python 的继承和多态？',
+    question: 'Python 的继承和多态？',
     answer: '【核心要点】\n• 继承：子类继承父类的属性和方法\n• 多态：同一接口可以有不同的实现\n• 方法重写：子类可以覆盖父类方法\n• super() 调用父类方法\n\n【常见错误回答】\n❌ "Python 不支持多继承"\n❌ "重写方法必须保持完全相同的签名"\n\n【代码推理】\nclass Animal:\n    def speak(self):\n        return "声音"\nclass Dog(Animal):\n    def speak(self):\n        return "汪汪"\n\n【追问】多继承的 MRO（方法解析顺序）？super() 的工作原理？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['面向对象', '继承', '基础']
   },
   {
     id: 'i26',
-    question: '⭐⭐ Python 的抽象基类（ABC）？',
+    question: 'Python 的抽象基类（ABC）？',
     answer: '【核心要点】\n• abc.ABC：抽象基类基类\n• @abc.abstractmethod：抽象方法装饰器\n• 不能直接实例化抽象类\n• 子类必须实现所有抽象方法\n\n【常见错误回答】\n❌ "抽象类可以实例化"\n❌ "抽象方法可以有实现"\n\n【代码推理】\nfrom abc import ABC, abstractmethod\nclass Shape(ABC):\n    @abstractmethod\n    def area(self):\n        pass\nclass Circle(Shape):\n    def area(self):\n        return 3.14 * self.radius**2\n\n【追问】抽象基类和普通基类的区别？何时使用？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['面向对象', '抽象类', '高级']
   },
   {
     id: 'i27',
-    question: '⭐⭐ Python 的枚举（Enum）？',
+    question: 'Python 的枚举（Enum）？',
     answer: '【核心要点】\n• enum.Enum：创建枚举类型\n• 枚举成员是常量，不可修改\n• 可以使用名称或值访问\n• 适合表示固定集合的值\n\n【常见错误回答】\n❌ "枚举成员可以修改"\n❌ "枚举和常量没有区别"\n\n【代码推理】\nfrom enum import Enum\nclass Color(Enum):\n    RED = 1\n    GREEN = 2\n    BLUE = 3\nprint(Color.RED)  # Color.RED\nprint(Color.RED.value)  # 1\n\n【追问】枚举和普通常量的区别？何时使用枚举？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['枚举', '类型系统', '基础']
   },
   {
     id: 'i28',
-    question: '⭐⭐ Python 的正则表达式？',
+    question: 'Python 的正则表达式？',
     answer: '【核心要点】\n• re 模块提供正则表达式功能\n• compile() 预编译提高性能\n• match() 从开头匹配，search() 搜索\n• findall() 查找所有匹配，sub() 替换\n\n【常见错误回答】\n❌ "match 和 search 没有区别"\n❌ "正则表达式总是最快的匹配方法"\n\n【代码推理】\nimport re\npattern = r"\\d+"\ntext = "我有3个苹果和5个橙子"\nmatches = re.findall(pattern, text)  # ["3", "5"]\n\n【追问】贪婪匹配和非贪婪匹配的区别？如何优化正则表达式性能？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['正则表达式', '字符串处理', '高级']
   },
   {
     id: 'i29',
-    question: '⭐⭐ Python 的文件操作？',
+    question: 'Python 的文件操作？',
     answer: '【核心要点】\n• open() 打开文件，with 语句自动关闭\n• 模式：r（读）、w（写）、a（追加）、b（二进制）\n• read() 读取全部，readline() 读取一行\n• write() 写入，注意编码问题\n\n【常见错误回答】\n❌ "文件操作不需要关闭"\n❌ "所有文件都是文本文件"\n\n【代码推理】\nwith open("file.txt", "r", encoding="utf-8") as f:\n    content = f.read()\nwith open("output.txt", "w") as f:\n    f.write("Hello")\n\n【追问】文本模式和二进制模式的区别？如何处理大文件？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['文件操作', 'I/O', '基础']
   },
   {
     id: 'i30',
-    question: '⭐⭐ Python 的 JSON 处理？',
+    question: 'Python 的 JSON 处理？',
     answer: '【核心要点】\n• json 模块用于 JSON 序列化和反序列化\n• json.dumps() 将对象转为 JSON 字符串\n• json.loads() 将 JSON 字符串转为对象\n• json.dump() 和 json.load() 用于文件操作\n\n【常见错误回答】\n❌ "JSON 和 Python 字典完全一样"\n❌ "所有 Python 对象都可以序列化为 JSON"\n\n【代码推理】\nimport json\ndata = {"name": "Python", "version": 3.11}\njson_str = json.dumps(data)\nparsed = json.loads(json_str)\n\n【追问】哪些类型不能直接序列化为 JSON？如何处理自定义对象？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['JSON', '数据序列化', '基础']
   },
   {
     id: 'i31',
-    question: '⭐⭐ Python 的日期时间处理？',
+    question: 'Python 的日期时间处理？',
     answer: '【核心要点】\n• datetime 模块提供日期时间功能\n• datetime.now() 获取当前时间\n• strftime() 格式化输出，strptime() 解析字符串\n• timedelta 用于时间计算\n\n【常见错误回答】\n❌ "时间戳和 datetime 对象没有区别"\n❌ "所有时区都是 UTC"\n\n【代码推理】\nfrom datetime import datetime, timedelta\nnow = datetime.now()\nfuture = now + timedelta(days=7)\nformatted = now.strftime("%Y-%m-%d %H:%M:%S")\n\n【追问】如何处理时区？time 和 datetime 的区别？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['日期时间', '标准库', '基础']
   },
   {
     id: 'i32',
-    question: '⭐⭐ Python 的集合运算？',
+    question: 'Python 的集合运算？',
     answer: '【核心要点】\n• 并集：union() 或 |\n• 交集：intersection() 或 &\n• 差集：difference() 或 -\n• 对称差集：symmetric_difference() 或 ^\n\n【常见错误回答】\n❌ "集合运算会修改原集合"\n❌ "所有集合运算都返回新集合"\n\n【代码推理】\nset1 = {1, 2, 3}\nset2 = {3, 4, 5}\nunion = set1 | set2  # {1, 2, 3, 4, 5}\nintersection = set1 & set2  # {3}\n\n【追问】集合的更新方法和运算符的区别？何时使用？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['集合', '数据结构', '基础']
   },
   {
     id: 'i33',
-    question: '⭐⭐ Python 的 collections 模块？',
+    question: 'Python 的 collections 模块？',
     answer: '【核心要点】\n• defaultdict：自动创建默认值的字典\n• Counter：计数器，统计元素出现次数\n• deque：双端队列，高效的两端操作\n• namedtuple：命名元组，增强可读性\n\n【常见错误回答】\n❌ "collections 是第三方库"\n❌ "defaultdict 和普通字典没有区别"\n\n【代码推理】\nfrom collections import defaultdict, Counter, deque\ndd = defaultdict(list)\ndd["key"].append("value")\ncounter = Counter("hello")  # {"h":1, "e":1, "l":2, "o":1}\n\n【追问】何时使用 defaultdict？Counter 的优势？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['collections', '标准库', '数据结构']
   },
   {
     id: 'i34',
-    question: '⭐⭐ Python 的 itertools 模块？',
+    question: 'Python 的 itertools 模块？',
     answer: '【核心要点】\n• itertools 提供高效的迭代器工具\n• chain() 连接多个迭代器\n• cycle() 无限循环迭代器\n• combinations() 和 permutations() 组合排列\n• groupby() 分组相邻元素\n\n【常见错误回答】\n❌ "itertools 会立即计算所有结果"\n❌ "itertools 比普通循环慢"\n\n【代码推理】\nfrom itertools import chain, cycle, combinations\nlist(chain([1, 2], [3, 4]))  # [1, 2, 3, 4]\nlist(combinations([1, 2, 3], 2))  # [(1,2), (1,3), (2,3)]\n\n【追问】何时使用 itertools？如何避免内存问题？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['itertools', '标准库', '迭代器']
   },
   {
     id: 'i35',
-    question: '⭐⭐ Python 的线程和进程？',
+    question: 'Python 的线程和进程？',
     answer: '【核心要点】\n• threading：多线程，受 GIL 限制\n• multiprocessing：多进程，绕过 GIL\n• 线程适合 I/O 密集型，进程适合 CPU 密集型\n• 使用 Queue 进行线程/进程间通信\n\n【常见错误回答】\n❌ "多线程总是比单线程快"\n❌ "进程间通信很复杂"\n\n【代码推理】\nimport threading\nimport multiprocessing\n# 线程\ndef worker():\n    print("线程工作")\nthread = threading.Thread(target=worker)\nthread.start()\n\n【追问】GIL 对多线程的影响？何时用多进程？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['并发', '多线程', '多进程']
   },
   {
     id: 'i36',
-    question: '⭐⭐ Python 的协程和 asyncio？',
+    question: 'Python 的协程和 asyncio？',
     answer: '【核心要点】\n• async/await 定义协程\n• asyncio 提供事件循环和异步工具\n• 协程是协作式多任务，单线程\n• 适合 I/O 密集型任务，提高并发性能\n\n【常见错误回答】\n❌ "协程就是多线程"\n❌ "async 函数总是异步执行"\n\n【代码推理】\nimport asyncio\nasync def fetch_data():\n    await asyncio.sleep(1)\n    return "data"\nasyncio.run(fetch_data())\n\n【追问】协程和生成器的关系？如何并发执行多个协程？',
     difficulty: '困难' as InterviewDifficulty,
     tags: ['异步', '协程', 'asyncio']
   },
   {
     id: 'i37',
-    question: '⭐⭐ Python 的元类（metaclass）？',
+    question: 'Python 的元类（metaclass）？',
     answer: '【核心要点】\n• 元类是类的类，用于创建类\n• type 是默认元类\n• 可以自定义元类控制类的创建\n• 常用于框架和 ORM\n\n【常见错误回答】\n❌ "元类就是继承"\n❌ "普通开发需要经常使用元类"\n\n【代码推理】\nclass Meta(type):\n    def __new__(cls, name, bases, attrs):\n        return super().__new__(cls, name, bases, attrs)\nclass MyClass(metaclass=Meta):\n    pass\n\n【追问】何时使用元类？元类和装饰器的区别？',
     difficulty: '困难' as InterviewDifficulty,
     tags: ['元类', '元编程', '高级']
   },
   {
     id: 'i38',
-    question: '⭐⭐ Python 的描述符（descriptor）？',
+    question: 'Python 的描述符（descriptor）？',
     answer: '【核心要点】\n• 描述符实现 __get__、__set__、__delete__\n• property 是描述符的实现\n• 用于控制属性访问\n• 支持数据验证和计算属性\n\n【常见错误回答】\n❌ "描述符只能用于类属性"\n❌ "property 不是描述符"\n\n【代码推理】\nclass Descriptor:\n    def __get__(self, obj, objtype=None):\n        return self.value\n    def __set__(self, obj, value):\n        self.value = value\n\n【追问】描述符和 property 的关系？何时使用描述符？',
     difficulty: '困难' as InterviewDifficulty,
     tags: ['描述符', '属性访问', '高级']
   },
   {
     id: 'i39',
-    question: '⭐⭐ Python 的弱引用（weakref）？',
+    question: 'Python 的弱引用（weakref）？',
     answer: '【核心要点】\n• weakref 创建对象的弱引用\n• 弱引用不增加引用计数\n• 对象被回收时，弱引用自动失效\n• 用于缓存和循环引用场景\n\n【常见错误回答】\n❌ "弱引用和普通引用没有区别"\n❌ "弱引用会阻止对象被回收"\n\n【代码推理】\nimport weakref\nclass MyClass:\n    pass\nobj = MyClass()\nref = weakref.ref(obj)\ndel obj  # 对象被回收\nprint(ref())  # None\n\n【追问】何时使用弱引用？WeakValueDictionary 的作用？',
     difficulty: '困难' as InterviewDifficulty,
     tags: ['弱引用', '内存管理', '高级']
   },
   {
     id: 'i40',
-    question: '⭐⭐ Python 的单元测试？',
+    question: 'Python 的单元测试？',
     answer: '【核心要点】\n• unittest 是标准库的测试框架\n• pytest 是更现代的第三方测试框架\n• 使用 assert 进行断言\n• setUp 和 tearDown 用于测试前后准备\n\n【常见错误回答】\n❌ "测试代码不需要维护"\n❌ "一个测试可以测试所有功能"\n\n【代码推理】\nimport unittest\nclass TestMath(unittest.TestCase):\n    def test_add(self):\n        self.assertEqual(1 + 1, 2)\n\n【追问】如何编写好的测试？mock 的作用？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['测试', 'unittest', 'pytest']
   },
   {
     id: 'i41',
-    question: '⭐⭐ Python 的日志记录（logging）？',
+    question: 'Python 的日志记录（logging）？',
     answer: '【核心要点】\n• logging 模块提供日志功能\n• 日志级别：DEBUG、INFO、WARNING、ERROR、CRITICAL\n• 可以配置多个处理器（handler）\n• 支持文件和控制台输出\n\n【常见错误回答】\n❌ "print 可以替代 logging"\n❌ "所有日志都应该输出"\n\n【代码推理】\nimport logging\nlogging.basicConfig(level=logging.INFO)\nlogging.info("信息")\nlogging.error("错误")\n\n【追问】如何配置日志格式？何时使用不同日志级别？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['日志', 'logging', '调试']
   },
   {
     id: 'i42',
-    question: '⭐⭐ Python 的包管理（pip）？',
+    question: 'Python 的包管理（pip）？',
     answer: '【核心要点】\n• pip 是 Python 的包管理器\n• requirements.txt 记录依赖\n• virtualenv 创建虚拟环境\n• pip install、pip uninstall、pip list 常用命令\n\n【常见错误回答】\n❌ "所有包都安装在全局"\n❌ "requirements.txt 不需要版本号"\n\n【代码推理】\n# requirements.txt\nrequests==2.28.0\nnumpy>=1.20.0\n\n# 安装\npip install -r requirements.txt\n\n【追问】虚拟环境的作用？如何管理依赖版本？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['包管理', 'pip', '虚拟环境']
   },
   {
     id: 'i43',
-    question: '⭐⭐ Python 的类型提示（typing）？',
+    question: 'Python 的类型提示（typing）？',
     answer: '【核心要点】\n• typing 模块提供类型提示\n• 类型提示不影响运行时，仅用于静态检查\n• 支持 List、Dict、Tuple 等泛型\n• mypy 等工具进行类型检查\n\n【常见错误回答】\n❌ "类型提示会影响性能"\n❌ "Python 是静态类型语言"\n\n【代码推理】\nfrom typing import List, Dict\ndef process(items: List[str]) -> Dict[str, int]:\n    return {item: len(item) for item in items}\n\n【追问】类型提示的好处？如何为复杂类型添加提示？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['类型提示', 'typing', '代码质量']
   },
   {
     id: 'i44',
-    question: '⭐⭐ Python 的数据类（dataclass）？',
+    question: 'Python 的数据类（dataclass）？',
     answer: '【核心要点】\n• @dataclass 装饰器自动生成特殊方法\n• 自动生成 __init__、__repr__、__eq__ 等\n• 支持默认值和类型提示\n• 减少样板代码\n\n【常见错误回答】\n❌ "dataclass 只能用于简单类"\n❌ "dataclass 会改变类的行为"\n\n【代码推理】\nfrom dataclasses import dataclass\n@dataclass\nclass Point:\n    x: int\n    y: int\n    z: int = 0\n\n【追问】dataclass 和普通类的区别？何时使用？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['dataclass', 'Python 3.7+', '面向对象']
   },
   {
     id: 'i45',
-    question: '⭐⭐ Python 的路径操作（pathlib）？',
+    question: 'Python 的路径操作（pathlib）？',
     answer: '【核心要点】\n• pathlib 提供面向对象的路径操作\n• Path 类替代 os.path\n• 支持跨平台路径处理\n• 更直观和易用\n\n【常见错误回答】\n❌ "pathlib 比 os.path 慢"\n❌ "pathlib 只能用于文件路径"\n\n【代码推理】\nfrom pathlib import Path\npath = Path("data/file.txt")\ncontent = path.read_text()\npath.parent.mkdir(parents=True, exist_ok=True)\n\n【追问】pathlib 和 os.path 的区别？何时使用？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['pathlib', '文件路径', '标准库']
   },
   {
     id: 'i46',
-    question: '⭐⭐ Python 的上下文变量（contextvars）？',
+    question: 'Python 的上下文变量（contextvars）？',
     answer: '【核心要点】\n• contextvars 用于异步上下文中的变量\n• ContextVar 创建上下文变量\n• 每个协程有独立的上下文\n• 用于传递请求上下文等场景\n\n【常见错误回答】\n❌ "contextvars 和全局变量一样"\n❌ "contextvars 只能用于异步"\n\n【代码推理】\nfrom contextvars import ContextVar\nrequest_id = ContextVar("request_id")\nrequest_id.set("123")\nprint(request_id.get())\n\n【追问】contextvars 和 threading.local 的区别？何时使用？',
     difficulty: '困难' as InterviewDifficulty,
     tags: ['contextvars', '异步', '上下文']
   },
   {
     id: 'i47',
-    question: '⭐⭐ Python 的协议（Protocol）？',
+    question: 'Python 的协议（Protocol）？',
     answer: '【核心要点】\n• Protocol 定义结构化的接口\n• 支持鸭子类型（duck typing）\n• 不需要显式继承\n• 用于类型检查和文档\n\n【常见错误回答】\n❌ "Protocol 和 ABC 一样"\n❌ "Protocol 会影响运行时"\n\n【代码推理】\nfrom typing import Protocol\nclass Drawable(Protocol):\n    def draw(self) -> None: ...\n\ndef render(obj: Drawable):\n    obj.draw()\n\n【追问】Protocol 和 ABC 的区别？何时使用？',
     difficulty: '困难' as InterviewDifficulty,
     tags: ['Protocol', '类型系统', 'Python 3.8+']
   },
   {
     id: 'i48',
-    question: '⭐⭐ Python 的 match/case 语句？',
+    question: 'Python 的 match/case 语句？',
     answer: '【核心要点】\n• match/case 是 Python 3.10+ 的模式匹配\n• 类似 switch 但更强大\n• 支持模式匹配和值绑定\n• 可以匹配类型、值、结构等\n\n【常见错误回答】\n❌ "match/case 就是 switch"\n❌ "所有 Python 版本都支持"\n\n【代码推理】\nmatch value:\n    case 1:\n        print("一")\n    case [x, y]:\n        print(f"列表: {x}, {y}")\n    case _:\n        print("其他")\n\n【追问】match/case 和 if/elif 的区别？何时使用？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['match/case', 'Python 3.10+', '模式匹配']
   },
   {
     id: 'i49',
-    question: '⭐⭐ Python 的性能优化技巧？',
+    question: 'Python 的性能优化技巧？',
     answer: '【核心要点】\n• 使用列表推导式替代循环\n• 避免全局变量查找\n• 使用局部变量缓存\n• 选择合适的数据结构\n• 使用生成器节省内存\n\n【常见错误回答】\n❌ "Python 无法优化性能"\n❌ "所有优化都会降低可读性"\n\n【代码推理】\n# 慢\nresult = []\nfor i in range(1000):\n    result.append(i * 2)\n# 快\nresult = [i * 2 for i in range(1000)]\n\n【追问】如何分析代码性能？常用的优化工具？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['性能优化', '最佳实践', '高级']
   },
   {
     id: 'i50',
-    question: '⭐⭐ Python 的 Web 框架（Flask/Django）？',
+    question: 'Python 的 Web 框架（Flask/Django）？',
     answer: '【核心要点】\n• Flask：轻量级微框架，灵活\n• Django：全功能框架，包含 ORM、admin 等\n• Flask 适合小型项目，Django 适合大型项目\n• 两者都支持 RESTful API 开发\n\n【常见错误回答】\n❌ "Flask 和 Django 功能相同"\n❌ "Django 比 Flask 快"\n\n【代码推理】\n# Flask\nfrom flask import Flask\napp = Flask(__name__)\n@app.route("/")\ndef hello():\n    return "Hello"\n\n【追问】如何选择框架？Flask 和 Django 的适用场景？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['Web开发', 'Flask', 'Django']
   },
   {
     id: 'i51',
-    question: '⭐⭐ Python 的数据库操作（ORM）？',
+    question: 'Python 的数据库操作（ORM）？',
     answer: '【核心要点】\n• ORM（对象关系映射）简化数据库操作\n• SQLAlchemy 是流行的 Python ORM\n• Django ORM 是 Django 框架的一部分\n• ORM 将数据库表映射为 Python 类\n\n【常见错误回答】\n❌ "ORM 总是比 SQL 慢"\n❌ "ORM 可以处理所有数据库操作"\n\n【代码推理】\nfrom sqlalchemy import create_engine\nfrom sqlalchemy.orm import sessionmaker\n# 定义模型、创建会话、查询数据\n\n【追问】ORM 的优缺点？何时使用原生 SQL？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['数据库', 'ORM', 'SQLAlchemy']
   },
   {
     id: 'i52',
-    question: '⭐⭐ Python 的 RESTful API 设计？',
+    question: 'Python 的 RESTful API 设计？',
     answer: '【核心要点】\n• REST 是一种架构风格\n• 使用 HTTP 方法：GET、POST、PUT、DELETE\n• 资源用 URL 表示\n• 状态码表示操作结果\n\n【常见错误回答】\n❌ "所有 HTTP 方法都可以用于任何操作"\n❌ "REST 和 RPC 没有区别"\n\n【代码推理】\nGET /api/users      # 获取用户列表\nPOST /api/users     # 创建用户\nGET /api/users/1    # 获取特定用户\nPUT /api/users/1    # 更新用户\n\n【追问】RESTful API 的最佳实践？如何设计资源结构？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['API设计', 'REST', 'Web开发']
   },
   {
     id: 'i53',
-    question: '⭐⭐ Python 的数据科学库（NumPy/Pandas）？',
+    question: 'Python 的数据科学库（NumPy/Pandas）？',
     answer: '【核心要点】\n• NumPy：数值计算，多维数组\n• Pandas：数据分析，DataFrame\n• 两者都基于 C 实现，性能优秀\n• 是数据科学和机器学习的基石\n\n【常见错误回答】\n❌ "NumPy 和 Pandas 功能重复"\n❌ "Pandas 只能处理表格数据"\n\n【代码推理】\nimport numpy as np\nimport pandas as pd\narr = np.array([1, 2, 3])\ndf = pd.DataFrame({"A": [1, 2], "B": [3, 4]})\n\n【追问】NumPy 和 Pandas 的关系？如何选择使用？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['数据科学', 'NumPy', 'Pandas']
   },
   {
     id: 'i54',
-    question: '⭐⭐ Python 的机器学习（scikit-learn）？',
+    question: 'Python 的机器学习（scikit-learn）？',
     answer: '【核心要点】\n• scikit-learn 是机器学习库\n• 提供分类、回归、聚类等算法\n• 统一的 API 设计\n• 包含数据预处理和模型评估工具\n\n【常见错误回答】\n❌ "scikit-learn 包含深度学习"\n❌ "所有机器学习任务都用 scikit-learn"\n\n【代码推理】\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.ensemble import RandomForestClassifier\n# 数据分割、模型训练、预测\n\n【追问】scikit-learn 的适用场景？如何评估模型性能？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['机器学习', 'scikit-learn', '数据科学']
   },
   {
     id: 'i55',
-    question: '⭐⭐ Python 的爬虫（requests/BeautifulSoup）？',
+    question: 'Python 的爬虫（requests/BeautifulSoup）？',
     answer: '【核心要点】\n• requests 用于 HTTP 请求\n• BeautifulSoup 用于 HTML 解析\n• Scrapy 是完整的爬虫框架\n• 需要遵守 robots.txt 和网站规则\n\n【常见错误回答】\n❌ "爬虫可以爬取任何网站"\n❌ "requests 可以解析 HTML"\n\n【代码推理】\nimport requests\nfrom bs4 import BeautifulSoup\nresponse = requests.get(url)\nsoup = BeautifulSoup(response.text, "html.parser")\n\n【追问】爬虫的合法性？如何避免被封？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['爬虫', 'requests', 'BeautifulSoup']
   },
   {
     id: 'i56',
-    question: '⭐⭐ Python 的代码质量工具？',
+    question: 'Python 的代码质量工具？',
     answer: '【核心要点】\n• pylint：代码检查工具\n• flake8：代码风格检查\n• black：代码自动格式化\n• mypy：类型检查\n• pytest：测试框架\n\n【常见错误回答】\n❌ "代码质量工具不重要"\n❌ "所有工具功能相同"\n\n【代码推理】\n# pylint: 检查代码质量问题\n# flake8: 检查 PEP 8 风格\n# black: 自动格式化代码\n# mypy: 类型检查\n\n【追问】如何建立代码质量检查流程？CI/CD 集成？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['代码质量', '工具', '最佳实践']
   },
   {
     id: 'i57',
-    question: '⭐⭐ Python 的设计模式？',
+    question: 'Python 的设计模式？',
     answer: '【核心要点】\n• 单例模式：确保类只有一个实例\n• 工厂模式：创建对象的接口\n• 观察者模式：对象间的通知机制\n• Python 的动态特性简化了模式实现\n\n【常见错误回答】\n❌ "设计模式在所有语言中实现方式相同"\n❌ "Python 不需要设计模式"\n\n【代码推理】\n# 单例模式\nclass Singleton:\n    _instance = None\n    def __new__(cls):\n        if cls._instance is None:\n            cls._instance = super().__new__(cls)\n        return cls._instance\n\n【追问】Python 中常用的设计模式？何时使用？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['设计模式', '最佳实践', '架构']
   },
   {
     id: 'i58',
-    question: '⭐⭐ Python 的安全最佳实践？',
+    question: 'Python 的安全最佳实践？',
     answer: '【核心要点】\n• 避免 eval() 和 exec() 执行用户输入\n• 使用参数化查询防止 SQL 注入\n• 验证和清理用户输入\n• 使用 HTTPS 传输敏感数据\n• 定期更新依赖包\n\n【常见错误回答】\n❌ "Python 代码天然安全"\n❌ "eval() 可以安全使用"\n\n【代码推理】\n# 危险\ncode = input()\neval(code)  # 可能执行恶意代码\n# 安全\n# 验证输入、使用安全函数\n\n【追问】常见的 Python 安全漏洞？如何防护？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['安全', '最佳实践', 'Web安全']
   },
   {
     id: 'i59',
-    question: '⭐⭐ Python 的并发编程最佳实践？',
+    question: 'Python 的并发编程最佳实践？',
     answer: '【核心要点】\n• 理解 GIL 的限制\n• I/O 密集型用多线程或异步\n• CPU 密集型用多进程\n• 使用线程池和进程池管理资源\n• 注意线程安全（锁、队列）\n\n【常见错误回答】\n❌ "多线程总是比单线程快"\n❌ "并发和并行没有区别"\n\n【代码推理】\nfrom concurrent.futures import ThreadPoolExecutor\nwith ThreadPoolExecutor() as executor:\n    results = executor.map(func, data)\n\n【追问】如何选择并发方式？如何避免竞态条件？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['并发', '多线程', '多进程']
   },
   {
     id: 'i60',
-    question: '⭐⭐ Python 的缓存机制？',
+    question: 'Python 的缓存机制？',
     answer: '【核心要点】\n• functools.lru_cache 提供缓存装饰器\n• 缓存函数结果，避免重复计算\n• maxsize 参数控制缓存大小\n• 适合纯函数和计算密集型函数\n\n【常见错误回答】\n❌ "缓存可以用于所有函数"\n❌ "缓存大小越大越好"\n\n【代码推理】\nfrom functools import lru_cache\n@lru_cache(maxsize=128)\ndef fibonacci(n):\n    if n < 2:\n        return n\n    return fibonacci(n-1) + fibonacci(n-2)\n\n【追问】何时使用缓存？如何避免缓存问题？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['缓存', '性能优化', 'functools']
   },
   {
     id: 'i61',
-    question: '⭐⭐ Python 的 partial 函数？',
+    question: 'Python 的 partial 函数？',
     answer: '【核心要点】\n• functools.partial 创建偏函数\n• 固定函数的部分参数\n• 创建新的函数对象\n• 用于函数式编程和回调\n\n【常见错误回答】\n❌ "partial 会修改原函数"\n❌ "partial 只能用于固定位置参数"\n\n【代码推理】\nfrom functools import partial\ndef multiply(x, y):\n    return x * y\ndouble = partial(multiply, 2)\nprint(double(5))  # 10\n\n【追问】partial 和 lambda 的区别？何时使用？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['partial', '函数式编程', 'functools']
   },
   {
     id: 'i62',
-    question: '⭐⭐ Python 的 reduce 函数？',
+    question: 'Python 的 reduce 函数？',
     answer: '【核心要点】\n• functools.reduce 累积应用函数\n• 将序列归约为单个值\n• 需要两个参数的函数\n• 常用于求和、求积等操作\n\n【常见错误回答】\n❌ "reduce 总是比循环快"\n❌ "reduce 可以用于所有序列操作"\n\n【代码推理】\nfrom functools import reduce\nnumbers = [1, 2, 3, 4, 5]\nsum_result = reduce(lambda x, y: x + y, numbers)\nproduct = reduce(lambda x, y: x * y, numbers)\n\n【追问】reduce 和 sum/max/min 的区别？何时使用？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['reduce', '函数式编程', 'functools']
   },
   {
     id: 'i63',
-    question: '⭐⭐ Python 的生成器表达式和列表推导式性能？',
+    question: 'Python 的生成器表达式和列表推导式性能？',
     answer: '【核心要点】\n• 列表推导式立即计算，占用内存\n• 生成器表达式惰性计算，节省内存\n• 大数据集用生成器表达式\n• 需要多次访问用列表推导式\n\n【常见错误回答】\n❌ "生成器表达式总是更快"\n❌ "两者性能相同"\n\n【代码推理】\n# 列表推导式 - 立即计算\nsquares_list = [x**2 for x in range(1000000)]\n# 生成器表达式 - 惰性计算\nsquares_gen = (x**2 for x in range(1000000))\n\n【追问】如何选择？何时必须用列表推导式？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['性能', '生成器', '推导式']
   },
   {
     id: 'i64',
-    question: '⭐⭐ Python 的字符串拼接性能？',
+    question: 'Python 的字符串拼接性能？',
     answer: '【核心要点】\n• 使用 join() 方法拼接字符串列表\n• 避免在循环中使用 += 拼接\n• join() 比 + 操作符高效\n• 字符串是不可变的，+= 会创建新对象\n\n【常见错误回答】\n❌ "+= 和 join() 性能相同"\n❌ "所有拼接方式都很快"\n\n【代码推理】\n# 慢\nresult = ""\nfor s in strings:\n    result += s\n# 快\nresult = "".join(strings)\n\n【追问】为什么 join() 更快？何时使用 +=？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['性能优化', '字符串', '最佳实践']
   },
   {
     id: 'i65',
-    question: '⭐⭐ Python 的字典和集合的底层实现？',
+    question: 'Python 的字典和集合的底层实现？',
     answer: '【核心要点】\n• 字典使用哈希表实现\n• 平均 O(1) 的查找、插入、删除\n• 键必须是可哈希的（不可变类型）\n• 集合也是基于哈希表实现\n\n【常见错误回答】\n❌ "字典查找是 O(n)"\n❌ "任何对象都可以作为字典键"\n\n【代码推理】\n# 可哈希类型可以作为键\nmy_dict = {"key": "value"}  # str 可哈希\n# 不可哈希类型不能作为键\n# my_dict = {[1, 2]: "value"}  # 错误！\n\n【追问】哈希冲突如何处理？字典为什么无序？',
     difficulty: '困难' as InterviewDifficulty,
     tags: ['数据结构', '哈希表', '底层实现']
   },
   {
     id: 'i66',
-    question: '⭐⭐ Python 的内存管理机制？',
+    question: 'Python 的内存管理机制？',
     answer: '【核心要点】\n• 引用计数：主要内存管理方式\n• 循环垃圾收集器：处理循环引用\n• 分代垃圾收集：提高效率\n• 对象池：小整数和字符串缓存\n\n【常见错误回答】\n❌ "Python 没有内存管理"\n❌ "对象立即被回收"\n\n【代码推理】\nimport sys\nx = "hello"\nprint(sys.getrefcount(x))  # 引用计数\nimport gc\ngc.collect()  # 手动触发垃圾回收\n\n【追问】引用计数的优缺点？何时需要手动 gc？',
     difficulty: '困难' as InterviewDifficulty,
     tags: ['内存管理', '垃圾回收', '底层原理']
   },
   {
     id: 'i67',
-    question: '⭐⭐ Python 的字节码和解释器？',
+    question: 'Python 的字节码和解释器？',
     answer: '【核心要点】\n• Python 代码先编译为字节码（.pyc）\n• 字节码由 Python 虚拟机执行\n• 可以使用 dis 模块查看字节码\n• CPython 是最常用的解释器\n\n【常见错误回答】\n❌ "Python 是解释型语言，不编译"\n❌ "字节码是机器码"\n\n【代码推理】\nimport dis\ndef func():\n    return 1 + 2\ndis.dis(func)  # 查看字节码\n\n【追问】字节码的作用？为什么需要字节码？',
     difficulty: '困难' as InterviewDifficulty,
     tags: ['字节码', '解释器', '底层原理']
   },
   {
     id: 'i68',
-    question: '⭐⭐ Python 的 C 扩展开发？',
+    question: 'Python 的 C 扩展开发？',
     answer: '【核心要点】\n• 使用 C/C++ 编写扩展模块\n• 通过 C API 与 Python 交互\n• 可以提高性能关键部分的执行速度\n• ctypes、CFFI 等工具简化开发\n\n【常见错误回答】\n❌ "C 扩展开发很简单"\n❌ "所有代码都应该用 C 扩展"\n\n【代码推理】\n# C 扩展模块示例\n# 需要编写 C 代码，编译为共享库\n# 然后在 Python 中导入使用\n\n【追问】何时需要 C 扩展？有哪些替代方案？',
     difficulty: '困难' as InterviewDifficulty,
     tags: ['C扩展', '性能优化', '系统编程']
   },
   {
     id: 'i69',
-    question: '⭐⭐ Python 的包分发（setuptools）？',
+    question: 'Python 的包分发（setuptools）？',
     answer: '【核心要点】\n• setuptools 用于打包和分发 Python 包\n• setup.py 定义包信息\n• 可以打包为 wheel 或 source distribution\n• 上传到 PyPI 供他人使用\n\n【常见错误回答】\n❌ "打包只需要复制文件"\n❌ "所有包都上传到 PyPI"\n\n【代码推理】\n# setup.py\nfrom setuptools import setup\nsetup(\n    name="mypackage",\n    version="0.1.0",\n    packages=["mypackage"],\n)\n\n【追问】如何编写 setup.py？wheel 和 egg 的区别？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['打包', 'setuptools', 'PyPI']
   },
   {
     id: 'i70',
-    question: '⭐⭐ Python 的虚拟环境（venv/virtualenv）？',
+    question: 'Python 的虚拟环境（venv/virtualenv）？',
     answer: '【核心要点】\n• 虚拟环境隔离项目依赖\n• venv 是 Python 3.3+ 内置模块\n• virtualenv 是第三方工具，功能更丰富\n• 每个项目使用独立的虚拟环境\n\n【常见错误回答】\n❌ "虚拟环境会影响系统 Python"\n❌ "所有项目可以共享一个虚拟环境"\n\n【代码推理】\n# 创建虚拟环境\npython -m venv myenv\n# 激活（Windows）\nmyenv\\Scripts\\activate\n# 激活（Linux/Mac）\nsource myenv/bin/activate\n\n【追问】虚拟环境的作用？如何管理多个虚拟环境？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['虚拟环境', 'venv', '环境管理']
   },
   {
     id: 'i71',
-    question: '⭐⭐ Python 的依赖管理（pip/conda）？',
+    question: 'Python 的依赖管理（pip/conda）？',
     answer: '【核心要点】\n• pip 是 Python 的包管理器\n• conda 是跨语言的包和环境管理器\n• requirements.txt 记录 pip 依赖\n• environment.yml 记录 conda 环境\n\n【常见错误回答】\n❌ "pip 和 conda 功能完全相同"\n❌ "不需要记录依赖版本"\n\n【代码推理】\n# requirements.txt\nrequests==2.28.0\nnumpy>=1.20.0\n# 安装\npip install -r requirements.txt\n\n【追问】pip 和 conda 的区别？如何选择？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['依赖管理', 'pip', 'conda']
   },
   {
     id: 'i72',
-    question: '⭐⭐ Python 的代码组织（项目结构）？',
+    question: 'Python 的代码组织（项目结构）？',
     answer: '【核心要点】\n• 合理的项目结构提高可维护性\n• 分离源代码、测试、文档\n• 使用 __init__.py 创建包\n• 遵循 PEP 8 和项目规范\n\n【常见错误回答】\n❌ "所有文件放在一个目录"\n❌ "项目结构不重要"\n\n【代码推理】\nmyproject/\n  mypackage/\n    __init__.py\n    module1.py\n  tests/\n  docs/\n  setup.py\n  README.md\n\n【追问】如何组织大型项目？模块和包的区别？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['项目结构', '代码组织', '最佳实践']
   },
   {
     id: 'i73',
-    question: '⭐⭐ Python 的文档字符串（docstring）？',
+    question: 'Python 的文档字符串（docstring）？',
     answer: '【核心要点】\n• docstring 是函数的文档说明\n• 使用三重引号编写\n• 遵循 PEP 257 规范\n• 可以使用 Sphinx 生成文档\n\n【常见错误回答】\n❌ "docstring 和注释没有区别"\n❌ "docstring 会影响性能"\n\n【代码推理】\ndef add(x: int, y: int) -> int:\n    """\n    计算两个数的和\n    \n    Args:\n        x: 第一个数\n        y: 第二个数\n    \n    Returns:\n        两个数的和\n    """\n    return x + y\n\n【追问】如何编写好的 docstring？docstring 的格式？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['文档', 'docstring', '代码规范']
   },
   {
     id: 'i74',
-    question: '⭐⭐ Python 的迭代协议？',
+    question: 'Python 的迭代协议？',
     answer: '【核心要点】\n• __iter__() 返回迭代器对象\n• __next__() 返回下一个元素\n• StopIteration 异常表示迭代结束\n• for 循环自动处理迭代协议\n\n【常见错误回答】\n❌ "所有对象都可以迭代"\n❌ "迭代器和可迭代对象没有区别"\n\n【代码推理】\nclass MyIterator:\n    def __init__(self, data):\n        self.data = data\n        self.index = 0\n    def __iter__(self):\n        return self\n    def __next__(self):\n        if self.index >= len(self.data):\n            raise StopIteration\n        value = self.data[self.index]\n        self.index += 1\n        return value\n\n【追问】可迭代对象和迭代器的区别？如何实现自定义迭代器？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['迭代器', '迭代协议', '高级特性']
   },
   {
     id: 'i75',
-    question: '⭐⭐ Python 的上下文管理协议？',
+    question: 'Python 的上下文管理协议？',
     answer: '【核心要点】\n• __enter__() 进入上下文\n• __exit__() 退出上下文\n• with 语句自动调用这两个方法\n• 即使发生异常也会调用 __exit__\n\n【常见错误回答】\n❌ "上下文管理器只能用于文件"\n❌ "__exit__ 不会处理异常"\n\n【代码推理】\nclass MyContext:\n    def __enter__(self):\n        print("进入")\n        return self\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        print("退出")\n        return False  # 不抑制异常\n\n【追问】如何自定义上下文管理器？contextlib 的作用？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['上下文管理器', '资源管理', '高级特性']
   },
   {
     id: 'i76',
-    question: '⭐⭐ Python 的运算符重载？',
+    question: 'Python 的运算符重载？',
     answer: '【核心要点】\n• 通过特殊方法重载运算符\n• __add__ 重载 +，__sub__ 重载 -\n• __eq__ 重载 ==，__lt__ 重载 <\n• 支持丰富的运算符重载\n\n【常见错误回答】\n❌ "所有运算符都可以重载"\n❌ "运算符重载会影响性能"\n\n【代码推理】\nclass Vector:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n    def __add__(self, other):\n        return Vector(self.x + other.x, self.y + other.y)\n    def __eq__(self, other):\n        return self.x == other.x and self.y == other.y\n\n【追问】哪些运算符可以重载？如何实现比较运算符？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['运算符重载', '特殊方法', '面向对象']
   },
   {
     id: 'i77',
-    question: '⭐⭐ Python 的命名空间包（namespace package）？',
+    question: 'Python 的命名空间包（namespace package）？',
     answer: '【核心要点】\n• 命名空间包允许包分布在多个目录\n• 不需要 __init__.py（Python 3.3+）\n• 用于大型项目的模块组织\n• 支持插件系统\n\n【常见错误回答】\n❌ "命名空间包必须有 __init__.py"\n❌ "命名空间包和普通包没有区别"\n\n【代码推理】\n# 命名空间包示例\n# mypackage/\n#   subpackage1/\n#     module1.py\n#   subpackage2/\n#     module2.py\n# 两个子包可以分布在不同位置\n\n【追问】何时使用命名空间包？和普通包的区别？',
     difficulty: '困难' as InterviewDifficulty,
     tags: ['命名空间包', '模块系统', '高级']
   },
   {
     id: 'i78',
-    question: '⭐⭐ Python 的导入系统（import system）？',
+    question: 'Python 的导入系统（import system）？',
     answer: '【核心要点】\n• import 语句触发模块查找和加载\n• sys.path 定义模块搜索路径\n• __import__() 是底层导入函数\n• importlib 提供编程式导入\n\n【常见错误回答】\n❌ "import 总是从当前目录开始查找"\n❌ "所有模块都立即执行"\n\n【代码推理】\nimport sys\nprint(sys.path)  # 模块搜索路径\nimport importlib\nmodule = importlib.import_module("mymodule")\n\n【追问】模块查找顺序？如何动态导入模块？',
     difficulty: '困难' as InterviewDifficulty,
     tags: ['导入系统', '模块加载', '底层原理']
   },
   {
     id: 'i79',
-    question: '⭐⭐ Python 的字节码优化？',
+    question: 'Python 的字节码优化？',
     answer: '【核心要点】\n• Python 编译为字节码（.pyc）\n• 字节码存储在 __pycache__ 目录\n• -O 优化标志移除断言和调试信息\n• -OO 进一步优化，移除文档字符串\n\n【常见错误回答】\n❌ "字节码优化会改变程序行为"\n❌ "所有优化都会提高性能"\n\n【代码推理】\n# 编译为字节码\npython -m py_compile script.py\n# 优化模式\npython -O script.py  # 移除断言\npython -OO script.py  # 移除断言和文档字符串\n\n【追问】字节码优化的作用？何时使用优化标志？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['字节码', '优化', '编译']
   },
   {
     id: 'i80',
-    question: '⭐⭐ Python 的装饰器模式应用？',
+    question: 'Python 的装饰器模式应用？',
     answer: '【核心要点】\n• 装饰器可以用于函数、类、方法\n• 可以带参数，也可以嵌套\n• 常用于日志、缓存、权限检查\n• functools.wraps 保持原函数元数据\n\n【常见错误回答】\n❌ "装饰器只能用于函数"\n❌ "装饰器会改变函数签名"\n\n【代码推理】\nfrom functools import wraps\ndef log(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        print(f"调用 {func.__name__}")\n        return func(*args, **kwargs)\n    return wrapper\n\n【追问】如何编写带参数的装饰器？装饰器的执行顺序？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['装饰器', '设计模式', '高级特性']
   },
   {
     id: 'i81',
-    question: '⭐⭐ Python 的线程同步（Lock/RLock）？',
+    question: 'Python 的线程同步（Lock/RLock）？',
     answer: '【核心要点】\n• Lock：互斥锁，同一时刻只有一个线程获取\n• RLock：可重入锁，同一线程可以多次获取\n• 使用 with 语句自动释放锁\n• 避免死锁，注意锁的获取顺序\n\n【常见错误回答】\n❌ "Lock 和 RLock 没有区别"\n❌ "锁不会影响性能"\n\n【代码推理】\nimport threading\nlock = threading.Lock()\nwith lock:\n    # 临界区代码\n    pass\n\n【追问】如何避免死锁？何时使用 RLock？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['线程同步', '锁', '并发']
   },
   {
     id: 'i82',
-    question: '⭐⭐ Python 的进程间通信（Queue/Pipe）？',
+    question: 'Python 的进程间通信（Queue/Pipe）？',
     answer: '【核心要点】\n• multiprocessing.Queue：进程安全队列\n• multiprocessing.Pipe：双向通信管道\n• Manager 提供共享对象\n• 用于多进程数据交换\n\n【常见错误回答】\n❌ "进程可以直接共享变量"\n❌ "Queue 和普通队列没有区别"\n\n【代码推理】\nfrom multiprocessing import Process, Queue\nq = Queue()\ndef worker(q):\n    q.put("数据")\np = Process(target=worker, args=(q,))\np.start()\nresult = q.get()\n\n【追问】进程间通信的方式？如何选择？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['多进程', '进程通信', '并发']
   },
   {
     id: 'i83',
-    question: '⭐⭐ Python 的异步编程模式？',
+    question: 'Python 的异步编程模式？',
     answer: '【核心要点】\n• async def 定义协程函数\n• await 等待异步操作完成\n• asyncio.gather() 并发执行多个协程\n• asyncio.create_task() 创建任务\n\n【常见错误回答】\n❌ "async 函数总是异步执行"\n❌ "await 会阻塞整个程序"\n\n【代码推理】\nimport asyncio\nasync def fetch(url):\n    await asyncio.sleep(1)\n    return f"数据来自 {url}"\nasync def main():\n    results = await asyncio.gather(\n        fetch("url1"),\n        fetch("url2")\n    )\n\n【追问】如何并发执行多个协程？asyncio 的事件循环？',
     difficulty: '困难' as InterviewDifficulty,
     tags: ['异步', '协程', 'asyncio']
   },
   {
     id: 'i84',
-    question: '⭐⭐ Python 的单元测试最佳实践？',
+    question: 'Python 的单元测试最佳实践？',
     answer: '【核心要点】\n• 测试应该独立、可重复、快速\n• 使用 setUp 和 tearDown 准备环境\n• 测试覆盖率不是唯一指标\n• 使用 mock 隔离依赖\n\n【常见错误回答】\n❌ "测试代码不需要维护"\n❌ "100% 覆盖率就是好测试"\n\n【代码推理】\nimport unittest\nfrom unittest.mock import Mock\nclass TestMyClass(unittest.TestCase):\n    def setUp(self):\n        self.obj = MyClass()\n    def test_method(self):\n        self.assertEqual(self.obj.method(), expected)\n\n【追问】如何编写好的测试？测试金字塔？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['测试', '最佳实践', '质量保证']
   },
   {
     id: 'i85',
-    question: '⭐⭐ Python 的代码审查（Code Review）？',
+    question: 'Python 的代码审查（Code Review）？',
     answer: '【核心要点】\n• 代码审查提高代码质量\n• 关注逻辑、性能、可读性\n• 使用工具辅助审查\n• 建立审查流程和规范\n\n【常见错误回答】\n❌ "代码审查浪费时间"\n❌ "只有高级开发者需要审查"\n\n【代码推理】\n# 代码审查检查点\n# 1. 逻辑正确性\n# 2. 性能优化\n# 3. 代码风格\n# 4. 错误处理\n# 5. 文档完整性\n\n【追问】如何进行有效的代码审查？审查清单？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['代码审查', '最佳实践', '团队协作']
   },
   {
     id: 'i86',
-    question: '⭐⭐ Python 的版本管理（Git）？',
+    question: 'Python 的版本管理（Git）？',
     answer: '【核心要点】\n• Git 是分布式版本控制系统\n• .gitignore 忽略不需要版本控制的文件\n• 使用有意义的提交信息\n• 分支策略：main、develop、feature\n\n【常见错误回答】\n❌ "所有文件都应该提交"\n❌ "提交信息不重要"\n\n【代码推理】\n# .gitignore\n__pycache__/\n*.pyc\n*.pyo\n.env\nvenv/\n\n【追问】如何编写 .gitignore？Git 工作流？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['版本控制', 'Git', '最佳实践']
   },
   {
     id: 'i87',
-    question: '⭐⭐ Python 的持续集成（CI/CD）？',
+    question: 'Python 的持续集成（CI/CD）？',
     answer: '【核心要点】\n• CI：持续集成，自动构建和测试\n• CD：持续部署，自动发布\n• GitHub Actions、Jenkins 等工具\n• 提高开发效率和代码质量\n\n【常见错误回答】\n❌ "CI/CD 只用于大型项目"\n❌ "CI/CD 配置很复杂"\n\n【代码推理】\n# .github/workflows/ci.yml\n# 定义自动化流程：\n# 1. 代码检查\n# 2. 运行测试\n# 3. 构建包\n# 4. 部署\n\n【追问】如何设置 CI/CD？CI/CD 的好处？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['CI/CD', 'DevOps', '自动化']
   },
   {
     id: 'i88',
-    question: '⭐⭐ Python 的监控和日志？',
+    question: 'Python 的监控和日志？',
     answer: '【核心要点】\n• 使用 logging 模块记录日志\n• 不同级别：DEBUG、INFO、WARNING、ERROR\n• 监控应用性能和错误\n• 使用 Sentry、ELK 等工具\n\n【常见错误回答】\n❌ "print 可以替代 logging"\n❌ "所有日志都应该输出"\n\n【代码推理】\nimport logging\nlogging.basicConfig(\n    level=logging.INFO,\n    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"\n)\nlogging.info("应用启动")\n\n【追问】如何配置日志？日志最佳实践？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['日志', '监控', '运维']
   },
   {
     id: 'i89',
-    question: '⭐⭐ Python 的性能分析（profiling）？',
+    question: 'Python 的性能分析（profiling）？',
     answer: '【核心要点】\n• cProfile 提供性能分析\n• line_profiler 分析逐行性能\n• memory_profiler 分析内存使用\n• 识别性能瓶颈，针对性优化\n\n【常见错误回答】\n❌ "性能分析不需要工具"\n❌ "所有代码都需要优化"\n\n【代码推理】\nimport cProfile\ncProfile.run("my_function()")\n# 或使用装饰器\n@profile\ndef slow_function():\n    pass\n\n【追问】如何分析性能？优化策略？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['性能分析', 'profiling', '优化']
   },
   {
     id: 'i90',
-    question: '⭐⭐ Python 的调试技巧？',
+    question: 'Python 的调试技巧？',
     answer: '【核心要点】\n• pdb 是 Python 调试器\n• 使用 breakpoint() 设置断点（Python 3.7+）\n• print 调试简单但有效\n• 使用 IDE 调试器更方便\n\n【常见错误回答】\n❌ "调试器会影响性能"\n❌ "print 是最好的调试方法"\n\n【代码推理】\nimport pdb\npdb.set_trace()  # 设置断点\n# 或使用\nbreakpoint()  # Python 3.7+\n\n【追问】如何使用 pdb？调试技巧？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['调试', 'pdb', '开发工具']
   },
   {
     id: 'i91',
-    question: '⭐⭐ Python 的错误处理最佳实践？',
+    question: 'Python 的错误处理最佳实践？',
     answer: '【核心要点】\n• 捕获具体异常，避免捕获所有异常\n• 使用 finally 确保资源清理\n• 记录异常信息，便于调试\n• 自定义异常提供更好的错误信息\n\n【常见错误回答】\n❌ "应该捕获所有异常"\n❌ "异常处理会影响性能"\n\n【代码推理】\ntry:\n    result = risky_operation()\nexcept SpecificError as e:\n    logger.error(f"错误: {e}")\n    raise\nfinally:\n    cleanup()\n\n【追问】如何设计异常层次？何时重新抛出异常？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['异常处理', '错误处理', '最佳实践']
   },
   {
     id: 'i92',
-    question: '⭐⭐ Python 的代码重构技巧？',
+    question: 'Python 的代码重构技巧？',
     answer: '【核心要点】\n• 提取函数，减少重复代码\n• 使用有意义的变量名\n• 保持函数简短，单一职责\n• 使用设计模式提高可维护性\n\n【常见错误回答】\n❌ "重构会破坏现有功能"\n❌ "代码能运行就不需要重构"\n\n【代码推理】\n# 重构前：长函数\n# 重构后：拆分为多个小函数\n# 使用函数式编程减少重复\n\n【追问】重构的原则？如何安全重构？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['重构', '代码质量', '最佳实践']
   },
   {
     id: 'i93',
-    question: '⭐⭐ Python 的 API 设计原则？',
+    question: 'Python 的 API 设计原则？',
     answer: '【核心要点】\n• 保持 API 简洁和一致\n• 使用有意义的命名\n• 提供清晰的文档\n• 考虑向后兼容性\n\n【常见错误回答】\n❌ "API 设计不重要"\n❌ "可以随时改变 API"\n\n【代码推理】\n# 好的 API 设计\nclass Calculator:\n    def add(self, x: float, y: float) -> float:\n        """计算两个数的和"""\n        return x + y\n\n【追问】如何设计好的 API？API 版本管理？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['API设计', '接口设计', '最佳实践']
   },
   {
     id: 'i94',
-    question: '⭐⭐ Python 的数据库连接池？',
+    question: 'Python 的数据库连接池？',
     answer: '【核心要点】\n• 连接池复用数据库连接\n• 减少连接开销，提高性能\n• SQLAlchemy 提供连接池\n• 配置合适的池大小\n\n【常见错误回答】\n❌ "每次操作都创建新连接"\n❌ "连接池大小越大越好"\n\n【代码推理】\nfrom sqlalchemy import create_engine\nengine = create_engine(\n    "postgresql://...",\n    pool_size=10,\n    max_overflow=20\n)\n\n【追问】如何配置连接池？连接池的优势？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['数据库', '连接池', '性能优化']
   },
   {
     id: 'i95',
-    question: '⭐⭐ Python 的缓存策略？',
+    question: 'Python 的缓存策略？',
     answer: '【核心要点】\n• 内存缓存：快速但有限\n• Redis：分布式缓存\n• 缓存失效策略：TTL、LRU\n• 缓存穿透、击穿、雪崩问题\n\n【常见错误回答】\n❌ "缓存总是提高性能"\n❌ "不需要考虑缓存失效"\n\n【代码推理】\nimport redis\nr = redis.Redis()\nr.set("key", "value", ex=3600)  # TTL 1小时\nvalue = r.get("key")\n\n【追问】如何选择缓存策略？缓存问题如何解决？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['缓存', 'Redis', '性能优化']
   },
   {
     id: 'i96',
-    question: '⭐⭐ Python 的消息队列（RabbitMQ/Kafka）？',
+    question: 'Python 的消息队列（RabbitMQ/Kafka）？',
     answer: '【核心要点】\n• 消息队列解耦系统组件\n• RabbitMQ：AMQP 协议，可靠\n• Kafka：高吞吐，适合流处理\n• 用于异步任务和事件驱动架构\n\n【常见错误回答】\n❌ "消息队列和数据库一样"\n❌ "所有系统都需要消息队列"\n\n【代码推理】\nimport pika\nconnection = pika.BlockingConnection(pika.ConnectionParameters())\nchannel = connection.channel()\nchannel.queue_declare(queue="task_queue")\nchannel.basic_publish(exchange="", routing_key="task_queue", body="消息")\n\n【追问】如何选择消息队列？消息队列的使用场景？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['消息队列', 'RabbitMQ', 'Kafka']
   },
   {
     id: 'i97',
-    question: '⭐⭐ Python 的微服务架构？',
+    question: 'Python 的微服务架构？',
     answer: '【核心要点】\n• 微服务将应用拆分为小服务\n• 每个服务独立部署和扩展\n• 使用 REST 或 gRPC 通信\n• 需要服务发现和配置管理\n\n【常见错误回答】\n❌ "微服务总是比单体好"\n❌ "所有应用都应该用微服务"\n\n【代码推理】\n# 微服务示例\n# user-service: 用户管理\n# order-service: 订单处理\n# payment-service: 支付处理\n# 通过 API 网关统一访问\n\n【追问】微服务的优缺点？何时使用微服务？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['微服务', '架构设计', '分布式系统']
   },
   {
     id: 'i98',
-    question: '⭐⭐ Python 的容器化（Docker）？',
+    question: 'Python 的容器化（Docker）？',
     answer: '【核心要点】\n• Docker 容器化应用\n• Dockerfile 定义镜像\n• 容器提供一致的运行环境\n• 简化部署和扩展\n\n【常见错误回答】\n❌ "Docker 和虚拟机一样"\n❌ "所有应用都需要容器化"\n\n【代码推理】\n# Dockerfile\nFROM python:3.11\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install -r requirements.txt\nCOPY . .\nCMD ["python", "app.py"]\n\n【追问】Docker 的优势？如何优化镜像大小？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['Docker', '容器化', 'DevOps']
   },
   {
     id: 'i99',
-    question: '⭐⭐ Python 的云部署（AWS/Azure/GCP）？',
+    question: 'Python 的云部署（AWS/Azure/GCP）？',
     answer: '【核心要点】\n• 云平台提供可扩展的基础设施\n• AWS Lambda：无服务器函数\n• 容器服务：ECS、Kubernetes\n• 数据库、存储、消息队列等托管服务\n\n【常见错误回答】\n❌ "云部署很复杂"\n❌ "所有应用都应该上云"\n\n【代码推理】\n# 云部署示例\n# 1. 使用容器服务部署\n# 2. 使用负载均衡\n# 3. 使用云数据库\n# 4. 配置自动扩展\n\n【追问】如何选择云平台？云部署的优势？',
     difficulty: '中等' as InterviewDifficulty,
     tags: ['云部署', 'AWS', 'DevOps']
   },
   {
     id: 'i100',
-    question: '⭐⭐⭐ Python 开发者的职业发展？',
+    question: 'Python 开发者的职业发展？',
     answer: '【核心要点】\n• 持续学习新技术和最佳实践\n• 参与开源项目，贡献代码\n• 建立技术博客，分享经验\n• 参加技术会议和社区活动\n• 掌握全栈技能，了解 DevOps\n\n【常见错误回答】\n❌ "只学 Python 就够了"\n❌ "不需要了解其他技术"\n\n【职业路径】\n• 初级：掌握 Python 基础和常用库\n• 中级：深入理解语言特性和设计模式\n• 高级：架构设计、性能优化、团队领导\n• 专家：技术专家、架构师、技术顾问\n\n【追问】如何规划职业发展？需要掌握哪些技能？',
     difficulty: '简单' as InterviewDifficulty,
     tags: ['职业发展', '学习路径', '综合']

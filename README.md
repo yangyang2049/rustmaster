@@ -1,0 +1,3 @@
+码上学（Code Now）是一款多语言编程学习应用，涵盖 Rust、Python、Go 和 ArkTS。应用提供系统化的 12 单元课程教程，每章包含详细讲解、示例代码和知识点总结。功能包括 200+ 条目语法速查、知识测验以及 100+ 道精选面试题（含解析和追问）。界面简洁，支持深色模式、收藏和分享，是开发者掌握现代编程语言的理想伴侣。
+
+Code Now is a multi-language programming learning app covering Rust, Python, Go, and ArkTS. It offers structured 12-unit courses for each language, featuring detailed explanations, example code, and key summaries. Features include a syntax cheat sheet with 200+ entries, interactive quizzes, and an interview bank with 100+ curated questions and detailed answers. With a clean UI, dark mode support, and favorites/sharing features, it’s the perfect tool for mastering modern coding.

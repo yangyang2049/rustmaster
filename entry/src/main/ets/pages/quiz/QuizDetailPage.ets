@@ -237,6 +237,35 @@ struct QuizDetailPage {
     this.answeredQuestions = [...this.answeredQuestions, this.currentQuestionIndex];
     // 保存进度
     this.saveProgress();
+
+    // 如果是最后一题，标记整个测验为完成
+    if (this.isLastQuestion()) {
+      this.markQuizAsCompleted();
+    }
+  }
+
+  private async markQuizAsCompleted(): Promise<void> {
+    try {
+      const learnPrefsKey = LanguageDataManager.getLearnPreferencesKey(this.language);
+      const learnPrefs = await PreferencesManager.getPreferences(learnPrefsKey);
+      const completedIdsStr = await learnPrefs.get('completedQuizIds', '[]') as string;
+      let completedIds: string[] = [];
+      try {
+        completedIds = JSON.parse(completedIdsStr);
+        if (!Array.isArray(completedIds)) completedIds = [];
+      } catch (e) {
+        completedIds = [];
+      }
+
+      if (!completedIds.includes(this.quizId)) {
+        completedIds.push(this.quizId);
+        await learnPrefs.put('completedQuizIds', JSON.stringify(completedIds));
+        await learnPrefs.flush();
+        console.info(`[QuizDetailPage] Marked quiz ${this.quizId} as completed in ${learnPrefsKey}`);
+      }
+    } catch (err) {
+      console.error(`[QuizDetailPage] Failed to mark quiz as completed: ${JSON.stringify(err)}`);
+    }
   }
 
   private nextQuestion(): void {

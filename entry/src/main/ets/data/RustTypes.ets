@@ -79,4 +79,5 @@ export interface InterviewItem {
   answer: string;
   difficulty: InterviewDifficulty;
   tags: string[];
+  language?: Language;
 }

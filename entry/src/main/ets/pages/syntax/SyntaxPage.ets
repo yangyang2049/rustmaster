@@ -125,7 +125,9 @@ export struct SyntaxPage {
     .alignItems(VerticalAlign.Center)
     .margin({ bottom: Spacing.ELEMENT_SPACING_MD })
     .onClick(() => {
-      this.collapsedCategories[index] = !this.collapsedCategories[index];
+      const newCollapsed = [...this.collapsedCategories];
+      newCollapsed[index] = !newCollapsed[index];
+      this.collapsedCategories = newCollapsed;
     })
   }
 

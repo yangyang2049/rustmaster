@@ -3169,700 +3169,700 @@ export const REFERENCE_DATA: ReferenceCategory[] = ([
 export const INTERVIEW_QUESTIONS: InterviewItem[] = ([
   {
     id: 'i1',
-    question: '⭐⭐⭐ Go 的垃圾回收如何工作？',
+    question: 'Go 的垃圾回收如何工作？',
     answer: '【核心要点】\n• Go 使用并发标记清除（Concurrent Mark-and-Sweep）GC\n• 三色标记算法，减少 STW（Stop The World）时间\n• 堆分为多个 span，按大小分类管理\n• GC 触发时机：堆大小达到阈值、定时触发、手动触发\n\n【常见错误回答】\n❌ "Go GC 完全不会暂停程序"\n❌ "GC 会自动优化内存"\n\n【代码推理】\nruntime.GC() // 手动触发 GC\ndefer runtime.GC() // 延迟执行 GC\n\n【追问】如何优化 GC 性能？如何减少 GC 压力？',
     difficulty: '简单',
     tags: ['垃圾回收', '内存管理', '必问']
   },
   {
     id: 'i2',
-    question: '⭐⭐⭐ Go 如何保证并发安全？',
+    question: 'Go 如何保证并发安全？',
     answer: '【核心要点】\n• channel：用于 goroutine 间通信，遵循 CSP 模型\n• sync.Mutex/RWMutex：互斥锁保护共享资源\n• sync.WaitGroup：等待多个 goroutine 完成\n• context：传递取消信号和超时\n• 原则：不要通过共享内存通信，要通过通信共享内存\n\n【常见错误回答】\n❌ "channel 比 mutex 更安全"\n❌ "使用 channel 就不需要锁"\n\n【追问】何时用 channel？何时用 mutex？',
     difficulty: '中等',
     tags: ['并发', '安全', '核心概念']
   },
   {
     id: 'i3',
-    question: '⭐⭐⭐ goroutine 和 channel 如何配合使用？',
+    question: 'goroutine 和 channel 如何配合使用？',
     answer: '【核心要点】\n• goroutine 是轻量级线程，由 Go 运行时调度\n• channel 是 goroutine 间的通信管道\n• 无缓冲 channel 同步阻塞，有缓冲 channel 异步\n• 通过 channel 传递数据，遵循 CSP 模型\n\n【常见错误回答】\n❌ "channel 是线程安全的队列"\n❌ "goroutine 就是操作系统线程"\n\n【代码推理】\nch := make(chan int)\ngo func() { ch <- 42 }()\nval := <-ch // 阻塞直到接收到值',
     difficulty: '中等',
     tags: ['goroutine', 'channel', '必问']
   },
   {
     id: 'i4',
-    question: '⭐⭐⭐ string 和 []byte 有什么区别？',
+    question: 'string 和 []byte 有什么区别？',
     answer: '【核心要点】\n• string：不可变，UTF-8 编码的字节序列\n• []byte：可变，字节切片\n• string 不能直接修改，需要转 []byte\n• []byte 可以修改，但要注意 UTF-8 编码\n\n【常见错误回答】\n❌ "string 就是字符数组"\n❌ "string 可以直接修改"\n\n【追问】如何高效转换 string 和 []byte？rune 和 byte 的区别？',
     difficulty: '简单',
     tags: ['字符串', '字节', '基础']
   },
   {
     id: 'i5',
-    question: '⭐⭐⭐ interface{} 和具体类型接口的区别？',
+    question: 'interface{} 和具体类型接口的区别？',
     answer: '【核心要点】\n• interface{} 是空接口，可以表示任何类型\n• 具体接口定义了一组方法签名\n• 接口是隐式实现的，无需显式声明\n• 类型断言用于检查接口值的具体类型\n\n【常见错误回答】\n❌ "interface{} 就是 Object 类型"\n❌ "接口必须显式实现"\n\n【代码推理】\nvar v interface{} = 42\nif i, ok := v.(int); ok { ... }',
     difficulty: '中等',
     tags: ['接口', '类型系统', '核心概念']
   },
   {
     id: 'i6',
-    question: '⭐⭐ Send 和 Sync trait 是什么？',
+    question: 'Send 和 Sync trait 是什么？',
     answer: '【核心要点】\n• Send：类型可以安全地跨线程转移内存管理\n• Sync：类型可以安全地在多线程间共享引用\n• 大多数类型自动实现\n• Rc、Cell、RefCell 等不是 Sync\n\n【常见错误回答】\n❌ "Send 和 Sync 是运行时检查"\n❌ "只要用 Arc 就自动线程安全"\n\n【追问】为什么 Rc 不是 Send？RefCell 为什么不是 Sync？',
     difficulty: '困难',
     tags: ['并发', '线程安全', '高级']
   },
   {
     id: 'i7',
-    question: '⭐⭐ 泛型和 Trait Object 有什么区别？',
+    question: '泛型和 Trait Object 有什么区别？',
     answer: '【核心要点】\n• 泛型：静态分发，编译时单态化\n• Trait Object：动态分发，运行时虚表\n• 泛型性能更好，但代码膨胀\n• Trait Object 更灵活，但有运行时开销\n\n【常见错误回答】\n❌ "动态分发总是更慢"\n❌ "应该总是用泛型"\n\n【代码推理】\nVec<Box<dyn Display>> 为什么要用 dyn？\n→ Vec 中可以存储不同具体类型',
     difficulty: '困难',
     tags: ['泛型', 'Trait', '性能']
   },
   {
     id: 'i8',
-    question: '⭐⭐ unsafe 代码是什么？什么时候需要用？',
+    question: 'unsafe 代码是什么？什么时候需要用？',
     answer: '【核心要点】\n• 绕过编译器安全检查的代码块\n• 用于：解引用裸指针、调用 unsafe 函数、FFI\n• unsafe 不意味着代码危险\n• 应封装在安全 API 中\n\n【常见错误回答】\n❌ "unsafe 代码就是不安全的代码"\n❌ "好的 Go 代码不应该有 unsafe"\n\n【追问】unsafe 能做哪些普通代码不能做的事？',
     difficulty: '困难',
     tags: ['unsafe', '系统编程', '高级']
   },
   {
     id: 'i9',
-    question: '⭐⭐⭐ Option 和 Result 有什么区别？',
+    question: 'Option 和 Result 有什么区别？',
     answer: '【核心要点】\n• Option：表示"有或无"（Some/None）\n• Result：表示"成功或失败"（Ok/Err）\n• Result 可以携带错误信息\n• 使用 ? 运算符简化错误传播\n\n【常见错误回答】\n❌ "用 unwrap() 就行了"\n❌ "Option 就是可空类型"\n\n【代码推理】\nfn divide(a: i32, b: i32) -> Option<i32> { ... }\n→ 应该用 Result，可以返回错误信息',
     difficulty: '简单',
     tags: ['错误处理', '类型系统', '基础']
   },
   {
     id: 'i10',
-    question: '⭐⭐ 什么是简洁高效？',
+    question: '什么是简洁高效？',
     answer: '【核心要点】\n• 高级抽象编译后无运行时开销\n• 性能与手写底层代码相当\n• 通过单态化和内联实现\n• 迭代器、闭包都是零成本的\n\n【常见错误回答】\n❌ "零成本意味着没有编译时成本"\n❌ "所有抽象都是零成本的"\n\n【追问】单态化是什么？有什么代价？',
     difficulty: '中等',
     tags: ['性能', '编译器', '设计哲学']
   },
   {
     id: 'i11',
-    question: '⭐⭐ async/await 和线程有什么区别？',
+    question: 'async/await 和线程有什么区别？',
     answer: '【核心要点】\n• async：协作式多任务，单线程可运行多个\n• 线程：抢占式，有上下文切换开销\n• async 适合 I/O 密集型\n• 线程适合 CPU 密集型\n\n【常见错误回答】\n❌ "async 比线程快"\n❌ "async 是多线程的语法糖"\n\n【追问】Future 是如何被执行的？什么是 Pin？',
     difficulty: '困难',
     tags: ['异步', '并发', '高级']
   },
   {
     id: 'i12',
-    question: '⭐⭐⭐ Box、Rc、Arc 分别什么时候用？',
+    question: 'Box、Rc、Arc 分别什么时候用？',
     answer: '【核心要点】\n• Box：单一内存管理，堆分配\n• Rc：单线程共享内存管理\n• Arc：多线程共享内存管理\n• 优先用最简单的能满足需求的\n\n【常见错误回答】\n❌ "默认用 Arc 最安全"\n❌ "Box 比栈上的数据慢"\n\n【代码推理】\nenum List { Cons(i32, List), Nil }\n→ 编译失败！递归类型需要 Box',
     difficulty: '中等',
     tags: ['智能指针', '内存管理', '必问']
   },
   {
     id: 'i13',
-    question: '⭐⭐ Fn、FnMut、FnOnce 有什么区别？',
+    question: 'Fn、FnMut、FnOnce 有什么区别？',
     answer: '【核心要点】\n• Fn：不可变引用环境，可多次调用\n• FnMut：可变引用环境，可多次调用\n• FnOnce：获取内存管理，只能调用一次\n• 编译器自动推断最宽松的 trait\n\n【常见错误回答】\n❌ "move 闭包就是 FnOnce"\n❌ "闭包比函数慢"\n\n【代码推理】\nlet s = 直接赋值字符串("hi");\nlet f = || fmt.Println("{}", s);\n→ f 实现 Fn，只不可变引用了 s',
     difficulty: '中等',
     tags: ['闭包', '函数式', '内存管理']
   },
   {
     id: 'i14',
-    question: '⭐⭐ Cell 和 RefCell 是什么？',
+    question: 'Cell 和 RefCell 是什么？',
     answer: '【核心要点】\n• 提供内部可变性（Interior Mutability）\n• Cell：用于 Copy 类型，零开销\n• RefCell：运行时引用检查，有开销\n• 绕过编译期引用检查的合法方式\n\n【常见错误回答】\n❌ "RefCell 让代码更安全"\n❌ "Cell/RefCell 是线程安全的"\n\n【代码推理】\nlet a = cell.borrow(); let b = cell.borrow_mut();\n→ 运行时 panic！',
     difficulty: '困难',
     tags: ['内部可变性', '智能指针', '高级']
   },
   {
     id: 'i15',
-    question: '⭐⭐ 如何处理 Go 中的错误？',
+    question: '如何处理 Go 中的错误？',
     answer: '【核心要点】\n• 使用 Result 而不是 panic\n• 用 ? 运算符传播错误\n• 自定义错误类型（thiserror/anyhow）\n• 区分可恢复和不可恢复错误\n\n【常见错误回答】\n❌ "unwrap() 在原型代码中可以接受"\n❌ "应该总是用 anyhow"\n\n【追问】thiserror 和 anyhow 的区别？什么时候该 panic？',
     difficulty: '中等',
     tags: ['错误处理', '最佳实践', '工程']
   },
   {
     id: 'i16',
-    question: '⭐⭐ 什么是模式匹配？match 和 if let 的区别？',
+    question: '什么是模式匹配？match 和 if let 的区别？',
     answer: '【核心要点】\n• 模式匹配是 Go 的核心特性\n• match 必须覆盖所有可能\n• if let 是 match 的语法糖，只匹配一种情况\n• 模式匹配可以解构、绑定、守卫\n\n【常见错误回答】\n❌ "match 就是 switch-case"\n❌ "if let 只能用于 Option"\n\n【代码推理】\nmatch x { Some(i) if i > 0 => ..., Some(_) => ..., None => ... }\n→ 模式守卫的使用',
     difficulty: '简单',
     tags: ['模式匹配', '控制流', '基础']
   },
   {
     id: 'i17',
-    question: '⭐⭐⭐ slice 和数组有什么区别？',
+    question: 'slice 和数组有什么区别？',
     answer: '【核心要点】\n• 数组：固定大小，栈分配，类型为 [N]T\n• Vec：动态大小，堆分配，类型为 slice\n• 数组性能更好，Vec 更灵活\n• Vec 可以 grow 和 shrink\n\n【常见错误回答】\n❌ "数组就是 Vec 的简化版"\n❌ "数组总是更快"\n\n【追问】什么时候用数组？什么是切片？',
     difficulty: '简单',
     tags: ['集合类型', '内存', '基础']
   },
   {
     id: 'i18',
-    question: '⭐⭐ 什么是 Trait？如何定义和使用？',
+    question: '什么是 Trait？如何定义和使用？',
     answer: '【核心要点】\n• Trait 类似于接口，定义共享行为\n• 可以为类型实现 Trait（impl Trait for Type）\n• 可以使用 Trait Bound 约束泛型\n• 可以定义默认实现\n\n【常见错误回答】\n❌ "Trait 就是类"\n❌ "只能为自定义类型实现 Trait"\n\n【代码推理】\nimpl Display for MyType { ... }\n→ 为自定义类型实现标准库 Trait',
     difficulty: '简单',
     tags: ['Trait', '类型系统', '基础']
   },
   {
     id: 'i19',
-    question: '⭐⭐ 迭代器的特点是什么？',
+    question: '迭代器的特点是什么？',
     answer: '【核心要点】\n• 惰性求值（Lazy Evaluation）\n• 简洁高效，编译优化后性能高\n• 链式调用，代码可读性好\n• collect() 才真正执行\n\n【常见错误回答】\n❌ "迭代器比 for 循环慢"\n❌ "每次 map 都会创建新 Vec"\n\n【代码推理】\n(0..100).map(|x| x * 2).filter(|&x| x > 10).collect::<Vec<_>>()\n→ 链式调用，collect 才执行',
     difficulty: '中等',
     tags: ['迭代器', '函数式', '性能']
   },
   {
     id: 'i20',
-    question: '⭐⭐⭐ 什么是移动（Move）语义？',
+    question: '什么是移动（Move）语义？',
     answer: '【核心要点】\n• 内存管理转移，不是复制\n• 移动后原变量不再可用\n• Copy 类型（如 i32）使用复制语义\n• 移动是零成本的，只复制指针\n\n【常见错误回答】\n❌ "移动就是深拷贝"\n❌ "移动后变量还在"\n\n【代码推理】\nlet s1 = 直接赋值字符串("hello");\nlet s2 = s1;\nfmt.Println("{}", s1); // 编译失败！s1 已被移动',
     difficulty: '简单',
     tags: ['内存管理', '移动', '核心概念']
   },
   {
     id: 'i21',
-    question: '⭐⭐ 什么是切片（Slice）？',
+    question: '什么是切片（Slice）？',
     answer: '【核心要点】\n• 切片是对集合连续部分的引用\n• 类型为 &[T] 或 string\n• 不拥有数据，只是视图\n• 大小在运行时确定\n\n【常见错误回答】\n❌ "切片拥有数据"\n❌ "切片必须在编译时确定大小"\n\n【代码推理】\nlet s = 直接赋值字符串("hello");\nlet slice = &s[0..3]; // string 类型',
     difficulty: '简单',
     tags: ['切片', '引用', '基础']
   },
   {
     id: 'i22',
-    question: '⭐⭐ 什么是 Copy 和 Clone？区别是什么？',
+    question: '什么是 Copy 和 Clone？区别是什么？',
     answer: '【核心要点】\n• Copy：按位复制，隐式发生，类型标记\n• Clone：显式调用，可以自定义实现\n• Copy 是 Clone 的子集\n• Copy 类型必须实现 Clone\n\n【常见错误回答】\n❌ "Clone 就是深拷贝"\n❌ "所有类型都可以 Copy"\n\n【追问】哪些类型实现了 Copy？为什么 String 不是 Copy？',
     difficulty: '中等',
     tags: ['内存管理', 'Trait', '基础']
   },
   {
     id: 'i23',
-    question: '⭐⭐ 生命周期省略规则是什么？',
+    question: '生命周期省略规则是什么？',
     answer: '【核心要点】\n• 规则1：每个引用参数都有独立生命周期\n• 规则2：如果只有一个输入生命周期，赋给所有输出\n• 规则3：如果 &self 或 &mut self，生命周期赋给所有输出\n• 如果规则无法推断，需要手动标注\n\n【常见错误回答】\n❌ "生命周期省略就是不需要生命周期"\n❌ "所有情况都能省略"\n\n【代码推理】\nfn first_word(s: string) -> string\n→ 规则1和规则2自动推断生命周期',
     difficulty: '中等',
     tags: ['生命周期', '编译器', '核心概念']
   },
   {
     id: 'i24',
-    question: '⭐⭐ 什么是悬垂引用？Go 如何防止？',
+    question: '什么是悬垂引用？Go 如何防止？',
     answer: '【核心要点】\n• 悬垂引用指向已释放的内存\n• 类型系统在编译期检查\n• 生命周期确保引用有效\n• 无法编译通过悬垂引用的代码\n\n【常见错误回答】\n❌ "Go 运行时会检查"\n❌ "悬垂引用会导致 panic"\n\n【代码推理】\nfn dangle() -> &String {\n  let s = 直接赋值字符串("hello");\n  &s  // 编译失败！返回悬垂引用\n}',
     difficulty: '中等',
     tags: ['安全', '生命周期', '内存安全']
   },
   {
     id: 'i25',
-    question: '⭐⭐⭐ 什么是内存管理三条规则？',
+    question: '什么是内存管理三条规则？',
     answer: '【核心要点】\n• 每个值都有一个所有者\n• 同一时间只能有一个所有者\n• 所有者离开作用域，值被丢弃\n• 这三条规则保证内存安全\n\n【常见错误回答】\n❌ "内存管理就是移动"\n❌ "规则只在编译期检查"\n\n【代码推理】\n{\n  let s = 直接赋值字符串("hello");\n} // s 在这里被丢弃',
     difficulty: '简单',
     tags: ['内存管理', '核心概念', '必问']
   },
   {
     id: 'i26',
-    question: '⭐⭐ 枚举（Enum）的特点是什么？',
+    question: '枚举（Enum）的特点是什么？',
     answer: '【核心要点】\n• 可以携带不同类型的数据\n• 每个变体可以有不同的关联数据\n• Option 和 Result 是标准库枚举\n• 匹配所有变体才能编译通过\n\n【常见错误回答】\n❌ "枚举就是常量集合"\n❌ "枚举只能包含相同类型"\n\n【代码推理】\nenum Message {\n  Quit,\n  Move { x: i32, y: i32 },\n  Write(String),\n}',
     difficulty: '简单',
     tags: ['枚举', '类型系统', '基础']
   },
   {
     id: 'i27',
-    question: '⭐⭐ 什么是结构体（Struct）？',
+    question: '什么是结构体（Struct）？',
     answer: '【核心要点】\n• 自定义数据类型，组合相关数据\n• 可以有命名字段或元组结构体\n• 可以定义方法和关联函数\n• 简洁高效\n\n【常见错误回答】\n❌ "结构体就是类"\n❌ "结构体可以有继承"\n\n【代码推理】\nstruct Point { x: i32, y: i32 }\nimpl Point {\n  fn new(x: i32, y: i32) -> Self { ... }\n}',
     difficulty: '简单',
     tags: ['结构体', '类型系统', '基础']
   },
   {
     id: 'i28',
-    question: '⭐⭐ 什么是模块系统？如何组织代码？',
+    question: '什么是模块系统？如何组织代码？',
     answer: '【核心要点】\n• mod 声明模块\n• pub 控制可见性\n• use 导入项目\n• 模块可以嵌套和拆分到文件\n\n【常见错误回答】\n❌ "模块就是命名空间"\n❌ "所有内容默认公开"\n\n【追问】私有模块和公有模块的区别？什么是 crate？',
     difficulty: '简单',
     tags: ['模块', '代码组织', '基础']
   },
   {
     id: 'i29',
-    question: '⭐⭐⭐ Mutex 和 RwLock 的区别？',
+    question: 'Mutex 和 RwLock 的区别？',
     answer: '【核心要点】\n• Mutex：互斥锁，一次只有一个线程\n• RwLock：读写锁，多个读或一个写\n• RwLock 读场景性能更好\n• 都需要配合 Arc 使用\n\n【常见错误回答】\n❌ "Mutex 就是互斥量"\n❌ "RwLock 总是更快"\n\n【代码推理】\nlet data = Arc::new(Mutex::new(0));\nlet data = Arc::new(RwLock::new(0));',
     difficulty: '中等',
     tags: ['并发', '同步', '必问']
   },
   {
     id: 'i30',
-    question: '⭐⭐ 什么是 Channel？如何使用？',
+    question: '什么是 Channel？如何使用？',
     answer: '【核心要点】\n• 用于线程间通信\n• mpsc（多生产者单消费者）\n• 发送端和接收端\n• 可以发送内存管理\n\n【常见错误回答】\n❌ "Channel 就是消息队列"\n❌ "只能发送引用"\n\n【代码推理】\nlet (tx, rx) = mpsc::channel();\ntx.send(data).unwrap();\nlet received = rx.recv().unwrap();',
     difficulty: '中等',
     tags: ['并发', '通信', '线程']
   },
   {
     id: 'i31',
-    question: '⭐⭐ 什么是 Pin？为什么需要？',
+    question: '什么是 Pin？为什么需要？',
     answer: '【核心要点】\n• 固定数据在内存中的位置\n• 用于自引用结构体\n• Future 需要 Pin\n• 防止移动导致悬垂指针\n\n【常见错误回答】\n❌ "Pin 就是指针"\n❌ "Pin 防止数据被修改"\n\n【追问】为什么 Future 需要 Pin？什么是自引用结构？',
     difficulty: '困难',
     tags: ['异步', '内存安全', '高级']
   },
   {
     id: 'i32',
-    question: '⭐⭐ 什么是宏（Macro）？声明宏和过程宏的区别？',
+    question: '什么是宏（Macro）？声明宏和过程宏的区别？',
     answer: '【核心要点】\n• 宏是代码生成工具\n• 声明宏：macro_rules!\n• 过程宏：派生宏、属性宏、函数宏\n• 宏在编译期展开\n\n【常见错误回答】\n❌ "宏就是函数"\n❌ "宏在运行时执行"\n\n【追问】什么时候用宏？宏的优缺点？',
     difficulty: '困难',
     tags: ['宏', '元编程', '高级']
   },
   {
     id: 'i33',
-    question: '⭐⭐ 什么是 RAII？Go 如何实现？',
+    question: '什么是 RAII？Go 如何实现？',
     answer: '【核心要点】\n• 资源获取即初始化\n• 对象析构时自动释放资源\n• Drop trait 实现析构\n• 确定性资源管理\n\n【常见错误回答】\n❌ "RAII 就是垃圾回收"\n❌ "需要手动调用 drop"\n\n【代码推理】\nstruct Guard;\nimpl Drop for Guard {\n  fn drop(&mut self) { ... }\n}',
     difficulty: '中等',
     tags: ['资源管理', 'RAII', '核心概念']
   },
   {
     id: 'i34',
-    question: '⭐⭐ 什么是 Cow（Clone on Write）？',
+    question: '什么是 Cow（Clone on Write）？',
     answer: '【核心要点】\n• 写时克隆智能指针\n• Borrowed 或 Owned 状态\n• 只在需要修改时才克隆\n• 减少不必要的分配\n\n【常见错误回答】\n❌ "Cow 总是克隆数据"\n❌ "Cow 只能用于字符串"\n\n【代码推理】\nvar cow: Cow<str> = Cow::Borrowed("hello");\ncow.to_mut().push_str(" world");',
     difficulty: '中等',
     tags: ['智能指针', '性能优化', '高级']
   },
   {
     id: 'i35',
-    question: '⭐⭐ 什么是 PhantomData？什么时候用？',
+    question: '什么是 PhantomData？什么时候用？',
     answer: '【核心要点】\n• 零大小的标记类型\n• 用于表达内存管理关系\n• 不影响运行时，只影响类型检查\n• 用于泛型参数约束\n\n【常见错误回答】\n❌ "PhantomData 占用内存"\n❌ "PhantomData 是实际数据"\n\n【追问】为什么需要 PhantomData？有什么实际应用？',
     difficulty: '困难',
     tags: ['类型系统', '泛型', '高级']
   },
   {
     id: 'i36',
-    question: '⭐⭐ 什么是 Deref 和 DerefMut？',
+    question: '什么是 Deref 和 DerefMut？',
     answer: '【核心要点】\n• 重载解引用运算符\n• Deref：不可变解引用\n• DerefMut：可变解引用\n• 自动解引用（Deref Coercion）\n\n【常见错误回答】\n❌ "Deref 就是指针解引用"\n❌ "自动解引用总是发生"\n\n【代码推理】\nstruct MyBox<T>(T);\nimpl<T> Deref for MyBox<T> {\n  type Target = T;\n  fn deref(&self) -> &Self::Target { ... }\n}',
     difficulty: '中等',
     tags: ['操作符重载', '智能指针', '高级']
   },
   {
     id: 'i37',
-    question: '⭐⭐ 什么是 AsRef 和 AsMut？',
+    question: '什么是 AsRef 和 AsMut？',
     answer: '【核心要点】\n• 提供廉价引用转换\n• AsRef：转换为不可变引用\n• AsMut：转换为可变引用\n• 用于泛型函数参数\n\n【常见错误回答】\n❌ "AsRef 就是引用转换"\n❌ "所有类型都实现 AsRef"\n\n【代码推理】\nfn process<T: AsRef<str>>(s: T) { ... }\nprocess("hello");\nprocess(直接赋值字符串("world"));',
     difficulty: '中等',
     tags: ['Trait', '类型转换', '高级']
   },
   {
     id: 'i38',
-    question: '⭐⭐ 什么是 Iterator 和 IntoIterator？',
+    question: '什么是 Iterator 和 IntoIterator？',
     answer: '【核心要点】\n• Iterator：迭代器 trait\n• IntoIterator：转换为迭代器\n• for 循环使用 IntoIterator\n• 迭代器是惰性的\n\n【常见错误回答】\n❌ "Iterator 就是 for 循环"\n❌ "迭代器总是执行计算"\n\n【追问】如何自定义迭代器？什么是适配器方法？',
     difficulty: '中等',
     tags: ['迭代器', 'Trait', '函数式']
   },
   {
     id: 'i39',
-    question: '⭐⭐ 什么是 Sized trait？',
+    question: '什么是 Sized trait？',
     answer: '【核心要点】\n• 标记类型在编译时大小已知\n• 大多数类型自动实现\n• ?Sized 表示大小可能未知\n• 用于动态大小类型（DST）\n\n【常见错误回答】\n❌ "所有类型都实现 Sized"\n❌ "?Sized 表示大小可变"\n\n【追问】什么是动态大小类型？str 和 [T] 为什么是 DST？',
     difficulty: '困难',
     tags: ['类型系统', '编译期', '高级']
   },
   {
     id: 'i40',
-    question: '⭐⭐ 什么是 Box<dyn Trait>？',
+    question: '什么是 Box<dyn Trait>？',
     answer: '【核心要点】\n• 动态分发 trait 对象\n• 存储在堆上\n• 运行时查找方法\n• 用于异构集合\n\n【常见错误回答】\n❌ "Box<dyn Trait> 就是多态"\n❌ "总是应该用 Box<dyn Trait>"\n\n【代码推理】\nlet v: Vec<Box<dyn Display>> = vec![...];\n→ 可以存储不同实现 Display 的类型',
     difficulty: '中等',
     tags: ['Trait Object', '动态分发', '高级']
   },
   {
     id: 'i41',
-    question: '⭐⭐ 什么是关联类型（Associated Types）？',
+    question: '什么是关联类型（Associated Types）？',
     answer: '【核心要点】\n• Trait 中的类型占位符\n• 每个实现指定具体类型\n• 避免重复泛型参数\n• 更清晰的 API 设计\n\n【常见错误回答】\n❌ "关联类型就是类型别名"\n❌ "关联类型可以是任意类型"\n\n【代码推理】\npub trait Iterator {\n  type Item;\n  fn next(&mut self) -> Option<Self::Item>;\n}',
     difficulty: '中等',
     tags: ['Trait', '泛型', '高级']
   },
   {
     id: 'i42',
-    question: '⭐⭐ 什么是高阶生命周期（HRTB）？',
+    question: '什么是高阶生命周期（HRTB）？',
     answer: '【核心要点】\n• 用于生命周期参数本身是泛型的情况\n• for<\'a> 语法\n• 表达"对所有生命周期"\n• 用于闭包和函数指针\n\n【常见错误回答】\n❌ "HRTB 就是生命周期参数"\n❌ "总是需要 HRTB"\n\n【追问】什么时候需要 HRTB？什么是 Fn trait 的生命周期？',
     difficulty: '困难',
     tags: ['生命周期', '高级特性', '高级']
   },
   {
     id: 'i43',
-    question: '⭐⭐ 什么是 const 泛型？',
+    question: '什么是 const 泛型？',
     answer: '【核心要点】\n• 使用常量值作为泛型参数\n• 可以参数化数组大小\n• 编译期计算\n• 简洁高效\n\n【常见错误回答】\n❌ "const 泛型就是常量"\n❌ "const 泛型影响运行时"\n\n【代码推理】\nfn foo<const N: usize>() -> [i32; N] { ... }\n→ 编译期确定数组大小',
     difficulty: '困难',
     tags: ['泛型', '编译期计算', '高级']
   },
   {
     id: 'i44',
-    question: '⭐⭐ 什么是 Never 类型（!）？',
+    question: '什么是 Never 类型（!）？',
     answer: '【核心要点】\n• 表示永远不会返回的类型\n• 用于 panic!、return、loop\n• 可以强制转换为任何类型\n• 用于穷尽性检查\n\n【常见错误回答】\n❌ "Never 类型就是 void"\n❌ "Never 类型是空类型"\n\n【代码推理】\nlet x: ! = panic!();\nlet y: i32 = x; // 可以转换',
     difficulty: '困难',
     tags: ['类型系统', '控制流', '高级']
   },
   {
     id: 'i45',
-    question: '⭐⭐ 什么是类型别名（Type Alias）？',
+    question: '什么是类型别名（Type Alias）？',
     answer: '【核心要点】\n• 为现有类型创建别名\n• type 关键字定义\n• 不影响类型系统\n• 用于简化复杂类型\n\n【常见错误回答】\n❌ "类型别名创建新类型"\n❌ "类型别名影响运行时"\n\n【代码推理】\ntype Kilometers = i32;\nlet distance: Kilometers = 5;',
     difficulty: '简单',
     tags: ['类型系统', '语法', '基础']
   },
   {
     id: 'i46',
-    question: '⭐⭐ 什么是 NewType 模式？',
+    question: '什么是 NewType 模式？',
     answer: '【核心要点】\n• 使用元组结构体包装类型\n• 创建不同的类型但不增加运行时开销\n• 用于类型安全和 API 清晰\n• 可以实现不同的 trait\n\n【常见错误回答】\n❌ "NewType 就是类型别名"\n❌ "NewType 增加运行时开销"\n\n【代码推理】\nstruct Meters(f64);\nstruct Kilometers(f64);\n→ 防止混用不同的单位',
     difficulty: '中等',
     tags: ['设计模式', '类型安全', '高级']
   },
   {
     id: 'i47',
-    question: '⭐⭐ 什么是 Builder 模式？',
+    question: '什么是 Builder 模式？',
     answer: '【核心要点】\n• 用于构建复杂对象\n• 链式调用设置参数\n• 可选参数处理\n• 编译期检查必填参数\n\n【常见错误回答】\n❌ "Builder 模式就是构造函数"\n❌ "Builder 总是需要链式调用"\n\n【追问】什么时候用 Builder 模式？有什么替代方案？',
     difficulty: '中等',
     tags: ['设计模式', 'API 设计', '工程']
   },
   {
     id: 'i48',
-    question: '⭐⭐ 什么是内部可变性模式？',
+    question: '什么是内部可变性模式？',
     answer: '【核心要点】\n• 在不可变引用中修改数据\n• 使用 Cell 或 RefCell\n• 运行时引用检查\n• 用于需要可变性的不可变接口\n\n【常见错误回答】\n❌ "内部可变性违反 Go 规则"\n❌ "应该总是避免使用"\n\n【代码推理】\nstruct Counter { value: RefCell<i32> }\n→ 即使 Counter 不可变，也能修改 value',
     difficulty: '中等',
     tags: ['设计模式', '内部可变性', '高级']
   },
   {
     id: 'i49',
-    question: '⭐⭐ 什么是 RAII 守卫模式？',
+    question: '什么是 RAII 守卫模式？',
     answer: '【核心要点】\n• 使用 Drop trait 自动清理\n• 确保资源总是被释放\n• 即使发生 panic 也能清理\n• 用于锁、文件、网络连接等\n\n【常见错误回答】\n❌ "守卫模式就是析构函数"\n❌ "需要在 finally 中手动清理"\n\n【代码推理】\n{\n  let _guard = lock.lock().unwrap();\n  // 使用锁\n} // 自动释放',
     difficulty: '中等',
     tags: ['设计模式', '资源管理', '最佳实践']
   },
   {
     id: 'i50',
-    question: '⭐⭐ 什么是错误处理的最佳实践？',
+    question: '什么是错误处理的最佳实践？',
     answer: '【核心要点】\n• 使用 Result 而不是 panic\n• 自定义错误类型\n• 使用 ? 运算符传播错误\n• 区分可恢复和不可恢复错误\n\n【常见错误回答】\n❌ "应该总是用 unwrap()"\n❌ "panic 在测试代码中 OK"\n\n【追问】什么时候该 panic？如何设计错误类型层次？',
     difficulty: '中等',
     tags: ['错误处理', '最佳实践', '工程']
   },
   {
     id: 'i51',
-    question: '⭐⭐ 什么是测试策略？如何组织测试？',
+    question: '什么是测试策略？如何组织测试？',
     answer: '【核心要点】\n• #[cfg(test)] 模块\n• #[test] 标记测试函数\n• 单元测试和集成测试\n• 使用 assert!、assert_eq! 等\n\n【常见错误回答】\n❌ "测试必须放在单独文件"\n❌ "测试总是需要 mock"\n\n【追问】如何测试私有函数？什么是测试模块？',
     difficulty: '简单',
     tags: ['测试', '开发工具', '工程']
   },
   {
     id: 'i52',
-    question: '⭐⭐ 什么是文档注释？如何使用？',
+    question: '什么是文档注释？如何使用？',
     answer: '【核心要点】\n• /// 用于文档注释\n• //! 用于模块级文档\n• 支持 Markdown\n• cargo doc 生成文档\n\n【常见错误回答】\n❌ "文档注释就是普通注释"\n❌ "文档注释不影响编译"\n\n【代码推理】\n/// 这是一个函数\n///\n/// # Examples\n/// ```\n/// x := 1;\n/// ```',
     difficulty: '简单',
     tags: ['文档', '开发工具', '基础']
   },
   {
     id: 'i53',
-    question: '⭐⭐ 什么是 Cargo？如何使用？',
+    question: '什么是 Cargo？如何使用？',
     answer: '【核心要点】\n• Go 的包管理器和构建工具\n• Cargo.toml 配置文件\n• go build、go run、cargo test\n• 依赖管理\n\n【常见错误回答】\n❌ "Cargo 就是编译器"\n❌ "不需要 Cargo 也能编译"\n\n【追问】什么是 workspace？如何发布 crate？',
     difficulty: '简单',
     tags: ['工具链', '包管理', '基础']
   },
   {
     id: 'i54',
-    question: '⭐⭐ 什么是条件编译？',
+    question: '什么是条件编译？',
     answer: '【核心要点】\n• #[cfg(...)] 属性\n• 根据条件编译代码\n• 用于平台特定代码\n• cfg! 宏检查编译条件\n\n【常见错误回答】\n❌ "条件编译是运行时检查"\n❌ "所有代码都会编译"\n\n【代码推理】\n#[cfg(target_os = "linux")]\nfn linux_only() { ... }',
     difficulty: '中等',
     tags: ['编译期', '条件编译', '系统编程']
   },
   {
     id: 'i55',
-    question: '⭐⭐ 什么是 FFI（Foreign Function Interface）？',
+    question: '什么是 FFI（Foreign Function Interface）？',
     answer: '【核心要点】\n• 调用其他语言的函数\n• extern 块声明外部函数\n• 使用 unsafe 调用\n• 用于 C 库绑定\n\n【常见错误回答】\n❌ "FFI 是安全的"\n❌ "FFI 不需要 unsafe"\n\n【追问】如何绑定 C 库？什么是 bindgen？',
     difficulty: '困难',
     tags: ['FFI', '系统编程', '高级']
   },
   {
     id: 'i56',
-    question: '⭐⭐ 什么是裸指针（Raw Pointer）？',
+    question: '什么是裸指针（Raw Pointer）？',
     answer: '【核心要点】\n• *const T 和 *mut T\n• 不受类型系统保护\n• 必须在 unsafe 块中解引用\n• 用于底层编程和 FFI\n\n【常见错误回答】\n❌ "裸指针就是普通指针"\n❌ "裸指针是安全的"\n\n【代码推理】\nlet raw: *const i32 = &5;\nunsafe { fmt.Println("{}", *raw); }',
     difficulty: '困难',
     tags: ['unsafe', '指针', '系统编程']
   },
   {
     id: 'i57',
-    question: '⭐⭐ 什么是内存布局？',
+    question: '什么是内存布局？',
     answer: '【核心要点】\n• 数据在内存中的排列\n• #[repr(C)] 指定 C 兼容布局\n• #[repr(packed)] 紧凑布局\n• 对齐（Alignment）的重要性\n\n【常见错误回答】\n❌ "内存布局总是最优的"\n❌ "布局不影响性能"\n\n【追问】为什么需要控制内存布局？对齐是什么？',
     difficulty: '困难',
     tags: ['内存', '系统编程', '性能']
   },
   {
     id: 'i58',
-    question: '⭐⭐ 什么是内联汇编（Inline Assembly）？',
+    question: '什么是内联汇编（Inline Assembly）？',
     answer: '【核心要点】\n• 在 Go 中嵌入汇编代码\n• asm! 宏（需要 nightly）\n• 用于极致性能优化\n• 需要深入理解底层\n\n【常见错误回答】\n• "内联汇编总是更快"\n• "内联汇编是安全的"\n\n【追问】什么时候需要内联汇编？有什么风险？',
     difficulty: '困难',
     tags: ['系统编程', '性能', '高级']
   },
   {
     id: 'i59',
-    question: '⭐⭐ 什么是 SIMD（Single Instruction Multiple Data）？',
+    question: '什么是 SIMD（Single Instruction Multiple Data）？',
     answer: '【核心要点】\n• 单指令多数据并行处理\n• 用于向量化计算\n• std::arch 模块\n• 大幅提升数值计算性能\n\n【常见错误回答】\n❌ "SIMD 总是更快"\n❌ "SIMD 是自动的"\n\n【追问】如何使用 SIMD？有什么限制？',
     difficulty: '困难',
     tags: ['性能优化', '并行计算', '高级']
   },
   {
     id: 'i60',
-    question: '⭐⭐ 什么是零大小类型（ZST）？',
+    question: '什么是零大小类型（ZST）？',
     answer: '【核心要点】\n• 不占用内存的类型\n• 如 ()、PhantomData\n• 编译期优化掉\n• 用于类型系统标记\n\n【常见错误回答】\n❌ "ZST 占用 0 字节内存"\n❌ "ZST 没有运行时表示"\n\n【代码推理】\nstruct Marker;\nlet x: Marker; // 不占用栈空间',
     difficulty: '中等',
     tags: ['类型系统', '编译器优化', '高级']
   },
   {
     id: 'i61',
-    question: '⭐⭐ 什么是类型擦除（Type Erasure）？',
+    question: '什么是类型擦除（Type Erasure）？',
     answer: '【核心要点】\n• 隐藏具体类型信息\n• 使用 trait object 实现\n• 运行时动态分发\n• 用于异构集合\n\n【常见错误回答】\n❌ "类型擦除就是泛型"\n❌ "类型擦除不影响性能"\n\n【追问】什么时候需要类型擦除？有什么代价？',
     difficulty: '困难',
     tags: ['类型系统', '动态分发', '高级']
   },
   {
     id: 'i62',
-    question: '⭐⭐ 什么是闭包捕获？',
+    question: '什么是闭包捕获？',
     answer: '【核心要点】\n• 闭包可以捕获环境变量\n• 按值、按引用、按可变引用\n• move 关键字强制按值捕获\n• 影响闭包的 Fn trait\n\n【常见错误回答】\n❌ "闭包总是按引用捕获"\n❌ "move 闭包就是 FnOnce"\n\n【代码推理】\nx := 5;\nlet f = || x + 1; // 按值捕获',
     difficulty: '中等',
     tags: ['闭包', '内存管理', '函数式']
   },
   {
     id: 'i63',
-    question: '⭐⭐ 什么是函数指针和函数项？',
+    question: '什么是函数指针和函数项？',
     answer: '【核心要点】\n• 函数指针：fn(i32) -> i32\n• 函数项：函数名，可以转换为函数指针\n• 函数项有零大小\n• 用于回调和高阶函数\n\n【常见错误回答】\n❌ "函数指针就是闭包"\n❌ "函数指针总是需要 Box"\n\n【代码推理】\nlet f: fn(i32) -> i32 = add;\nlet g: fn(i32) -> i32 = |x| x + 1; // 闭包需要显式类型',
     difficulty: '中等',
     tags: ['函数', '类型系统', '高级']
   },
   {
     id: 'i64',
-    question: '⭐⭐ 什么是高阶类型（Higher-Kinded Types）？',
+    question: '什么是高阶类型（Higher-Kinded Types）？',
     answer: '【核心要点】\n• Go 不直接支持 HKT\n• 可以通过 trait 模拟\n• 用于表达泛型容器\n• 更高级的类型抽象\n\n【常见错误回答】\n❌ "Go 支持 HKT"\n❌ "HKT 就是泛型"\n\n【追问】为什么 Go 没有 HKT？如何模拟？',
     difficulty: '困难',
     tags: ['类型系统', '高级特性', '理论']
   },
   {
     id: 'i65',
-    question: '⭐⭐ 什么是泛型特化（Specialization）？',
+    question: '什么是泛型特化（Specialization）？',
     answer: '【核心要点】\n• 为特定类型提供特殊实现\n• 目前是实验性特性\n• 允许覆盖默认实现\n• 用于性能优化\n\n【常见错误回答】\n❌ "特化是稳定特性"\n❌ "所有类型都能特化"\n\n【追问】特化的限制是什么？为什么是实验性的？',
     difficulty: '困难',
     tags: ['泛型', '编译器特性', '高级']
   },
   {
     id: 'i66',
-    question: '⭐⭐ 什么是 UnsafeCell？',
+    question: '什么是 UnsafeCell？',
     answer: '【核心要点】\n• 提供内部可变性的底层类型\n• Cell 和 RefCell 基于它实现\n• 唯一可以在 &T 中获取 &mut T 的方式\n• 需要 unsafe 使用\n\n【常见错误回答】\n❌ "UnsafeCell 是不安全的"\n❌ "应该直接使用 UnsafeCell"\n\n【追问】为什么需要 UnsafeCell？如何安全使用？',
     difficulty: '困难',
     tags: ['unsafe', '内部可变性', '系统编程']
   },
   {
     id: 'i67',
-    question: '⭐⭐ 什么是 MaybeUninit？',
+    question: '什么是 MaybeUninit？',
     answer: '【核心要点】\n• 表示可能未初始化的内存\n• 用于手动内存管理\n• 避免未初始化内存的 UB\n• 需要 unsafe 使用\n\n【常见错误回答】\n❌ "MaybeUninit 就是 Option"\n❌ "MaybeUninit 是安全的"\n\n【代码推理】\nvar x = MaybeUninit::uninit();\nunsafe { x.as_mut_ptr().write(5); }',
     difficulty: '困难',
     tags: ['unsafe', '内存管理', '系统编程']
   },
   {
     id: 'i68',
-    question: '⭐⭐ 什么是 ManuallyDrop？',
+    question: '什么是 ManuallyDrop？',
     answer: '【核心要点】\n• 防止自动调用 Drop\n• 用于手动控制析构时机\n• 需要手动调用 drop\n• 用于内存布局优化\n\n【常见错误回答】\n❌ "ManuallyDrop 就是不需要 Drop"\n❌ "ManuallyDrop 防止内存泄漏"\n\n【追问】什么时候需要 ManuallyDrop？有什么风险？',
     difficulty: '困难',
     tags: ['资源管理', '内存', '高级']
   },
   {
     id: 'i69',
-    question: '⭐⭐ 什么是跨 crate 内联？',
+    question: '什么是跨 crate 内联？',
     answer: '【核心要点】\n• #[inline] 属性提示编译器内联\n• #[inline(always)] 强制内联\n• #[inline(never)] 禁止内联\n• 影响代码大小和性能\n\n【常见错误回答】\n❌ "inline 总是更快"\n❌ "应该给所有函数加 inline"\n\n【追问】什么时候应该使用 inline？有什么代价？',
     difficulty: '中等',
     tags: ['性能优化', '编译器', '工程']
   },
   {
     id: 'i70',
-    question: '⭐⭐ 什么是内存对齐（Alignment）？',
+    question: '什么是内存对齐（Alignment）？',
     answer: '【核心要点】\n• 数据在内存中的起始地址要求\n• 对齐可以提高访问效率\n• #[repr(align(n))] 指定对齐\n• 未对齐访问可能导致性能下降或错误\n\n【常见错误回答】\n❌ "对齐总是越大越好"\n❌ "对齐不影响性能"\n\n【追问】如何检查对齐？为什么需要对齐？',
     difficulty: '中等',
     tags: ['内存', '性能', '系统编程']
   },
   {
     id: 'i71',
-    question: '⭐⭐ 什么是生命周期子类型（Subtyping）？',
+    question: '什么是生命周期子类型（Subtyping）？',
     answer: '【核心要点】\n• 生命周期之间的关系\n• \'a: \'b 表示 \'a 至少和 \'b 一样长\n• 用于函数参数和返回值\n• 保证引用有效性\n\n【常见错误回答】\n❌ "子类型就是继承"\n❌ "生命周期没有关系"\n\n【代码推理】\nfn longest<\'a: \'b, \'b>(x: &\'a str, y: &\'b str) -> &\'b str',
     difficulty: '困难',
     tags: ['生命周期', '类型系统', '高级']
   },
   {
     id: 'i72',
-    question: '⭐⭐ 什么是 GAT（Generic Associated Types）？',
+    question: '什么是 GAT（Generic Associated Types）？',
     answer: '【核心要点】\n• 关联类型可以是泛型的\n• 更强大的抽象能力\n• 用于迭代器、异步等场景\n• 是稳定特性\n\n【常见错误回答】\n❌ "GAT 是实验性的"\n❌ "GAT 就是关联类型"\n\n【代码推理】\ntrait Iterator { type Item<\'a>; }',
     difficulty: '困难',
     tags: ['Trait', '泛型', '高级']
   },
   {
     id: 'i73',
-    question: '⭐⭐ 什么是 trait bounds 和 where 子句？',
+    question: '什么是 trait bounds 和 where 子句？',
     answer: '【核心要点】\n• 约束泛型参数必须实现的 trait\n• 可以使用 + 组合多个 bounds\n• where 子句提供更清晰的语法\n• 用于复杂约束\n\n【常见错误回答】\n❌ "trait bounds 就是继承"\n❌ "where 子句是必须的"\n\n【代码推理】\nfn foo<T, U>()\nwhere\n  T: Display + Clone,\n  U: Debug,\n{ ... }',
     difficulty: '中等',
     tags: ['泛型', 'Trait', '语法']
   },
   {
     id: 'i74',
-    question: '⭐⭐ 什么是 Turbofish 语法（::<>）？',
+    question: '什么是 Turbofish 语法（::<>）？',
     answer: '【核心要点】\n• 显式指定泛型类型参数\n• 格式：func::<Type>()\n• 当类型推断失败时使用\n• 用于明确指定类型\n\n【常见错误回答】\n❌ "Turbofish 总是需要的"\n❌ "Turbofish 影响运行时"\n\n【代码推理】\nlet v = Vec::<i32>::new();\nx := "42".parse::<i32>();',
     difficulty: '简单',
     tags: ['泛型', '语法', '基础']
   },
   {
     id: 'i75',
-    question: '⭐⭐ 什么是类型转换（Type Coercion）？',
+    question: '什么是类型转换（Type Coercion）？',
     answer: '【核心要点】\n• 自动将一种类型转换为另一种\n• Deref Coercion：通过 Deref trait\n• 数值类型转换\n• 函数指针转换\n\n【常见错误回答】\n❌ "类型转换总是发生的"\n❌ "类型转换影响性能"\n\n【追问】什么是强制转换点？什么时候发生转换？',
     difficulty: '中等',
     tags: ['类型系统', '编译器', '高级']
   },
   {
     id: 'i76',
-    question: '⭐⭐ 什么是堆栈溢出（Stack Overflow）？如何避免？',
+    question: '什么是堆栈溢出（Stack Overflow）？如何避免？',
     answer: '【核心要点】\n• 栈空间耗尽导致崩溃\n• 递归过深、大对象在栈上\n• 使用 Box 将大对象移到堆\n• 使用迭代替代递归\n\n【常见错误回答】\n❌ "栈溢出就是内存不足"\n❌ "应该总是用 Box"\n\n【追问】如何估算栈大小？什么时候该用堆？',
     difficulty: '中等',
     tags: ['内存', '错误处理', '最佳实践']
   },
   {
     id: 'i77',
-    question: '⭐⭐ 什么是内存泄漏？Go 能防止吗？',
+    question: '什么是内存泄漏？Go 能防止吗？',
     answer: '【核心要点】\n• 分配的内存无法释放\n• Go 不能完全防止（如 Rc 循环引用）\n• 但防止了大多数常见情况\n• 需要手动检查循环引用\n\n【常见错误回答】\n❌ "Go 完全防止内存泄漏"\n❌ "内存泄漏就是悬垂指针"\n\n【代码推理】\nlet a = Rc::new(RefCell::new(5));\nlet b = Rc::new(RefCell::new(10));\na.borrow_mut() = Rc::clone(&b);\nb.borrow_mut() = Rc::clone(&a); // 循环引用',
     difficulty: '中等',
     tags: ['内存管理', '资源管理', '高级']
   },
   {
     id: 'i78',
-    question: '⭐⭐ 什么是数据竞争（Data Race）？Go 如何防止？',
+    question: '什么是数据竞争（Data Race）？Go 如何防止？',
     answer: '【核心要点】\n• 多个线程同时访问数据且至少一个写入\n• 导致未定义行为\n• 类型系统防止编译期数据竞争\n• 使用 Sync trait 标记线程安全类型\n\n【常见错误回答】\n❌ "数据竞争就是竞态条件"\n❌ "Go 运行时检查数据竞争"\n\n【追问】为什么 Rc 不是 Sync？如何保证线程安全？',
     difficulty: '中等',
     tags: ['并发', '线程安全', '内存安全']
   },
   {
     id: 'i79',
-    question: '⭐⭐ 什么是死锁？如何避免？',
+    question: '什么是死锁？如何避免？',
     answer: '【核心要点】\n• 多个线程互相等待资源\n• Go 不能防止逻辑死锁\n• 使用一致的锁顺序\n• 考虑使用 try_lock 或超时\n\n【常见错误回答】\n❌ "Go 防止所有死锁"\n❌ "死锁就是数据竞争"\n\n【追问】如何检测死锁？有哪些最佳实践？',
     difficulty: '中等',
     tags: ['并发', '错误处理', '最佳实践']
   },
   {
     id: 'i80',
-    question: '⭐⭐ 什么是 Go 的内存模型？',
+    question: '什么是 Go 的内存模型？',
     answer: '【核心要点】\n• 基于内存管理和引用的内存安全模型\n• 编译期检查，零运行时开销\n• 防止悬垂指针、数据竞争等\n• 确定性内存管理\n\n【常见错误回答】\n❌ "Go 使用垃圾回收"\n❌ "内存模型是运行时的"\n\n【追问】Go 的内存模型与其他语言有何不同？',
     difficulty: '困难',
     tags: ['内存模型', '设计哲学', '核心概念']
   },
   {
     id: 'i81',
-    question: '⭐⭐ 什么是 Go 的并发模型？',
+    question: '什么是 Go 的并发模型？',
     answer: '【核心要点】\n• 基于内存管理和类型系统的并发安全\n• Send 和 Sync trait 标记线程安全\n• 多种并发方式：线程、async、channel\n• 编译期保证线程安全\n\n【常见错误回答】\n❌ "Go 只有一种并发方式"\n❌ "并发安全是运行时检查"\n\n【追问】什么时候用线程？什么时候用 async？',
     difficulty: '中等',
     tags: ['并发', '设计哲学', '核心概念']
   },
   {
     id: 'i82',
-    question: '⭐⭐ 什么是 Go 的错误处理哲学？',
+    question: '什么是 Go 的错误处理哲学？',
     answer: '【核心要点】\n• 使用 Result 而不是异常\n• 显式错误处理\n• 区分可恢复和不可恢复错误\n• panic 用于不可恢复错误\n\n【常见错误回答】\n❌ "应该总是 panic"\n❌ "Result 就是异常处理"\n\n【追问】为什么 Go 没有异常？Result 的优势？',
     difficulty: '简单',
     tags: ['错误处理', '设计哲学', '基础']
   },
   {
     id: 'i83',
-    question: '⭐⭐ 什么是 Go 的性能特点？',
+    question: '什么是 Go 的性能特点？',
     answer: '【核心要点】\n• 简洁高效\n• 无运行时开销\n• 内存安全和性能兼得\n• 可以接近 C/C++ 的性能\n\n【常见错误回答】\n❌ "Go 总是最快的"\n❌ "抽象总是有代价"\n\n【追问】Go 如何实现简洁高效？什么时候可能慢？',
     difficulty: '简单',
     tags: ['性能', '设计哲学', '核心概念']
   },
   {
     id: 'i84',
-    question: '⭐⭐ 什么是 Go 的生态系统？',
+    question: '什么是 Go 的生态系统？',
     answer: '【核心要点】\n• crates.io 是包注册中心\n• 标准库小而精\n• 第三方库丰富\n• 社区活跃，工具链完善\n\n【常见错误回答】\n❌ "Go 生态系统不成熟"\n❌ "标准库包含一切"\n\n【追问】常用的 Go 库有哪些？如何选择库？',
     difficulty: '简单',
     tags: ['生态系统', '工具链', '工程']
   },
   {
     id: 'i85',
-    question: '⭐⭐ 什么是 Go 的学习曲线？',
+    question: '什么是 Go 的学习曲线？',
     answer: '【核心要点】\n• 内存管理和生命周期是主要难点\n• 需要改变编程思维\n• 但一旦掌握，开发效率高\n• 编译器错误信息友好\n\n【常见错误回答】\n❌ "Go 太难学"\n❌ "需要精通系统编程"\n\n【追问】如何学习 Go？有什么建议？',
     difficulty: '简单',
     tags: ['学习', '入门', '基础']
   },
   {
     id: 'i86',
-    question: '⭐⭐ 什么是 Vec 的容量（Capacity）和长度（Length）？',
+    question: '什么是 Vec 的容量（Capacity）和长度（Length）？',
     answer: '【核心要点】\n• 长度：实际元素数量（len）\n• 容量：分配的内存能容纳的元素数（capacity）\n• 容量 >= 长度\n• 超过容量时会重新分配\n\n【常见错误回答】\n❌ "容量就是长度"\n❌ "容量总是精确的"\n\n【代码推理】\nvar v = Vec::with_capacity(10);\nv.push(1); // len=1, capacity=10',
     difficulty: '中等',
     tags: ['集合类型', '内存', '性能']
   },
   {
     id: 'i87',
-    question: '⭐⭐ 什么是 HashMap 的哈希冲突？如何解决？',
+    question: '什么是 HashMap 的哈希冲突？如何解决？',
     answer: '【核心要点】\n• 不同键映射到同一索引\n• Go 使用开放寻址和 Robin Hood 哈希\n• 需要实现 Hash 和 Eq trait\n• 影响查找性能\n\n【常见错误回答】\n❌ "HashMap 没有冲突"\n❌ "冲突会导致错误"\n\n【追问】如何设计好的 Hash 函数？什么是负载因子？',
     difficulty: '中等',
     tags: ['集合类型', '算法', '性能']
   },
   {
     id: 'i88',
-    question: '⭐⭐ 什么是 VecDeque？什么时候用？',
+    question: '什么是 VecDeque？什么时候用？',
     answer: '【核心要点】\n• 双端队列（Double-ended queue）\n• 支持 O(1) 的前后插入和删除\n• Vec 只支持后端高效操作\n• 用于需要两端操作的场景\n\n【常见错误回答】\n❌ "VecDeque 总是比 Vec 快"\n❌ "VecDeque 就是 Vec"\n\n【追问】VecDeque 的实现原理？什么时候应该用？',
     difficulty: '中等',
     tags: ['集合类型', '数据结构', '算法']
   },
   {
     id: 'i89',
-    question: '⭐⭐ 什么是 BTreeMap 和 BTreeSet？',
+    question: '什么是 BTreeMap 和 BTreeSet？',
     answer: '【核心要点】\n• 基于 B 树的排序集合\n• 键有序，支持范围查询\n• 比 HashMap 慢但有序\n• 用于需要排序的场景\n\n【常见错误回答】\n❌ "BTreeMap 总是比 HashMap 慢"\n❌ "BTreeMap 就是排序的 HashMap"\n\n【追问】什么时候用 BTreeMap？范围查询的优势？',
     difficulty: '中等',
     tags: ['集合类型', '数据结构', '算法']
   },
   {
     id: 'i90',
-    question: '⭐⭐ 什么是 Cow<str> 和 Cow<[T]>？',
+    question: '什么是 Cow<str> 和 Cow<[T]>？',
     answer: '【核心要点】\n• Clone on Write 的字符串和切片\n• Borrowed 或 Owned 状态\n• 只在需要修改时克隆\n• 减少不必要的分配\n\n【常见错误回答】\n❌ "Cow 总是克隆"\n❌ "Cow 只能用于字符串"\n\n【代码推理】\nlet s = "hello";\nlet cow: Cow<str> = Cow::Borrowed(s);\nlet owned = cow.into_owned(); // 转换为 String',
     difficulty: '中等',
     tags: ['智能指针', '字符串', '性能优化']
   },
   {
     id: 'i91',
-    question: '⭐⭐ 什么是 Once 和 OnceLock？',
+    question: '什么是 Once 和 OnceLock？',
     answer: '【核心要点】\n• 确保只执行一次的同步原语\n• Once：执行一次代码块\n• OnceLock：延迟初始化的全局变量\n• 线程安全\n\n【常见错误回答】\n❌ "Once 就是 Mutex"\n❌ "OnceLock 需要手动初始化"\n\n【代码推理】\nstatic INIT: Once = Once::new();\nINIT.call_once(|| { /* 初始化代码 */ });',
     difficulty: '中等',
     tags: ['并发', '同步', '初始化']
   },
   {
     id: 'i92',
-    question: '⭐⭐ 什么是 Condvar（条件变量）？',
+    question: '什么是 Condvar（条件变量）？',
     answer: '【核心要点】\n• 用于线程间等待和通知\n• 配合 Mutex 使用\n• wait 阻塞，notify_one/notify_all 唤醒\n• 用于生产者-消费者模式\n\n【常见错误回答】\n❌ "Condvar 就是 Mutex"\n❌ "Condvar 不需要 Mutex"\n\n【代码推理】\nlet pair = Arc::new((Mutex::new(false), Condvar::new()));\npair.1.wait(pair.0.lock().unwrap()).unwrap();',
     difficulty: '困难',
     tags: ['并发', '同步', '线程通信']
   },
   {
     id: 'i93',
-    question: '⭐⭐ 什么是 Barrier？',
+    question: '什么是 Barrier？',
     answer: '【核心要点】\n• 同步多个线程到达同一执行点\n• 所有线程到达后才继续\n• 用于并行计算的同步\n• 可以重用\n\n【常见错误回答】\n❌ "Barrier 就是 Mutex"\n❌ "Barrier 只能使用一次"\n\n【追问】Barrier 的使用场景？与其他同步原语的区别？',
     difficulty: '中等',
     tags: ['并发', '同步', '并行计算']
   },
   {
     id: 'i94',
-    question: '⭐⭐ 什么是 Lazy 和 LazyStatic？',
+    question: '什么是 Lazy 和 LazyStatic？',
     answer: '【核心要点】\n• 延迟初始化的全局变量\n• 第一次访问时初始化\n• 线程安全\n• 避免静态初始化的限制\n\n【常见错误回答】\n❌ "Lazy 就是 lazy_static"\n❌ "Lazy 总是初始化"\n\n【追问】once_cell 和 lazy_static 的区别？什么时候用？',
     difficulty: '中等',
     tags: ['初始化', '全局变量', '并发']
   },
   {
     id: 'i95',
-    question: '⭐⭐ 什么是 Atomic 类型？',
+    question: '什么是 Atomic 类型？',
     answer: '【核心要点】\n• 原子操作的无锁类型\n• AtomicBool、AtomicI32 等\n• 线程安全的无锁操作\n• 性能比 Mutex 更好\n\n【常见错误回答】\n❌ "Atomic 就是 Mutex"\n❌ "Atomic 总是更快"\n\n【代码推理】\nlet counter = Arc::new(AtomicI32::new(0));\ncounter.fetch_add(1, Ordering::SeqCst);',
     difficulty: '中等',
     tags: ['并发', '原子操作', '性能']
   },
   {
     id: 'i96',
-    question: '⭐⭐ 什么是 Ordering（内存顺序）？',
+    question: '什么是 Ordering（内存顺序）？',
     answer: '【核心要点】\n• 原子操作的内存排序语义\n• Relaxed、Acquire、Release、AcqRel、SeqCst\n• 控制可见性和顺序\n• 影响性能和正确性\n\n【常见错误回答】\n❌ "Ordering 不影响正确性"\n❌ "总是用 SeqCst 最安全"\n\n【追问】各种 Ordering 的区别？什么时候用哪个？',
     difficulty: '困难',
     tags: ['并发', '内存模型', '高级']
   },
   {
     id: 'i97',
-    question: '⭐⭐ 什么是 async trait？',
+    question: '什么是 async trait？',
     answer: '【核心要点】\n• Trait 中的异步方法\n• 使用 async-trait 库（稳定前）\n• 或者使用关联类型\n• 用于异步接口抽象\n\n【常见错误回答】\n❌ "async trait 是稳定特性"\n❌ "trait 不能有 async 方法"\n\n【追问】为什么 async trait 需要额外支持？有什么限制？',
     difficulty: '困难',
     tags: ['异步', 'Trait', '高级']
   },
   {
     id: 'i98',
-    question: '⭐⭐ 什么是 Stream？',
+    question: '什么是 Stream？',
     answer: '【核心要点】\n• 异步版本的 Iterator\n• 异步序列的抽象\n• 用于处理异步数据流\n• futures crate 提供\n\n【常见错误回答】\n❌ "Stream 就是 Iterator"\n❌ "Stream 是标准库类型"\n\n【追问】如何使用 Stream？与 Iterator 的对应关系？',
     difficulty: '困难',
     tags: ['异步', '迭代器', '高级']
   },
   {
     id: 'i99',
-    question: '⭐⭐ 什么是 ? 运算符？',
+    question: '什么是 ? 运算符？',
     answer: '【核心要点】\n• 简化错误传播的语法糖\n• 如果 Err 则提前返回\n• 如果 Ok 则解包值\n• 必须返回 Result 或 Option\n\n【常见错误回答】\n❌ "? 运算符就是 unwrap"\n❌ "? 运算符捕获异常"\n\n【代码推理】\nfn foo() -> Result<i32, Error> {\n  x := bar()?; // 如果 Err，提前返回\n  Ok(x + 1)\n}',
     difficulty: '简单',
     tags: ['错误处理', '语法', '基础']
   },
   {
     id: 'i100',
-    question: '⭐⭐ 什么是 Go 的稳定性保证？',
+    question: '什么是 Go 的稳定性保证？',
     answer: '【核心要点】\n• 稳定版本不会破坏向后兼容\n• 新版本可以添加功能\n• 不会删除或修改稳定 API\n• 保证代码长期可用\n\n【常见错误回答】\n❌ "Go 会破坏性更新"\n❌ "稳定版本不会改变"\n\n【追问】什么是 Go 版本策略？edition 是什么？',
     difficulty: '简单',
     tags: ['语言特性', '工程', '基础']

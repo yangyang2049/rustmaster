@@ -2,8 +2,8 @@
   "app": {
     "bundleName": "com.douhua.rustmaster",
     "vendor": "Douhua Tech",
-    "versionCode": 6,
-    "versionName": "2.0.0",
+    "versionCode": 8,
+    "versionName": "2.0.1",
     "icon": "$media:layered_image",
     "label": "$string:app_name"
   }

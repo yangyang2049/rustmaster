@@ -1,4 +1,4 @@
-import { InterviewDifficulty, InterviewItem } from '../data/RustTypes';
+import { InterviewDifficulty, InterviewItem, Language } from '../data/RustTypes';
 import { PreferencesManager } from './PreferencesManager';
 
 /**
@@ -31,6 +31,8 @@ export class InterviewQuestionsManager {
     const id = typeof obj.id === 'string' ? obj.id : '';
     const question = typeof obj.question === 'string' ? obj.question : '';
     const answer = typeof obj.answer === 'string' ? obj.answer : '';
+    const language = typeof obj.language === 'number' ? obj.language as Language : undefined;
+    
     if (!id || !question || !answer) {
       return null;
     }
@@ -39,14 +41,15 @@ export class InterviewQuestionsManager {
       question,
       answer,
       difficulty: InterviewQuestionsManager.normalizeDifficulty(obj.difficulty as string),
-      tags: InterviewQuestionsManager.normalizeTags(obj.tags as string | string[] | null | undefined)
+      tags: InterviewQuestionsManager.normalizeTags(obj.tags as string | string[] | null | undefined),
+      language
     };
   }
 
   /**
-   * 获取所有自定义面试问题
+   * 获取自定义面试问题，支持按语言过滤
    */
-  static async getCustomQuestions(): Promise<InterviewItem[]> {
+  static async getCustomQuestions(language?: Language): Promise<InterviewItem[]> {
     try {
       const prefs = await PreferencesManager.getPreferences('app_settings');
       const questionsJson: string = await prefs.get(InterviewQuestionsManager.STORAGE_KEY, '[]') as string;
@@ -59,7 +62,10 @@ export class InterviewQuestionsManager {
         const raw = parsed[i] as Record<string, Object>;
         const normalized = InterviewQuestionsManager.normalizeQuestion(raw);
         if (normalized !== null) {
-          result.push(normalized);
+          // 如果指定了语言，则进行过滤。如果没有 language 字段，则视为通用（旧数据兼容）
+          if (language === undefined || normalized.language === undefined || normalized.language === language) {
+            result.push(normalized);
+          }
         }
       }
       return result;
@@ -70,9 +76,9 @@ export class InterviewQuestionsManager {
   }
 
   /**
-   * 保存自定义面试问题列表
+   * 保存所有自定义面试问题列表
    */
-  private static async saveCustomQuestions(questions: InterviewItem[]): Promise<void> {
+  private static async saveAllCustomQuestions(questions: InterviewItem[]): Promise<void> {
     try {
       const prefs = await PreferencesManager.getPreferences('app_settings');
       await prefs.put(InterviewQuestionsManager.STORAGE_KEY, JSON.stringify(questions));
@@ -83,18 +89,25 @@ export class InterviewQuestionsManager {
   }
 
   /**
+   * 获取不分语言的所有自定义问题（内部使用）
+   */
+  private static async getAllCustomQuestions(): Promise<InterviewItem[]> {
+    return await InterviewQuestionsManager.getCustomQuestions(undefined);
+  }
+
+  /**
    * 添加自定义面试问题
    */
   static async addCustomQuestion(question: InterviewItem): Promise<boolean> {
     try {
-      const questions = await InterviewQuestionsManager.getCustomQuestions();
+      const allQuestions = await InterviewQuestionsManager.getAllCustomQuestions();
       // 检查是否已存在相同ID的问题
-      const exists = questions.some((q: InterviewItem) => q.id === question.id);
+      const exists = allQuestions.some((q: InterviewItem) => q.id === question.id);
       if (exists) {
         return false;
       }
-      questions.push(question);
-      await InterviewQuestionsManager.saveCustomQuestions(questions);
+      allQuestions.push(question);
+      await InterviewQuestionsManager.saveAllCustomQuestions(allQuestions);
       return true;
     } catch (err) {
       console.error(`Failed to add custom interview question: ${JSON.stringify(err)}`);
@@ -107,13 +120,13 @@ export class InterviewQuestionsManager {
    */
   static async deleteCustomQuestion(questionId: string): Promise<boolean> {
     try {
-      const questions = await InterviewQuestionsManager.getCustomQuestions();
-      const index = questions.findIndex((q: InterviewItem) => q.id === questionId);
+      const allQuestions = await InterviewQuestionsManager.getAllCustomQuestions();
+      const index = allQuestions.findIndex((q: InterviewItem) => q.id === questionId);
       if (index === -1) {
         return false;
       }
-      questions.splice(index, 1);
-      await InterviewQuestionsManager.saveCustomQuestions(questions);
+      allQuestions.splice(index, 1);
+      await InterviewQuestionsManager.saveAllCustomQuestions(allQuestions);
       return true;
     } catch (err) {
       console.error(`Failed to delete custom interview question: ${JSON.stringify(err)}`);
@@ -126,13 +139,13 @@ export class InterviewQuestionsManager {
    */
   static async updateCustomQuestion(questionId: string, updatedQuestion: InterviewItem): Promise<boolean> {
     try {
-      const questions = await InterviewQuestionsManager.getCustomQuestions();
-      const index = questions.findIndex((q: InterviewItem) => q.id === questionId);
+      const allQuestions = await InterviewQuestionsManager.getAllCustomQuestions();
+      const index = allQuestions.findIndex((q: InterviewItem) => q.id === questionId);
       if (index === -1) {
         return false;
       }
-      questions[index] = updatedQuestion;
-      await InterviewQuestionsManager.saveCustomQuestions(questions);
+      allQuestions[index] = updatedQuestion;
+      await InterviewQuestionsManager.saveAllCustomQuestions(allQuestions);
       return true;
     } catch (err) {
       console.error(`Failed to update custom interview question: ${JSON.stringify(err)}`);

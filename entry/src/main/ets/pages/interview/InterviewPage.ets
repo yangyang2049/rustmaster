@@ -65,7 +65,7 @@ export struct InterviewPage {
 
   private async loadAllQuestions(): Promise<void> {
     try {
-      const customQuestions = await InterviewQuestionsManager.getCustomQuestions();
+      const customQuestions = await InterviewQuestionsManager.getCustomQuestions(this.language);
       const builtinQuestions = LanguageDataManager.getInterviewQuestions(this.language);
       this.allQuestions = builtinQuestions.concat(customQuestions);
     } catch (err) {
@@ -220,7 +220,8 @@ export struct InterviewPage {
       question: this.newQuestionText.trim(),
       answer: this.newAnswerText.trim(),
       difficulty: this.newDifficulty as '简单' | '中等' | '困难',
-      tags: tags
+      tags: tags,
+      language: this.language
     };
 
     this.isSavingQuestion = true;

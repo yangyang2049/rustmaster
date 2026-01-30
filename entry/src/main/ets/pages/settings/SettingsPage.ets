@@ -29,28 +29,20 @@ export struct SettingsPage {
   private appSettingsPrefs: preferences.Preferences | null = null;
   private context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
 
-  private getAppInfo(): AppInfo {
-    const appInfo: AppInfo = {
-      name: '码上学',
-      description: '一款全面的编程学习应用，包含多语言语法参考、题库和互动练习',
-      bundleName: 'com.douhua.rustmaster',
-      aboutMessage: '码上学 v2.0.0\n\n一款全面的编程学习应用，包含多语言语法参考、题库和互动练习。支持 Rust、Python、Go、ArkTS 等多种编程语言的学习。\n\n本应用不提供任何职业资格认证或考试服务。'
+  private async getAppInfo(): Promise<AppInfo> {
+    const bundleName = 'com.douhua.rustmaster';
+    
+    // Get strings from resources
+    const nameStr = await this.context.resourceManager.getStringValue($r('app.string.EntryAbility_label').id);
+    const descStr = await this.context.resourceManager.getStringValue($r('app.string.EntryAbility_desc').id);
+    const aboutStr = await this.context.resourceManager.getStringValue($r('app.string.about_app_message').id);
+    
+    return {
+      name: nameStr,
+      description: descStr,
+      bundleName: bundleName,
+      aboutMessage: aboutStr
     };
-    return appInfo;
-  }
-
-  private getPrimaryHexColor(): string {
-    switch (this.language) {
-      case Language.PYTHON:
-        return '#3776AB';
-      case Language.GO:
-        return '#00ADD8';
-      case Language.ARKTS:
-        return '#0A59F7';
-      case Language.RUST:
-      default:
-        return '#FB923C';
-    }
   }
 
   async aboutToAppear() {
@@ -70,7 +62,6 @@ export struct SettingsPage {
       }
       const saved: number = await this.appSettingsPrefs.get('colorMode', ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET) as number;
       this.colorMode = saved as ConfigurationConstant.ColorMode;
-      // 不需要再次应用，因为 EntryAbility 已经应用过了
     } catch (err) {
       console.error(`Failed to load color mode: ${JSON.stringify(err)}`);
     }
@@ -78,7 +69,6 @@ export struct SettingsPage {
 
   private async saveColorMode(): Promise<void> {
     try {
-      // 使用单独的 app_settings preferences 来存储主题设置
       if (!this.appSettingsPrefs) {
         this.appSettingsPrefs = await PreferencesManager.getPreferences('app_settings');
       }
@@ -114,53 +104,68 @@ export struct SettingsPage {
     }
   }
 
-
-
-  private showAboutApp(): void {
+  private async showAboutApp(): Promise<void> {
     try {
-      const appInfo = this.getAppInfo();
+      const appInfo = await this.getAppInfo();
+      const titleStr = await this.context.resourceManager.getStringValue($r('app.string.about_app').id);
+      const okStr = await this.context.resourceManager.getStringValue($r('app.string.confirm').id);
+      
       promptAction.showDialog({
-        title: '关于应用',
+        title: titleStr,
         message: appInfo.aboutMessage,
         buttons: [
-          { text: '确定', color: '#FB923C' }
+          { text: okStr, color: this.getPrimaryHexColor() }
         ]
-      }).then(() => {
-      }).catch((err: Error) => {
-        console.error(`Failed to show dialog: ${err.message}`);
       });
     } catch (err) {
-      console.error(`Failed to show dialog: ${err instanceof Error ? err.message : String(err)}`);
+      console.error(`Failed to show about dialog: ${JSON.stringify(err)}`);
     }
   }
 
-  private showFeedback(): void {
+  private async showFeedback(): Promise<void> {
     try {
+      const titleStr = await this.context.resourceManager.getStringValue($r('app.string.feedback').id);
+      const messageStr = await this.context.resourceManager.getStringValue($r('app.string.feedback_message').id);
+      const okStr = await this.context.resourceManager.getStringValue($r('app.string.ok').id);
+
       promptAction.showDialog({
-        title: '意见反馈',
-        message: '如有建议或问题，可通过应用商店评论，或者发邮件到 ssz2048@163.com 反馈。感谢您的支持。',
+        title: titleStr,
+        message: messageStr,
         buttons: [
-          { text: '好的', color: '#FB923C' }
+          { text: okStr, color: this.getPrimaryHexColor() }
         ]
-      }).then(() => {
-      }).catch((err: Error) => {
-        console.error(`Failed to show dialog: ${err.message}`);
       });
     } catch (err) {
-      console.error(`Failed to show dialog: ${err instanceof Error ? err.message : String(err)}`);
+      console.error(`Failed to show feedback dialog: ${JSON.stringify(err)}`);
+    }
+  }
+
+  private getPrimaryHexColor(): string {
+    switch (this.language) {
+      case Language.PYTHON:
+        return '#3776AB';
+      case Language.GO:
+        return '#00ADD8';
+      case Language.ARKTS:
+        return '#0A59F7';
+      case Language.RUST:
+      default:
+        return '#FB923C';
     }
   }
 
   private async shareApp(): Promise<void> {
     try {
-      const appInfo = this.getAppInfo();
+      const appInfo = await this.getAppInfo();
+      const shareText = await this.context.resourceManager.getStringValue($r('app.string.share_app_text').id);
       const bundleName = appInfo.bundleName;
       const appGalleryUrl = `https://appgallery.huawei.com/app/detail?id=${bundleName}&channelId=SHARE&source=appshare`;
-      const shareText = `${appInfo.name} - 一款全面的编程学习应用，包含多语言语法参考、题库和互动练习。支持 Rust、Python、Go、ArkTS 等多种编程语言的学习。\n\n下载链接：${appGalleryUrl}`;
+      
+      const formattedShareText = shareText.replace('{url}', appGalleryUrl);
 
       const shareData: systemShare.SharedData = new systemShare.SharedData({
         utd: uniformTypeDescriptor.UniformDataType.TEXT,
-        content: shareText,
+        content: formattedShareText,
         title: appInfo.name,
         description: appInfo.description
       });
@@ -189,7 +194,7 @@ export struct SettingsPage {
         ToastUtil.showToast(this.context, '打开应用商店失败', 2000);
       });
     } catch (err) {
-      console.error(`Failed to open app gallery: ${err instanceof Error ? err.message : String(err)}`);
+      console.error(`Failed to open app gallery: ${JSON.stringify(err)}`);
       ToastUtil.showToast(this.context, '打开应用商店失败', 2000);
     }
   }
@@ -234,7 +239,7 @@ export struct SettingsPage {
   }
 
   @Builder
-  settingItemWithValue(icon: Resource, title: string, valueGetter: () => string, onClick?: () => void) {
+  settingItemWithValue(icon: Resource, title: string, value: string, onClick?: () => void) {
     Row() {
       Row() {
         Image(icon)
@@ -248,20 +253,16 @@ export struct SettingsPage {
       }
       .layoutWeight(1)
 
-      if (valueGetter() !== '') {
-        Row() {
-          Text(valueGetter())
+      Row() {
+        if (value !== '') {
+          Text(value)
             .fontSize(FontSizes.SMALL)
             .fontColor($r(Colors.TEXT_TERTIARY))
-          Image($r('app.media.icon_arrow_right'))
-            .width(Sizes.ICON_SM)
-            .height(Sizes.ICON_SM)
-            .margin({ left: 8 })
         }
-      } else {
         Image($r('app.media.icon_arrow_right'))
           .width(Sizes.ICON_SM)
           .height(Sizes.ICON_SM)
+          .margin({ left: 8 })
       }
     }
     .width('100%')
@@ -275,38 +276,8 @@ export struct SettingsPage {
   }
 
   @Builder
-  settingItemWithToggle(icon: Resource, title: string, enabled: boolean, onToggle: (enabled: boolean) => void) {
-    Row() {
-      Row() {
-        Image(icon)
-          .width(16)
-          .height(16)
-          .margin({ right: 12 })
-        Text(title)
-          .fontSize(FontSizes.BODY)
-          .fontWeight(FontWeights.MEDIUM)
-          .fontColor($r(Colors.TEXT_PRIMARY))
-      }
-      .layoutWeight(1)
-
-      Toggle({ type: ToggleType.Switch, isOn: enabled })
-        .selectedColor($r(Colors.RUST_PRIMARY))
-        .switchPointColor($r(Colors.TEXT_WHITE))
-        .onChange((isOn: boolean) => {
-          onToggle(isOn);
-        })
-    }
-    .width('100%')
-    .height(56)
-    .padding({ left: Spacing.CARD_PADDING, right: Spacing.CARD_PADDING })
-  }
-
-
-
-  @Builder
   ThemeDialog() {
     Stack({ alignContent: Alignment.Center }) {
-      // 遮罩层 - 使用与系统对话框类似的遮罩样式（与 promptAction.showDialog 一致）
       Column()
         .width('100%')
         .height('100%')
@@ -315,7 +286,6 @@ export struct SettingsPage {
           this.showThemeDialog = false;
         })
 
-      // 对话框
       Column() {
         Text('深色模式')
           .fontSize(FontSizes.LARGE)
@@ -346,13 +316,39 @@ export struct SettingsPage {
       .padding(Spacing.CARD_PADDING_LARGE)
       .backgroundColor($r(Colors.BG_CARD))
       .borderRadius(Sizes.RADIUS_XL)
-      .onClick(() => {
-        // 拦截点击事件，避免点击对话框内容时关闭遮罩层
-      })
     }
     .width('100%')
     .height('100%')
-    .zIndex(1000) // 确保在最上层
+    .zIndex(1000)
+  }
+
+  @Builder
+  ThemeOption(label: string, value: ConfigurationConstant.ColorMode) {
+    Row() {
+      Text(label)
+        .fontSize(FontSizes.BODY)
+        .fontColor($r(Colors.TEXT_PRIMARY))
+        .layoutWeight(1)
+
+      if (this.colorMode === value) {
+        Circle()
+          .width(10)
+          .height(10)
+          .fill($r(Colors.RUST_PRIMARY))
+      }
+    }
+    .width('100%')
+    .padding(Spacing.CARD_PADDING)
+    .borderRadius(Sizes.RADIUS_LG)
+    .backgroundColor(this.colorMode === value ? $r(Colors.RUST_BG_LIGHT) : $r(Colors.BG_SECONDARY))
+    .margin({ bottom: Spacing.ELEMENT_SPACING_MD })
+    .border({
+      width: this.colorMode === value ? 1 : 0,
+      color: $r(Colors.RUST_PRIMARY)
+    })
+    .onClick(() => {
+      this.colorMode = value;
+    })
   }
 
   @Builder
@@ -391,41 +387,11 @@ export struct SettingsPage {
     })
   }
 
-  @Builder
-  ThemeOption(label: string, value: ConfigurationConstant.ColorMode) {
-    Row() {
-      Text(label)
-        .fontSize(FontSizes.BODY)
-        .fontColor($r(Colors.TEXT_PRIMARY))
-        .layoutWeight(1)
-
-      if (this.colorMode === value) {
-        Circle()
-          .width(10)
-          .height(10)
-          .fill($r(Colors.RUST_PRIMARY))
-      }
-    }
-    .width('100%')
-    .padding(Spacing.CARD_PADDING)
-    .borderRadius(Sizes.RADIUS_LG)
-    .backgroundColor(this.colorMode === value ? $r(Colors.RUST_BG_LIGHT) : $r(Colors.BG_SECONDARY))
-    .margin({ bottom: Spacing.ELEMENT_SPACING_MD })
-    .border({
-      width: this.colorMode === value ? 1 : 0,
-      color: $r(Colors.RUST_PRIMARY)
-    })
-    .onClick(() => {
-      this.colorMode = value;
-    })
-  }
-
   build() {
     Stack() {
       Scroll() {
         Column() {
           Column() {
-            // 顶部部分：我的收藏（无标题）
             Column() {
               this.settingItem($r('app.media.icon_star'), '我的收藏', () => {
                 router.pushUrl({ url: 'pages/settings/FavoritesPage' })
@@ -441,13 +407,12 @@ export struct SettingsPage {
 
             this.SectionTitle('设置')
 
-            // 设置项
             Column() {
-              this.settingItemWithValue($r('app.media.icon_theme'), '深色模式', () => this.getThemeText(), () => {
+              this.settingItemWithValue($r('app.media.icon_theme'), '深色模式', this.getThemeText(), () => {
                 this.showThemeSettings();
               })
               this.settingItem($r('app.media.icon_star'), '评分', () => {
-                this.openAppInGallery(this.getAppInfo().bundleName);
+                this.openAppInGallery('com.douhua.rustmaster');
               })
               Divider()
                 .strokeWidth(0.5)
@@ -478,7 +443,6 @@ export struct SettingsPage {
 
             this.SectionTitle('其他应用')
 
-            // 其他应用
             Column() {
               this.OtherAppItem(
                 $r('app.media.icon_kaifazhushou'),
@@ -510,7 +474,6 @@ export struct SettingsPage {
       .edgeEffect(EdgeEffect.Spring)
       .backgroundColor($r(Colors.BG_PAGE))
 
-      // 主题设置对话框
       if (this.showThemeDialog) {
         this.ThemeDialog()
       }

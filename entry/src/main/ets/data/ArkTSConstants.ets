@@ -2489,70 +2489,70 @@ export const REFERENCE_DATA: ReferenceCategory[] = [
 export const INTERVIEW_QUESTIONS: InterviewItem[] = [
   {
     id: 'i1',
-    question: '⭐⭐ ArkTS 与 TypeScript 的关系？',
+    question: 'ArkTS 与 TypeScript 的关系？',
     answer: 'ArkTS 是 TypeScript 的超集（扩展）也是子集（限制）。\n\n1. **扩展**：增加了声明式 UI 描述、状态管理装饰器等能力。\n2. **限制**：为了更高的性能（静态类型优化），限制了 TS 中部分动态特性（如 any 类型的部分使用、运行时动态改变对象布局等）。',
     difficulty: '简单',
     tags: ['基础', '概念']
   },
   {
     id: 'i2',
-    question: '⭐⭐ @State, @Prop, @Link 的区别？',
+    question: '@State, @Prop, @Link 的区别？',
     answer: '1. **@State**：组件内部私有状态，初始化必须赋值，变化触发 UI 更新。\n2. **@Prop**：父组件单向同步给子组件，子组件修改不回传。\n3. **@Link**：父子组件双向同步，子组件修改会同步给父组件，需要用 $ 传递引用。',
     difficulty: '中等',
     tags: ['状态管理', '装饰器', '必问']
   },
   {
     id: 'i3',
-    question: '⭐⭐⭐ ArkUI 的渲染机制是怎样的？',
+    question: 'ArkUI 的渲染机制是怎样的？',
     answer: 'ArkUI 采用声明式开发范式。当状态（State）发生变化时，框架会自动识别依赖该状态的组件，并仅重新渲染这些受影响的组件（脏区刷新），而不是重绘整个页面，从而保证高性能。',
     difficulty: '困难',
     tags: ['原理', '渲染']
   },
   {
     id: 'i4',
-    question: '⭐⭐ 什么是 LazyForEach？为什么使用它？',
+    question: '什么是 LazyForEach？为什么使用它？',
     answer: 'LazyForEach 是用于 List 或 Grid 组件的数据懒加载机制。\n\n**原因**：当列表数据量很大（如上千条）时，普通的 ForEach 会一次性创建所有组件，导致启动慢、内存高。LazyForEach 只渲染屏幕可见区域及少量预加载区域的组件，滑动时按需创建和销毁，极大提高性能。',
     difficulty: '中等',
     tags: ['性能优化', 'List']
   },
   {
     id: 'i5',
-    question: '⭐⭐⭐ 页面生命周期有哪些？',
+    question: '页面生命周期有哪些？',
     answer: '1. **aboutToAppear**：组件创建后，build 之前执行。适合做数据初始化。\n2. **onPageShow**：页面显示时触发（包括切后台回来）。\n3. **onPageHide**：页面隐藏时触发。\n4. **onBackPress**：用户点击返回键时触发。\n5. **aboutToDisappear**：组件销毁前触发。',
     difficulty: '简单',
     tags: ['生命周期', '基础']
   },
   {
     id: 'i6',
-    question: '⭐⭐ Stage 模型和 FA 模型有什么区别？',
+    question: 'Stage 模型和 FA 模型有什么区别？',
     answer: 'Stage 模型是 HarmonyOS 3.1+ 推出的新应用模型。\n\n1. **设计思想**：Stage 模型更加规范，类名更清晰（UIAbility vs Ability）。\n2. **上下文**：Stage 模型有独立的 Context（AbilityContext, WindowStageContext），隔离性更好。\n3. **多实例**：Stage 模型原生支持多实例。\n目前推荐使用 Stage 模型开发。',
     difficulty: '中等',
     tags: ['应用模型', '概念']
   },
   {
     id: 'i7',
-    question: '⭐⭐ 如何实现跨组件层级的数据共享？',
+    question: '如何实现跨组件层级的数据共享？',
     answer: '1. **@Provide/@Consume**：适合组件树内部跨层级同步。\n2. **AppStorage**：应用全局状态，适合跨页面共享。\n3. **LocalStorage**：页面级 UIAbility 存储。\n4. **EventHub/Emitter**：基于事件的通信（订阅/发布模式）。',
     difficulty: '中等',
     tags: ['状态管理', '通信']
   },
   {
     id: 'i8',
-    question: '⭐⭐⭐ 什么是 vp 和 fp？',
+    question: '什么是 vp 和 fp？',
     answer: '1. **vp (virtual pixel)**：虚拟像素，屏幕密度无关。在不同像素密度的屏幕上，1vp 对应的物理像素不同，保证视觉大小一致。\n2. **fp (font pixel)**：字体像素。类似 vp，但会随系统字体大小设置缩放。设置字体大小时应使用 fp。',
     difficulty: '简单',
     tags: ['UI', '基础']
   },
   {
     id: 'i9',
-    question: '⭐⭐ Worker 和 TaskPool 的区别？',
+    question: 'Worker 和 TaskPool 的区别？',
     answer: '1. **TaskPool**：更轻量，自动管理线程生命周期。适合执行耗时较短的独立任务。函数需 @Concurrent 装饰。\n2. **Worker**：常驻线程，生命周期由开发者管理。适合长时间运行的后台任务。通信开销略大（序列化）。\n**推荐**：优先使用 TaskPool。',
     difficulty: '困难',
     tags: ['并发', '多线程']
   },
   {
     id: 'i10',
-    question: '⭐⭐ 如何做持久化存储？',
+    question: '如何做持久化存储？',
     answer: '1. **Preferences**：轻量级 Key-Value 存储，适合配置项。\n2. **RelationalStore (RDB)**：关系型数据库 (SQLite)，适合复杂结构化数据。\n3. **File**：文件存储，适合存储文档、图片等非结构化数据。',
     difficulty: '简单',
     tags: ['数据存储', '基础']
@@ -2560,210 +2560,210 @@ export const INTERVIEW_QUESTIONS: InterviewItem[] = [
 ,
   {
     id: 'i11',
-    question: '⭐⭐⭐ ArkTS 中如何优化列表滚动的性能？',
+    question: 'ArkTS 中如何优化列表滚动的性能？',
     answer: '1. **使用 LazyForEach**：替代 ForEach，按需加载和复用列表项，大幅降低内存占用。\n2. **组件复用 (@Reusable)**：标记自定义组件为可复用，配合 LazyForEach 的 cachedCount 属性，缓存离屏组件节点。\n3. **减少组件层级**：扁平化布局，减少嵌套。\n4. **固定尺寸**：给 List item 设置固定宽高，减少测量开销。',
     difficulty: '困难',
     tags: ['性能优化', 'List', '实战']
   },
   {
     id: 'i12',
-    question: '⭐⭐ Ability 和 UIAbility 的区别？',
+    question: 'Ability 和 UIAbility 的区别？',
     answer: '在 Stage 模型中，Ability 是一个抽象概念。UIAbility 是包含 UI 界面的应用组件，继承自 Ability。它是用户与应用交互的入口，负责页面路由和生命周期管理。ExtensionAbility 也是 Ability 的一种，但用于特定场景（如服务卡片、输入法），通常无主 UI。',
     difficulty: '中等',
     tags: ['应用模型', '概念']
   },
   {
     id: 'i13',
-    question: '⭐⭐⭐ 什么是 AppStorage 和 LocalStorage？',
+    question: '什么是 AppStorage 和 LocalStorage？',
     answer: '1. **AppStorage**：应用全局的状态存储，在整个应用运行期间存在，所有 UIAbility 和页面都能访问，适合存储用户信息、全局配置。\n2. **LocalStorage**：页面级或 UIAbility 级的状态存储，数据在特定的 UIAbility 实例或页面树内共享，不同实例间数据隔离。',
     difficulty: '中等',
     tags: ['状态管理', '数据共享']
   },
   {
     id: 'i14',
-    question: '⭐⭐ 如何防止“回调地狱” (Callback Hell)？',
+    question: '如何防止“回调地狱” (Callback Hell)？',
     answer: '1. **使用 Promise**：将异步操作封装为 Promise，使用 .then().catch() 链式调用。\n2. **async/await**：ArkTS 支持 async/await 语法，用同步的写法编写异步代码，可读性最好。\n3. **TaskPool**：将复杂的计算逻辑移至后台线程，主线程通过 Promise 等待结果。',
     difficulty: '简单',
     tags: ['异步编程', '代码质量']
   },
   {
     id: 'i15',
-    question: '⭐⭐ ArkUI 的 @BuilderParam 是什么？',
+    question: 'ArkUI 的 @BuilderParam 是什么？',
     answer: '@BuilderParam 用于在自定义组件中接收外部传入的 UI 结构（@Builder 函数）。它类似于 Vue 的 Slot 或 React 的 render props。允许父组件在调用子组件时，动态注入一段 UI 内容，极大地提高了组件的灵活性和复用性。',
     difficulty: '中等',
     tags: ['装饰器', '组件封装']
   },
   {
     id: 'i16',
-    question: '⭐⭐⭐ 鸿蒙应用如何进行多设备适配？',
+    question: '鸿蒙应用如何进行多设备适配？',
     answer: '1. **响应式布局**：使用 GridRow/GridCol 栅格布局，根据屏幕断点自动调整列数。\n2. **自适应布局**：使用 Flex、RelativeContainer、百分比宽高、layoutWeight 等，让界面随窗口大小变化。\n3. **资源限定词**：在 resources 目录下创建 element-tablet, element-dark 等限定词目录，自动加载对应资源。\n4. **Navigation**：使用 Navigation 组件的自适应分栏模式。',
     difficulty: '困难',
     tags: ['适配', '布局', '实战']
   },
   {
     id: 'i17',
-    question: '⭐⭐ ArkTS 的 NAPI 是什么？',
+    question: 'ArkTS 的 NAPI 是什么？',
     answer: 'NAPI (Native API) 是 ArkTS 与 C/C++ 代码交互的桥梁。当 ArkTS 需要调用高性能的 C++ 库（如音视频处理、OpenCV）或系统底层能力时，通过 NAPI 封装 C++ 接口，暴露给 ArkTS 调用。',
     difficulty: '困难',
     tags: ['NDK', 'C++', '底层']
   },
   {
     id: 'i18',
-    question: '⭐⭐⭐ 什么是 HVIGOR？',
+    question: '什么是 HVIGOR？',
     answer: 'Hvigor 是 HarmonyOS 的构建系统，基于 TypeScript 编写。它负责管理项目的构建流程，包括依赖管理、任务调度、编译打包等。类似于 Android 的 Gradle。开发者可以通过修改 hvigorfile.ts 来自定义构建脚本。',
     difficulty: '中等',
     tags: ['构建工具', '工程化']
   },
   {
     id: 'i19',
-    question: '⭐⭐ @ObjectLink 和 @Observed 的作用？',
+    question: '@ObjectLink 和 @Observed 的作用？',
     answer: '@Observed 装饰类，使其属性变化可被观察。@ObjectLink 用于观察 @Observed 类的实例，当实例的属性变化时，会触发 UI 更新。\n\n**使用场景**：当需要观察对象内部属性变化时（如数组元素、对象属性），必须使用 @Observed + @ObjectLink，而不能直接用 @State。',
     difficulty: '中等',
     tags: ['状态管理', '装饰器']
   },
   {
     id: 'i20',
-    question: '⭐⭐⭐ 什么是 @Reusable 装饰器？',
+    question: '什么是 @Reusable 装饰器？',
     answer: '@Reusable 用于标记自定义组件为可复用组件。配合 LazyForEach 使用时，系统会缓存离屏的组件节点，当相同类型的组件再次进入可视区域时，会复用已缓存的节点，而不是重新创建，从而提升列表滚动性能。',
     difficulty: '困难',
     tags: ['性能优化', '组件复用']
   },
   {
     id: 'i21',
-    question: '⭐⭐ 如何实现自定义弹窗？',
+    question: '如何实现自定义弹窗？',
     answer: '1. **使用 CustomDialog**：继承 CustomDialog 类，实现 build() 方法定义 UI。\n2. **使用 @CustomDialog 装饰器**：标记自定义组件，通过 showDialog() 显示。\n3. **使用 promptAction.showDialog()**：系统提供的标准弹窗，适合简单场景。',
     difficulty: '简单',
     tags: ['UI', '弹窗']
   },
   {
     id: 'i22',
-    question: '⭐⭐⭐ 什么是 GridRow 和 GridCol？',
+    question: '什么是 GridRow 和 GridCol？',
     answer: 'GridRow 和 GridCol 是响应式栅格布局组件，用于实现多设备适配。\n\n- **GridRow**：栅格容器，根据屏幕断点自动调整列数。\n- **GridCol**：栅格列，通过 span 属性控制占据的列数。\n\n**优势**：在不同屏幕尺寸下自动适配，无需写多套布局代码。',
     difficulty: '中等',
     tags: ['布局', '响应式', '适配']
   },
   {
     id: 'i23',
-    question: '⭐⭐ 如何实现下拉刷新和上拉加载？',
+    question: '如何实现下拉刷新和上拉加载？',
     answer: '使用 Refresh 组件包裹 Scroll 或 List：\n\n1. **下拉刷新**：设置 .refreshing() 和 .onRefreshing()。\n2. **上拉加载**：使用 List 的 .onReachEnd() 回调。\n3. **加载状态**：通过 @State 变量控制 loading 状态和提示文字。',
     difficulty: '中等',
     tags: ['List', '交互', '实战']
   },
   {
     id: 'i24',
-    question: '⭐⭐⭐ 什么是 @Styles 和 @Extend？',
+    question: '什么是 @Styles 和 @Extend？',
     answer: '1. **@Styles**：定义可重用的样式函数，可以在多个组件中复用相同的样式设置。\n2. **@Extend**：扩展原生组件的样式，为原生组件添加自定义样式方法。\n\n**区别**：@Styles 用于组件样式复用，@Extend 用于扩展原生组件能力。',
     difficulty: '中等',
     tags: ['样式', '装饰器']
   },
   {
     id: 'i25',
-    question: '⭐⭐ 如何实现页面间数据传递？',
+    question: '如何实现页面间数据传递？',
     answer: '1. **路由参数**：使用 router.pushUrl() 的 params 参数传递简单数据。\n2. **AppStorage**：全局状态存储，适合跨页面共享数据。\n3. **EventHub**：基于事件的通信机制，适合解耦的场景。\n4. **单例模式**：创建数据管理类，在多个页面间共享实例。',
     difficulty: '简单',
     tags: ['路由', '数据传递', '通信']
   },
   {
     id: 'i26',
-    question: '⭐⭐⭐ 什么是 @BuilderParam？如何使用？',
+    question: '什么是 @BuilderParam？如何使用？',
     answer: '@BuilderParam 用于在自定义组件中接收外部传入的 @Builder 函数，实现类似 Slot 的功能。\n\n**使用**：\n1. 在子组件中声明 @BuilderParam 变量。\n2. 在 build() 中调用该变量。\n3. 父组件传入 @Builder 函数。\n\n**优势**：提高组件灵活性，允许父组件自定义子组件的部分 UI。',
     difficulty: '中等',
     tags: ['装饰器', '组件封装', '高级特性']
   },
   {
     id: 'i27',
-    question: '⭐⭐ 如何实现自定义手势识别？',
+    question: '如何实现自定义手势识别？',
     answer: '使用 GestureGroup 组合多个手势：\n\n1. **定义手势**：创建 TapGesture、PanGesture 等。\n2. **组合手势**：使用 GestureGroup 的 .parallel() 或 .sequence() 组合。\n3. **绑定组件**：通过 .gesture() 方法绑定到组件。\n\n**示例**：长按后拖动、双击缩放等复杂手势。',
     difficulty: '困难',
     tags: ['手势', '交互', '高级特性']
   },
   {
     id: 'i28',
-    question: '⭐⭐⭐ 什么是 LocalStorage 和 PersistentStorage？',
+    question: '什么是 LocalStorage 和 PersistentStorage？',
     answer: '1. **LocalStorage**：页面级或 UIAbility 级的状态存储，数据在特定实例内共享，不同实例间隔离。适合页面内状态共享。\n2. **PersistentStorage**：持久化存储，将 AppStorage 中的数据持久化到本地文件，应用重启后数据依然存在。适合需要持久化的全局配置。',
     difficulty: '中等',
     tags: ['状态管理', '持久化', '存储']
   },
   {
     id: 'i29',
-    question: '⭐⭐ 如何优化应用启动速度？',
+    question: '如何优化应用启动速度？',
     answer: '1. **延迟加载**：非关键页面使用懒加载，减少初始 bundle 大小。\n2. **减少初始化任务**：将耗时操作移至后台线程或延迟执行。\n3. **优化资源**：压缩图片、使用 WebP 格式、按需加载资源。\n4. **代码分割**：使用动态 import 按需加载模块。\n5. **预加载**：使用 TaskPool 预加载关键数据。',
     difficulty: '困难',
     tags: ['性能优化', '启动速度', '实战']
   },
   {
     id: 'i30',
-    question: '⭐⭐⭐ 什么是 AbilityContext 和 WindowStageContext？',
+    question: '什么是 AbilityContext 和 WindowStageContext？',
     answer: '在 Stage 模型中，Context 分为两类：\n\n1. **AbilityContext**：UIAbility 的上下文，提供启动 Ability、获取资源等能力。通过 getContext(this) 获取。\n2. **WindowStageContext**：窗口阶段的上下文，提供窗口管理、显示控制等能力。通过 windowStage.getMainWindow() 获取。\n\n**区别**：AbilityContext 关注应用能力，WindowStageContext 关注窗口显示。',
     difficulty: '困难',
     tags: ['应用模型', 'Context', 'Stage模型']
   },
   {
     id: 'i31',
-    question: '⭐⭐ 如何实现主题切换（深色模式）？',
+    question: '如何实现主题切换（深色模式）？',
     answer: '1. **使用系统主题**：通过 Configuration.getColorMode() 获取系统主题，动态切换资源。\n2. **自定义主题**：使用 AppStorage 存储主题状态，通过资源限定词（如 element-dark）加载对应资源。\n3. **动态样式**：根据主题状态动态设置组件颜色。\n\n**推荐**：结合系统主题和自定义主题，提供最佳用户体验。',
     difficulty: '中等',
     tags: ['主题', 'UI', '实战']
   },
   {
     id: 'i32',
-    question: '⭐⭐⭐ 什么是 @Preview 装饰器？',
+    question: '什么是 @Preview 装饰器？',
     answer: '@Preview 用于在 DevEco Studio 的预览器中预览组件。可以设置预览参数（如设备类型、主题、语言等），方便开发时快速查看 UI 效果，无需运行完整应用。\n\n**注意**：@Preview 仅在开发阶段生效，不会影响实际运行。',
     difficulty: '简单',
     tags: ['开发工具', '预览器']
   },
   {
     id: 'i33',
-    question: '⭐⭐ 如何处理列表项的点击事件？',
+    question: '如何处理列表项的点击事件？',
     answer: '1. **ListItem 的 onClick**：直接在 ListItem 上绑定 onClick 事件。\n2. **子组件事件冒泡**：在 ListItem 内的组件上绑定事件，事件会冒泡到 ListItem。\n3. **使用 .onClick() 链式调用**：在 ListItem 的子组件上链式调用 onClick。\n\n**推荐**：使用 ListItem 的 onClick，语义更清晰，性能更好。',
     difficulty: '简单',
     tags: ['List', '事件处理', '交互']
   },
   {
     id: 'i34',
-    question: '⭐⭐⭐ 什么是 @Concurrent 装饰器的限制？',
+    question: '什么是 @Concurrent 装饰器的限制？',
     answer: '@Concurrent 装饰的函数有以下限制：\n\n1. **必须是顶层函数或静态方法**：不能是实例方法。\n2. **参数和返回值必须可序列化**：支持基本类型、可序列化对象，不支持函数、闭包。\n3. **不能访问外部变量**：只能使用参数传入的数据。\n4. **不能调用 UI 相关 API**：不能操作 UI 组件或状态。',
     difficulty: '困难',
     tags: ['并发', 'TaskPool', '限制']
   },
   {
     id: 'i35',
-    question: '⭐⭐ 如何实现图片的懒加载和缓存？',
+    question: '如何实现图片的懒加载和缓存？',
     answer: '1. **Image 组件自动缓存**：Image 组件支持自动缓存网络图片。\n2. **使用占位图**：通过 .alt() 设置加载中的占位图。\n3. **自定义缓存策略**：使用 http 模块下载图片，手动管理缓存。\n4. **使用第三方库**：集成图片加载库（如支持 HarmonyOS 的图片库）。\n\n**推荐**：优先使用 Image 组件的内置缓存能力。',
     difficulty: '中等',
     tags: ['图片', '性能优化', '缓存']
   },
   {
     id: 'i36',
-    question: '⭐⭐⭐ 什么是 @Watch 装饰器？如何使用？',
+    question: '什么是 @Watch 装饰器？如何使用？',
     answer: "@Watch 用于监听状态变量的变化，当变量改变时执行回调函数。\n\n**使用场景**：\n1. 数据变化时执行副作用（如保存数据、发送日志）。\n2. 多个状态变量联动。\n3. 数据验证和转换。\n\n**语法**：@Watch('variableName') callback() { 在回调中执行逻辑 }",
     difficulty: '中等',
     tags: ['装饰器', '状态管理', '监听']
   },
   {
     id: 'i37',
-    question: '⭐⭐ 如何实现自定义 TabBar？',
+    question: '如何实现自定义 TabBar？',
     answer: '1. **使用 Tabs 组件**：系统提供的标签页组件，支持底部和顶部导航。\n2. **自定义实现**：使用 Row + Button 组合，通过 @State 控制选中状态。\n3. **结合 Navigation**：在 Navigation 内使用自定义 TabBar。\n\n**推荐**：优先使用 Tabs 组件，功能完善且性能好。',
     difficulty: '简单',
     tags: ['导航', 'TabBar', 'UI']
   },
   {
     id: 'i38',
-    question: '⭐⭐⭐ 什么是 RelativeContainer 相对布局？',
+    question: '什么是 RelativeContainer 相对布局？',
     answer: 'RelativeContainer 是相对布局容器，通过锚点（anchor）定位子元素。\n\n**特点**：\n1. 子元素通过 .align() 设置相对于父容器或其他子元素的锚点。\n2. 支持复杂的相对定位关系。\n3. 适合实现不规则布局。\n\n**使用场景**：卡片式布局、浮动按钮、自定义图表等。',
     difficulty: '困难',
     tags: ['布局', 'RelativeContainer', '高级特性']
   },
   {
     id: 'i39',
-    question: '⭐⭐ 如何实现搜索功能？',
+    question: '如何实现搜索功能？',
     answer: '1. **使用 TextInput**：设置 .type(InputType.Search) 显示搜索图标。\n2. **监听输入**：通过 .onChange() 监听输入变化。\n3. **防抖处理**：使用 setTimeout 实现防抖，避免频繁搜索。\n4. **过滤数据**：根据关键词过滤列表数据。\n5. **高亮显示**：使用 Text 的 .decoration() 高亮匹配文本。',
     difficulty: '中等',
     tags: ['搜索', '交互', '实战']
   },
   {
     id: 'i40',
-    question: '⭐⭐⭐ 什么是 @Entry 和 @Component 的区别？',
+    question: '什么是 @Entry 和 @Component 的区别？',
     answer: '1. **@Entry**：标记页面入口组件，一个页面只能有一个 @Entry。它是应用的入口点，系统会为其创建页面实例。\n2. **@Component**：标记自定义组件，可以有多个。用于封装可复用的 UI 逻辑。\n\n**关系**：@Entry 组件本身也是 @Component，但具有页面级别的生命周期。',
     difficulty: '简单',
     tags: ['装饰器', '基础', '概念']
